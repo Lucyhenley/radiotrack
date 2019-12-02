@@ -1,0 +1,11 @@
+data/
+figs/
+**.jld2
+.ipynb_checkpoints/
+**.pdf
+**.gz
+**.bak
+**.avi
+**.mp4
+**.aux
+
