@@ -8,4 +8,9 @@ figs/
 **.avi
 **.mp4
 **.aux
+**.toc
+**.log
+**.bbl
+**.blg
+**.out
 

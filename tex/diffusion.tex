@@ -1,15 +1,3 @@
-\documentclass{article}
-
-
-\usepackage{amsmath,amssymb,mathtools,amsthm} % Math
-
-\newcommand{\chap}[1]{Chapter \ref{#1}}
-\newcommand{\eqn}[1]{equation \eqref{#1}}
-\newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
-\newcommand{\DD}[2]{\frac{\partial^2 #1}{\partial #2^2}}
-
-\begin{document}
-
 \section{A diffusion model for bat movement}
 
 Diffusion models are widely used to model animal movement for a number of species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to describe the movement of bats flying away from the roost.
@@ -25,7 +13,7 @@ finding a bat at position $(x,y)$ at time $t$,
 %
 where $D$ is the diffusion coefficient and quantifies the speed with which bats diffuse.
 
-The diffusion equation can also be written in polar coordinates:
+The diffusion equation can also be written in polar coordinates,
 
 \begin{equation}
 \D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
@@ -40,17 +28,22 @@ The initial condition
 \label{eqn:IC}
 \end{equation}
 %
-specifies that all bats begin the night at the roost.
+specifies that all bats begin the night at the roost. The boundary conditions
 
-Motion is determined by the parameter $D$, the diffusion coefficient. The diffusion coefficient determines the speed of motion away from the origin and can be calculated using the mean squared distance (MSD) $\mathbb{E}[r^2]$. The expected MSD at time $t$ can be calculated using the diffusion equation:
+\begin{equation}
+\phi(x_0,y_0,0) = \delta(x_0,y_0)
+\label{eqn:IC}
+\end{equation}
+
+Motion is determined by the parameter $D$, the diffusion coefficient. The diffusion coefficient determines the speed of motion away from the origin and can be calculated using the mean squared distance (MSD) $\mathbb{E}[r^2]$. The expected MSD at time $t$ can be calculated using the diffusion equation,
 
 \begin{equation}
 \left<r^2\right> = \int_{\infty}r^2 \phi(r,t) d\Omega ,
 \end{equation}
 %
-where the integral is over all space. 
+where the integral is over all space.
 
-The rate of change of the MSD with time can be used to calculate the relationship between MSD and time:
+The rate of change of the MSD with time can be used to calculate the relationship between MSD and time,
 
 \begin{equation}
 \begin{split}
@@ -80,7 +73,7 @@ and therefore MSD is directly proportional to time.
 
 \subsection{Advection-Diffusion model}
 
-A simple diffusion model does not 
+A simple diffusion model does not
 
 Bats don't diffuse for the whole night
 
@@ -97,7 +90,7 @@ Motion in later portion of the night is described by an advection-diffusion mode
 
 where $\chi$ is the strength of the drift back towards the roost.
 
-The same method can be used to calculate the MSD for the advection-diffusion model in terms of $D$ and $\chi$:
+The same method can be used to calculate the MSD for the advection-diffusion model in terms of $D$ and $\chi$,
 
 \begin{equation}
 \begin{split}
@@ -109,7 +102,7 @@ The same method can be used to calculate the MSD for the advection-diffusion mod
 \end{equation}
 
 
-Substituting the first term from \eqn{eqn:diffusion_1}:
+Substituting the first term from \eqn{eqn:diffusion_1},
 
 \begin{equation}
 \begin{split}
@@ -224,8 +217,3 @@ At present, this is approximated using a Riemann sum at intervals $\Delta t$:
 %
 In future, this approximation will be improved by using a better numerical
 integration method. The number of hits expected at each detector $\tilde{N_i}(T)$ for a possible roost location $\bm{\theta'}$ will be compared to the number of hits found in bat surveys to estimate the probability that the true roost is at $\bm{\theta'}$.
-
-
-
-
-\end{document}

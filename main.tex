@@ -1,0 +1,233 @@
+
+\documentclass[a4paper, 11pt, twoside, onecolumn, openany, extrafontsizes]{memoir}
+
+\usepackage[utf8]{inputenc} % If utf8 encoding
+\usepackage[T1]{fontenc}    %
+\usepackage[english]{babel} % English please
+\usepackage[final]{microtype} % Less badboxes
+\usepackage{color}
+\usepackage{standalone}
+\usepackage{algpseudocode}
+
+\usepackage{enumitem,amssymb,mathrsfs}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
+
+\newcommand\at[2]{\left.#1\right|_{#2}}
+
+
+\usepackage{amsmath,amssymb,mathtools,amsthm} % Maths
+
+\theoremstyle{plain}% default
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{rem}{Remark}[section]
+\newtheorem{defn}{Definition}[section]
+\theoremstyle{definition}{}
+%\newtheorem{defn}{Definition}[section]
+\newtheorem{exmp}{Example}[section]
+
+\usepackage{tikz} % Figures
+\usepackage{graphicx} % Include figures
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{bm}
+
+\usepackage[perpage]{footmisc}
+
+\DisemulatePackage{setspace}
+\usepackage[doublespacing]{setspace}
+
+
+%%% PAGE LAYOUT
+%%%------------------------------------------------------------------------------
+
+\setlrmarginsandblock{0.15\paperwidth}{*}{1} % Left and right margin
+\setulmarginsandblock{0.2\paperwidth}{*}{1}  % Upper and lower margin
+\checkandfixthelayout
+
+%%% SECTIONAL DIVISIONS
+%%%------------------------------------------------------------------------------
+
+\maxsecnumdepth{subsection} % Subsections (and higher) are numbered
+\setsecnumdepth{subsection}
+
+\chapterstyle{tandh}
+%\chapterstyle{brotherton}
+\renewcommand*{\chapnumfont}{\normalfont\huge\bfseries}
+\renewcommand*{\chaptitlefont}{\normalfont\huge\bfseries}
+
+\setsecheadstyle{\normalfont\large\bfseries}
+\setsubsecheadstyle{\normalfont\normalsize\bfseries}
+\setparaheadstyle{\normalfont\normalsize\bfseries}
+\setparaindent{0pt}\setafterparaskip{0pt}
+
+%%% FLOATS AND CAPTIONS
+%%%------------------------------------------------------------------------------
+
+\graphicspath{ {./figs/} }
+
+\makeatletter                  % You do not need to write [htpb] all the time
+\renewcommand\fps@figure{htbp} %
+\renewcommand\fps@table{htbp}  %
+\makeatother                   %
+
+
+%%% HEADER AND FOOTER
+%%%------------------------------------------------------------------------------
+
+\makepagestyle{standard} % Make standard pagestyle
+
+\makeatletter                 % Define standard pagestyle
+\makeevenfoot{standard}{}{}{} %
+\makeoddfoot{standard}{}{}{}  %
+\makeevenhead{standard}{\bfseries\thepage\normalfont\qquad\small\leftmark}{}{}
+\makeoddhead{standard}{}{}{\small\rightmark\qquad\bfseries\thepage}
+% \makeheadrule{standard}{\textwidth}{\normalrulethickness}
+\makeatother                  %
+
+\makeatletter
+\makepsmarks{standard}{
+	\createmark{chapter}{both}{shownumber}{\@chapapp\ }{ \quad }
+	\createmark{section}{right}{shownumber}{}{ \quad }
+	\createplainmark{toc}{both}{\contentsname}
+	\createplainmark{lof}{both}{\listfigurename}
+	\createplainmark{lot}{both}{\listtablename}
+	\createplainmark{bib}{both}{\bibname}
+	\createplainmark{index}{both}{\indexname}
+	\createplainmark{glossary}{both}{\glossaryname}
+}
+\makeatother                               %
+
+\makepagestyle{chap} % Make new chapter pagestyle
+
+\makeatletter
+%\makeevenfoot{chap}{}{\small\bfseries\thepage}{} % Define new chapter pagestyle
+%\makeoddfoot{chap}{}{\small\bfseries\thepage}{}  %
+%\makeevenhead{chap}{}{}{}   %
+%\makeoddhead{chap}{}{}{}    %
+% \makeheadrule{chap}{\textwidth}{\normalrulethickness}
+\makeevenfoot{chap}{}{}{}
+\makeoddfoot{chap}{}{}{}
+\makeevenhead{chap}{\bfseries\thepage}{}{}
+\makeoddhead{chap}{}{}{\bfseries\thepage}
+\makeatother
+
+\nouppercaseheads
+\pagestyle{standard}               % Choosing pagestyle and chapter pagestyle
+\aliaspagestyle{chapter}{chap} %
+
+%%% TABLE OF CONTENTS
+%%%------------------------------------------------------------------------------
+
+\maxtocdepth{subsection} % Only parts, chapters and sections in the table of contents
+\settocdepth{subsection}
+
+\AtEndDocument{\addtocontents{toc}{\par}} % Add a \par to the end of the TOC
+
+%%% INTERNAL HYPERLINKS
+%%%-------------------------------------------------------------------------------
+
+\usepackage{hyperref}   % Internal hyperlinks
+\hypersetup{
+	pdfborder={0 0 0},      % No borders around internal hyperlinks
+	pdfauthor={Lucy Henley} % author
+}
+\usepackage{memhfixc}   %
+
+%%% SHORTCUTS
+%%%------------------------------------------------------------------------------
+
+
+
+\newcommand{\fig}[1]{Figure \ref{#1}}
+\newcommand{\figs}[2]{figures \ref{#1} and \ref{#2}}
+\newcommand{\sect}[1]{Section \ref{#1}}
+\newcommand{\app}[1]{Appendix \ref{#1}}
+\newcommand{\chap}[1]{Chapter \ref{#1}}
+\newcommand{\eqn}[1]{equation \ref{#1}}
+\newcommand{\eqns}[2]{equations \ref{#1} and \ref{#2}}
+\newcommand{\Eqns}[2]{Equations \ref{#1} and \ref{#2}}
+\newcommand{\eqnto}[2]{equations \ref{#1}-\ref{#2}}
+%\usepackage{authblk}
+\usepackage{url}
+\usepackage{soul}
+\newcommand{\eg}{\emph{e.g.} }
+\newcommand{\bn}{\bm{n}}
+\newcommand{\tr}{\textrm{tr}}
+\newcommand{\bu}{\bm{u}}
+\newcommand{\ie}{\emph{i.e.} }
+\newcommand{\Chapter}[1]{\chapter{#1}\label{#1}}
+\newcommand{\Section}[1]{\section{#1}\label{#1}}
+\newcommand{\Subsection}[1]{\subsection{#1}\label{#1}}
+\newcommand{\Subsubsection}[1]{\subsubsection{#1}\label{#1}}
+\newcommand{\Appendix}[1]{\appendix{#1}\label{#1}}
+\newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\DD}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+\newcommand{\rd}{\text{ d}}
+\newcommand{\ttttp}{.24\textwidth}
+\newcommand{\tttp}{.32\textwidth}
+\newcommand{\ttp}{.45\textwidth}
+\newcommand{\tp}{\textwidth}
+\newcommand{\tbo}{.6\textwidth}
+
+%%% Title Page
+%%%-------------------------------------------------------------------------------
+
+% Cardiff University Logo
+\newcommand*{\plogo}{\includegraphics[width=0.2\linewidth]{culogo.png}}
+\newlength{\drop}
+
+\newcommand*{\titlepage}{\begingroup
+	\drop = 0.2\textheight
+	\centering
+	\vfill
+%	{\huge Annual Report}\\[\baselineskip]
+	{\Huge Modelling bat movement using radiotracking data or something similar to this}\\[\baselineskip]
+	{\huge Lucy Henley}\\[\baselineskip]
+	{\Large Supervised by}\\
+	{\Large Dr~Thomas Woolley, Professor Owen Jones and Professor Fiona Mathews}\\[1.4\drop]
+	{\Large \plogo}\\[0.5\baselineskip]
+	{\Large Cardiff University}\\
+	{\large\scshape 2019}\par
+	\vfill\null
+	\endgroup}
+
+
+%%%-------------------------------------------------------------------------------
+
+\author{Lucy Henley}
+\title{Annual Report}
+
+\begin{document}
+	\pagestyle{empty}
+	\pagenumbering{gobble}
+	\titlepage
+	\tableofcontents*
+	\pagestyle{standard}
+
+	\mainmatter
+
+\cite{Walters2012}
+
+\include{tex/abstract}
+\include{tex/diffusion}
+
+
+	\backmatter
+
+	\bibliographystyle{unsrt}
+ 	\bibliography{bib}
+
+
+
+
+\end{document}
