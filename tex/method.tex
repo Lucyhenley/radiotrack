@@ -116,6 +116,60 @@ Integrating with respect to time gives
 %
 and therefore MSD is directly proportional to time for a simple diffusion model.
 
+
+
+\section{Fitting model to data}
+
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=\textwidth]{RadioTrack_simulation.pdf}
+        \caption{Mean squared distance from the roost for radio tracked bats in Devon, UK. The initial straight line segment corresponds to diffusion with $D = 65 ms^{-s^2}$. Diffusion/leapfrog simulation fit with $r^2 = 0.92$}
+    \label{fig:radiotrack_fit}
+\end{figure}
+
+Stochastic differential equation:
+
+Diffusion:
+\begin{equation}
+X_{t+1} = X_t + N(0,D)
+\end{equation}
+
+Diffusion with drift:
+
+
+
+
+
+
+
+
+Area is topologically complex: mix of favourable habitat: patches of woodland, high hedgerows and steep cliffs. Not clear how generalisable the data is to other landscapes. Could try ABC with detector data and see?
+
+Interacting particles:
+
+\begin{equation}
+dx_i(t) = (m_i(t) - \frac{\kappa x_i(t)}{||x_i(t)||}) dt + \sigma dB(t)
+\end{equation}
+
+\begin{equation}
+m_i(t) = \sum_{j \neq i} \frac{(x_j(t) - x_i(t))}{||x_j(t) - x_i(t)||} * h(||x_j(t) - x_i(t)||).
+\end{equation}
+
+\begin{equation}
+h(x) = 1/(\epsilon + x^2)
+\end{equation}
+
+Then talk about the drift thingy:
+show that quadratic fit is ok
+Drift diffusion equation
+explain why that doesn't work with multiple bats at many distances: add example with a few bats and the avg of them
+
+Leapfrogging: write out SDE?
+
+
+
+\section{SOLUTION OF DIFFUSION EQUATION}
+
 The diffusion equation in cartesian coordinates, given by \eqn{eqn:diffusion_cartesian}, can be written as
 
 {\huge What do i want from this}
@@ -168,50 +222,3 @@ Transforming back to polar coordinates gives
   \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} .\\
   \label{eqn:phi_0}
 \end{equation}
-
-
-\section{Fitting model to data}
-
-\begin{figure} [h]
-    \centering
-        \includegraphics[width=\textwidth]{RadioTrack_simulation.pdf}
-        \caption{Mean squared distance from the roost for radio tracked bats in Devon, UK. The initial straight line segment corresponds to diffusion with $D = 65 ms^{-s^2}$. Diffusion/leapfrog simulation fit with $r^2 = 0.92$}
-    \label{fig:radiotrack_fit}
-\end{figure}
-
-Stochastic differential equation:
-
-Diffusion:
-\begin{equation}
-X_{t+1} = X_t + N(0,D)
-\end{equation}
-
-Diffusion with drift:
-
-
-
-
-
-
-Area is topologically complex: mix of favourable habitat: patches of woodland, high hedgerows and steep cliffs. Not clear how generalisable the data is to other landscapes. Could try ABC with detector data and see?
-
-Interacting particles:
-
-\begin{equation}
-dx_i(t) = (m_i(t) - \frac{\kappa x_i(t)}{||x_i(t)||}) dt + \sigma dB(t)
-\end{equation}
-
-\begin{equation}
-m_i(t) = \sum_{j \neq i} \frac{(x_j(t) - x_i(t))}{||x_j(t) - x_i(t)||} * h(||x_j(t) - x_i(t)||).
-\end{equation}
-
-\begin{equation}
-h(x) = 1/(\epsilon + x^2)
-\end{equation}
-
-Then talk about the drift thingy:
-show that quadratic fit is ok
-Drift diffusion equation
-explain why that doesn't work with multiple bats at many distances: add example with a few bats and the avg of them
-
-Leapfrogging: write out SDE?
