@@ -127,37 +127,18 @@ and therefore MSD is directly proportional to time for a simple diffusion model.
     \label{fig:radiotrack_fit}
 \end{figure}
 
-Stochastic differential equation:
-
-Diffusion:
+Diffusion is a stochastic process and can therefore be described in terms of a Markov process. Let the location of bat $i$ at time $t$ be $\bm{X_{i,t}}$. The initial condition
 \begin{equation}
-X_{t+1} = X_t + N(0,D)
+X_{i,0} = (0,0)         \forall i
+\end{equation}
+specifies that all bats begin the night at the roost. The diffusion model can then be described by the stochastic difference equation,
+\begin{equation}
+X_{t+1} = X_t + N(0,D) .
 \end{equation}
 
-Diffusion with drift:
 
 
-
-
-
-
-
-
-Area is topologically complex: mix of favourable habitat: patches of woodland, high hedgerows and steep cliffs. Not clear how generalisable the data is to other landscapes. Could try ABC with detector data and see?
-
-Interacting particles:
-
-\begin{equation}
-dx_i(t) = (m_i(t) - \frac{\kappa x_i(t)}{||x_i(t)||}) dt + \sigma dB(t)
-\end{equation}
-
-\begin{equation}
-m_i(t) = \sum_{j \neq i} \frac{(x_j(t) - x_i(t))}{||x_j(t) - x_i(t)||} * h(||x_j(t) - x_i(t)||).
-\end{equation}
-
-\begin{equation}
-h(x) = 1/(\epsilon + x^2)
-\end{equation}
+\section{}
 
 Then talk about the drift thingy:
 show that quadratic fit is ok
