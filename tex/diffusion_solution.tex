@@ -1,0 +1,56 @@
+
+
+\section{SOLUTION OF DIFFUSION EQUATION}
+
+The diffusion equation in cartesian coordinates, given by \eqn{eqn:diffusion_cartesian}, can be written as
+
+{\huge What do i want from this}
+
+ solved using a Fourier transform in the spatial dimensions. Writing the Fourier transform of $\phi_0(x,y,t)$ as $\mathscr{F}\left[ \phi_0(x,y,t) \right] = \tilde{\phi_0}(k_x,k_y,t)$, each term in equation
+
+\begin{equation}
+\begin{split}
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{x} \right] &= \int \int \DD{\phi_0(x,y,t)}{x} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_x^2 \tilde{\phi_0}(k_x,k_y,t), \\
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{y} \right] &= \int \int \DD{\phi_0(x,y,t)}{y} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_y^2 \tilde{\phi_0}(k_x,k_y,t) \\
+  \mathscr{F}\left[\DD{\phi_0(x,y,t)}{t}\right] &= \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} \\
+  \mathscr{F}\left[\phi_0(x,y,0)\right] &= \mathscr{F}\left[\delta(0)\right] \\
+  &= 1
+\end{split}
+\end{equation}
+
+
+Substituting into \eqn{eqn:cartesian_diffusion}
+
+\begin{equation}
+  \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} = -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t).
+\end{equation}
+
+Integrating with respect to time gives
+
+\begin{equation}
+\begin{split}
+  \tilde{\phi_0}(k_x,k_y,t) &= \int -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t) dt \\
+  &= \tilde{\phi_0}(k_x,k_y,0)\mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{split}
+\end{equation}
+
+IC $ \tilde{\phi_0}(k_x,k_y,0) = 1$ and so
+
+\begin{equation}
+  \tilde{\phi_0}(k_x,k_y,t) = \mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{equation}
+
+Then inverse fourier transform to recover $\phi_0(x,y,t)$
+
+\begin{equation}
+  \phi_0(x,y,t) = \mathscr{F}^{-1}\left[\tilde{\phi_0}(k_x,k_y,t)\right] = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{x^2 + y^2}{4Dt}} \\
+\end{equation}
+
+Transforming back to polar coordinates gives
+
+\begin{equation}
+  \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} .\\
+  \label{eqn:phi_0}
+\end{equation}
