@@ -1,46 +1,45 @@
 \section{Radoiotracking data}
 
-During the night, bats emerge from the roost and fly around to forage. Studying this movement is difficult as bats they are nocturnal, elusive and difficult to track. GPS tracking devices are unsuitable, as they are large enough that they are likely to impede bat movement. Instead, radio transmitters are fitted to the bats. These are smaller and less likely to affect foraging behaviour. The signal from the transmitters is picked up using scanning radio-receivers, and the position of the bat is estimated. Field workers can then follow the bat and attempt to maintain contact, taking regular recordings of location until the signal is lost, or the bat returns to the roost. Due to the nature of the tracking, locations are not recorded at regular intervals, and instead when the signal is found.
+Shortly after sunset, bats emerge from the roost and fly around to forage. Studying this movement is difficult as bats they are nocturnal, elusive and difficult to track. GPS tracking devices are unsuitable, as they are large enough that they are likely to impede bat movement. Instead, radio transmitters are often used as these are smaller and less likely to affect foraging behaviour. Data from radio tracking surveys are widely used to identify habitat use of bats \cite{Bontadina2002, Encarnacao2005}.  The signal from transmitters is picked up using scanning radio-receivers, and the position of the bat is estimated. Field workers can then follow the bat and attempt to maintain contact, taking regular recordings of location until the signal is lost, or the bat returns to the roost. Due to the nature of the tracking, locations are not recorded at regular intervals, and instead when the signal is found.
 
-A study was conducted at Greater Horseshoe bat roosts in Devon to identify roosts used in the area. 12 bats were fit with radio tags and studied over 24 nights. Due to a limited number of workers and limited battery life on the tags, bats were not tracked every night. Four day roosts were used by bats in the study, with some bats using different roosts on different days. The roost used by each bat was identified for 2/3 of bat-nights. For this analysis, only  the data from nights when a bat's roost was known was used, since the movement away from the roost is important. A total of 322 bat locations were used for this analysis, and these are shown along with the location of day roosts in \fig{fig:radiotrack_locations}. As the data is not recorded at regular time intervals, locations were linearly interpolated at intervals of $\Delta t = 200$ seconds. The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along with the two day roosts used by bat 1 over the survey. The trajectories show that bat 1 took a different path each night and always remained within 3km of the roost.
+A study was conducted at Greater Horseshoe bat roosts in Devon to identify roosts used in the area. 12 bats were fit with radio tags and studied over 24 nights. Due to a limited number of workers and limited battery life on the tags, bats were not tracked every night. Four day roosts were used by bats in the study, with some bats using different roosts on different days. The roost used by each bat was identified for 2/3 of bat-nights. For this analysis, only  the data from nights when a bat's roost was known was used, since the dispersal from the roost is important. A total of 322 bat locations were used for this analysis, and these are shown along with the location of day roosts in \fig{fig:radiotrack_locations}. Since the data is recorded at irregular time intervals locations were linearly interpolated between recordings at intervals of $\Delta t = 200$ seconds. The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along with the two day roosts used by bat 1 during the survey. These trajectories indicate that the bat travelled in different directions each night whilst foraging and remained within 3km of the roost at all times {\huge Check the max distance from the roost?}
 %
 \begin{figure} [h]
     \centering
         \includegraphics[width=\textwidth]{track_locations.pdf}
-        \caption{Locations of day roosts and bat recordings found during the radio tracking survey}
+        \caption{Locations of day roosts and tracked bat locations recorded during the radio tracking survey.}
     \label{fig:radiotrack_locations}
 \end{figure}
 %
 \begin{figure} [h]
     \centering
         \includegraphics[width=\textwidth]{bat1_locations.pdf}
-        \caption{The locations recorded for bat 1 during the study. Bat 1 was only recorded on 6 nights. The locations were interpolated for each night to obtain trajectories.}
+        \caption{The locations recorded for bat 1 over 6 nights during the study. The locations were interpolated for each night to obtain trajectories.}
     \label{fig:bat1}
 \end{figure}
 %
-To gain more information about the movement of bats, the mean-squared distance (MSD) was plotted over the course of the night, shown in \fig{fig:MSD}. The results show an initial straight line segment up to $t = 1.6$ hours from sunset, followed by a quadratic decrease for the rest of the night until a sharp decrease as the bats return to the roost.
+The mean-squared distance (MSD) from the roost was calculated using the interpolated positions and is shown in \fig{fig:MSD}. The results show an initial straight line segment up to $t = 1.6$ hours from sunset, followed by a quadratic decrease for the rest of the night until a sharp decrease as the bats return to the roost before sunrise.
 %
 \begin{figure} [h]
     \centering
-        \includegraphics[width=\textwidth]{RadioTrack_simulation.pdf}
-        \caption{CHANGE THIS TO MSD}
-    \label{fig:radiotrack_fit}
+        \includegraphics[width=\textwidth]{RadioTrack_MSD.pdf}
+        \caption{The mean-sqared distance (MSD) for all radio tracked bats. The standard error is shown as a ribbon.}
+    \label{fig:MSD}
 \end{figure}
 %
 \section{A diffusion model for bat movement}
 %
-Diffusion models are widely used to model animal movement for a number of species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to describe the movement of bats flying away from the roost.
+Partial differential equations (PDEs) are often used in ecology to describe spatial processes such as animal movement \cite{Holmes1994}. The diffusion model is commonly used to model dispersal \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to describe the dispersal of bats flying away from the roost.
 %
-If the roost is at $(x_0,y_0)$ and bats leave the roost at time $t =0$,
-the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
-finding a bat at position $(x,y)$ at a later time $t$,
+All bats are assumed to leave the roost at position $(x_0,y_0)$ at time $t=0$. The 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+bats at position $(x,y)$ at a later time $t$,
 %
 \begin{equation}
   \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) ,
   \label{eqn:diffusion_cartesian}
 \end{equation}
 %
-where the diffusion coefficient $D$ quantifies the speed with which bats diffuse. The diffusion equation can also be written in polar coordinates:
+where the diffusion coefficient $D$ quantifies the dispersal speed. Since bats are assumed to move The diffusion equation can also be written in polar coordinates:
 %
 \begin{equation}
 \D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
