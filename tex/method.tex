@@ -2,8 +2,8 @@
 
 Shortly after sunset, bats emerge from the roost and fly around to forage. Studying this movement is difficult as bats they are nocturnal, elusive and difficult to track. GPS tracking devices are unsuitable, as they are large enough that they are likely to impede bat movement. Instead, radio transmitters are often used as these are smaller and less likely to affect foraging behaviour. Data from radio tracking surveys are widely used to identify habitat use of bats \cite{Bontadina2002, Encarnacao2005}.  The signal from transmitters is picked up using scanning radio-receivers, and the position of the bat is estimated. Field workers can then follow the bat and attempt to maintain contact, taking regular recordings of location until the signal is lost, or the bat returns to the roost. Due to the nature of the tracking, locations are not recorded at regular intervals, and instead when the signal is found.
 
-A study was conducted at Greater Horseshoe bat roosts in Devon to identify roosts used in the area. 12 bats were fit with radio tags and studied over 24 nights. Due to a limited number of workers and limited battery life on the tags, bats were not tracked every night. Four day roosts were used by bats in the study, with some bats using different roosts on different days. The roost used by each bat was identified for 2/3 of bat-nights. For this analysis, only  the data from nights when a bat's roost was known was used, since the dispersal from the roost is important. A total of 322 bat locations were used for this analysis, and these are shown along with the location of day roosts in \fig{fig:radiotrack_locations}. Since the data is recorded at irregular time intervals locations were linearly interpolated between recordings at intervals of $\Delta t = 200$ seconds. The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along with the two day roosts used by bat 1 during the survey. These trajectories indicate that the bat travelled in different directions each night whilst foraging and remained within 3km of the roost at all times {\huge Check the max distance from the roost?}
-%
+A study was conducted at Greater Horseshoe bat roosts in Devon to identify roosts used in the area. 12 bats were fit with radio tags and studied over 24 nights. Due to a limited number of workers and limited battery life on the tags, bats were not tracked every night. Four day roosts were used by bats in the study, with some bats using different roosts on different days. The roost used by each bat was identified for 2/3 of bat-nights. For this analysis, only  the data from nights when a bat's roost was known was used, since the dispersal from the roost is important. As bats were followed each night until the signal was lost, the frequency of recordings reduced over time when signals were lost. A total of 322 bat locations were used for this analysis, and these are shown along with the location of day roosts in \fig{fig:radiotrack_locations}. Since the data is recorded at irregular time intervals locations were linearly interpolated between recordings at intervals of $\Delta t = 200$ seconds. The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along with the two day roosts used by bat 1 during the survey. These trajectories indicate that the bat travelled in different directions each night whilst foraging and remained within 3km of the roost at all times.
+%Max distance from roost = 2962m
 \begin{figure} [h]
     \centering
         \includegraphics[width=\textwidth]{track_locations.pdf}
@@ -18,7 +18,7 @@ A study was conducted at Greater Horseshoe bat roosts in Devon to identify roost
     \label{fig:bat1}
 \end{figure}
 %
-The mean-squared distance (MSD) from the roost was calculated using the interpolated positions and is shown in \fig{fig:MSD}. The results show an initial straight line segment up to $t = 1.6$ hours from sunset, followed by a quadratic decrease for the rest of the night until a sharp decrease as the bats return to the roost before sunrise.
+The mean-squared distance (MSD) from the roost was calculated using the interpolated positions and is shown in \fig{fig:MSD}. The standard error decreases later in the night as the number of recordings reduces with time. The results show an initial straight line segment up to $t = 1.6$ hours from sunset, followed by a quadratic decrease for the rest of the night until a sharp decrease as the bats return to the roost before sunrise.
 %
 \begin{figure} [h]
     \centering
@@ -39,7 +39,7 @@ bats at position $(x,y)$ at a later time $t$,
   \label{eqn:diffusion_cartesian}
 \end{equation}
 %
-where the diffusion coefficient $D$ quantifies the dispersal speed. Since bats are assumed to move The diffusion equation can also be written in polar coordinates:
+where the diffusion coefficient $D$ quantifies the dispersal speed. Since bats are assumed to move symmetrically, the diffusion equation can also be written in polar coordinates,
 %
 \begin{equation}
 \D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
@@ -69,10 +69,10 @@ and
 \label{eqn:IC}
 \end{equation}
 %
-{\huge Something about how it's flat at infinity??}
+specify that the probability density is flat at $r=\infty$.
 %
-Motion is determined by the parameter $D$, the diffusion coefficient. The diffusion coefficient determines the speed of motion away from the origin and can be calculated using the mean squared distance (MSD) $\mathbb{E}[r^2]$. The expected MSD at time $t$ can be calculated using the diffusion equation,
-
+Motion is determined by the parameter $D$, the diffusion coefficient. The diffusion coefficient determines the speed of dispersal away from the origin and can be calculated using the mean squared distance (MSD) $\mathbb{E}[r^2]$. The expected MSD at time $t$ can be calculated using the diffusion equation,
+%
 \begin{equation}
 \mathbb{E}[r^2] = \int_{\infty}r^2 \phi(r,t) d\Omega ,
 \label{eqn:MSD_int}
@@ -112,13 +112,9 @@ Integrating with respect to time gives
 \label{eqn:D_msd}
 \end{equation}
 %
-and therefore MSD is directly proportional to time for a simple diffusion model.
+and therefore MSD is directly proportional to time for a simple diffusion model, consistent with the initial straight line segment in the radio tracking data.
 
-
-
-\section{Fitting model to data}
-
-
+\section{A stochastic model for bat movement}
 
 \begin{figure} [h]
     \centering
@@ -126,8 +122,8 @@ and therefore MSD is directly proportional to time for a simple diffusion model.
         \caption{Mean squared distance from the roost for radio tracked bats in Devon, UK. The initial straight line segment corresponds to diffusion with $D = 65 ms^{-s^2}$. Diffusion/leapfrog simulation fit with $r^2 = 0.92$}
     \label{fig:radiotrack_fit}
 \end{figure}
-
-Diffusion is a stochastic process and can therefore be described in terms of a Markov process. Let the location of bat $i$ at time $t$ be $\bm{X_{i,t}}$. The initial condition
+%
+Diffusion of real animals is a stochastic process and can be described in terms of a Markov chain. Let the location of bat $i$ at time $t$ be $\bm{X}_{i,t}$. The initial condition
 %
 \begin{equation}
 X_{i,0} = (0,0)         \forall i
@@ -138,6 +134,7 @@ specifies that all bats begin the night at the roost. The diffusion model can th
 \begin{equation}
 X_{t+1} = X_t + N(0,D) .
 \end{equation}
+%
 
 
 
@@ -147,3 +144,59 @@ Convection-diffusion doesn't work: wrong shape because particles close to the or
 Plot of multiple bats SD and MSD?
 
 Leapfrogging: write out SDE or write as algorithm/pseudocode?
+
+\section{Fitting the model to radiotracking data}
+
+{\huge Maybe write something about basic Bayesian stats here?}
+
+The models are fit to the data using Approximate Bayesian Computation (ABC), a simulation-based approach to Bayesian inference \cite{Beaumont2002, Sisson2010}. It is used to update knowledge about a parameter $\theta$ given related data $\bm{Y}$.
+
+Simulations of the model are run using possible parameter values $\theta$ to produce an artificial dataset $\bm{X}$. Some distance metric $\rho (\bm{X}, \bm{Y}) $, usually defined
+as a distance between summary statistics of $\bm{X}$ and $\bm{Y}$, is used to
+compare simulated data $\bm{X}$ to observations $\bm{Y}$. If $\rho (\bm{X},
+\bm{Y}) $ is smaller than some threshold value $\epsilon$, the simulated data is
+close enough to observations that the candidate parameter $\theta'$ has some
+nonzero probability of being in the posterior distribution $ p(\theta \mid
+\bm{Y})$, and the sample $\theta'$ is accepted into the simulated posterior. This is repeated until the desired sample size is reached. For small $\epsilon$, the simulated posterior distribution produced approximates the
+true posterior $ p(\theta \mid \bm{Y})$.
+
+The parameters $\theta$ are:
+
+ Diffusion coefficient $D_1$ for initial diffusive part
+
+TIme when diffusion ends and leapfrogging begins $T_L$
+
+Diffusion coefficient $D_2$ for leapfrogging
+
+Distance moved in a leapfrog move $u?$
+
+
+
+\subsection{The ABC Algorithm}
+
+First, the threshold parameter $\epsilon$ and sample size $n$ are fixed and the
+prior distribution $p(\theta)$ is defined as uniform over the circle of 3km
+radius around the original detected bat, $p(\theta) = \frac{1}{3^2 \pi}$.
+
+Observations $\bm{Y}$ are given by the number of hits at each detector from bat
+surveys and dataset $\bm{X}$ is the expected number of hits at each detector for
+a roost at $\theta'$ given by Equation \ref{eqn:expect_hits}. The posterior
+distribution $p(\theta \mid \bm{Y})$ for roost locations will be given by
+$\bm{\theta}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
+
+The pseudocode is as follows:
+
+\begin{algorithmic}
+  \While {$i < n$}
+    \State  Sample $\theta'$ from $p(\theta)$
+    \State Calculate $\bm{X}$ using Equation \ref{eqn:expect_hits}
+    \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
+    \If {$\bar{\rho} < \epsilon$}
+      \State $\bm{\theta_i} \gets \theta'$
+    	\State $i \gets i + 1$
+    \EndIf
+  \EndWhile
+\end{algorithmic}
+
+The probability distribution function of the roost search area is then given by $\bm{\theta}$, and the true location of the
+roost can be estimated by taking the mean of the posterior $\bm{\theta}$.
