@@ -13,4 +13,6 @@ figs/
 **.bbl
 **.blg
 **.out
-
+**.png
+**.gif
+**.vtu

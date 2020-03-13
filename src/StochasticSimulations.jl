@@ -8,7 +8,9 @@ function diffusion_step(args,x,y)
     Takes position x,y and returns a new position after a diffusion step
     with diffusion coefficient D and timestep dt
     """
-    return x .+ rand(Normal(0,sqrt(2*args.D*args.dt)),args.N), y .+ rand(Normal(0,sqrt(2*args.D*args.dt)),args.N)
+    x = x .+ rand(Normal(0,sqrt(2*args.D*args.dt)),args.N)
+    y = y .+ rand(Normal(0,sqrt(2*args.D*args.dt)),args.N)
+    return x, y
 end
 
 function diffusion_simulation(args)

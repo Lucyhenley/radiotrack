@@ -61,7 +61,7 @@
 \setsecnumdepth{subsection}
 
 \chapterstyle{tandh}
-%\chapterstyle{brotherton}
+\chapterstyle{brotherton}
 \renewcommand*{\chapnumfont}{\normalfont\huge\bfseries}
 \renewcommand*{\chaptitlefont}{\normalfont\huge\bfseries}
 
@@ -110,11 +110,11 @@
 \makepagestyle{chap} % Make new chapter pagestyle
 
 \makeatletter
-%\makeevenfoot{chap}{}{\small\bfseries\thepage}{} % Define new chapter pagestyle
-%\makeoddfoot{chap}{}{\small\bfseries\thepage}{}  %
-%\makeevenhead{chap}{}{}{}   %
-%\makeoddhead{chap}{}{}{}    %
-% \makeheadrule{chap}{\textwidth}{\normalrulethickness}
+\makeevenfoot{chap}{}{\small\bfseries\thepage}{} % Define new chapter pagestyle
+\makeoddfoot{chap}{}{\small\bfseries\thepage}{}  %
+\makeevenhead{chap}{}{}{}   %
+\makeoddhead{chap}{}{}{}    %
+ \makeheadrule{chap}{\textwidth}{\normalrulethickness}
 \makeevenfoot{chap}{}{}{}
 \makeoddfoot{chap}{}{}{}
 \makeevenhead{chap}{\bfseries\thepage}{}{}
@@ -190,8 +190,8 @@
 	\drop = 0.2\textheight
 	\centering
 	\vfill
-%	{\huge Annual Report}\\[\baselineskip]
-	{\Huge Modelling bat movement using data from radiotracking studies?}\\[\baselineskip]
+	{\huge Title title}\\[\baselineskip]
+	{\Huge Title}\\[\baselineskip]
 	{\huge Lucy Henley}\\[\baselineskip]
 	{\Large Supervised by}\\
 	{\Large Dr~Thomas Woolley, Professor Owen Jones and Professor Fiona Mathews}\\[1.4\drop]
@@ -205,29 +205,30 @@
 %%%-------------------------------------------------------------------------------
 
 \author{Lucy Henley}
-\title{Annual Report}
+\title{Title}
 
 \begin{document}
 	\pagestyle{empty}
 	\pagenumbering{gobble}
-	\titlepage
-	\tableofcontents*
+%	\titlepage
+
+%	\tableofcontents*
 	\pagestyle{standard}
 
 	\mainmatter
 
-\cite{Walters2012}
-
-\include{tex/abstract}
-\include{tex/intro}
-\include{tex/method}
-\include{tex/diffusion}
+%\include{tex/abstract}
+%\include{tex/intro}
+%\include{tex/method}
+%\include{tex/diffusion}
+\include{tex/domaingrowth}
 
 
 	\backmatter
 
-	\bibliographystyle{unsrt}
- 	\bibliography{bib}
+%\cite{Barlow2015}
+%	\bibliographystyle{unsrt}
+% 	\bibliography{bib}
 
 
 
