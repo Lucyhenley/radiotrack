@@ -1,6 +1,7 @@
 
 \documentclass[a4paper, 11pt, twoside, onecolumn, openany, extrafontsizes]{memoir}
 
+\usepackage{siunitx}
 \usepackage[utf8]{inputenc} % If utf8 encoding
 \usepackage[T1]{fontenc}    %
 \usepackage[english]{babel} % English please
@@ -40,6 +41,9 @@
 \usepackage{subcaption}
 \usepackage{enumitem}
 \usepackage{bm}
+
+\usetikzlibrary{positioning}% To get more advances positioning options
+\usetikzlibrary{arrows}% To get more arrow heads
 
 \usepackage[perpage]{footmisc}
 
@@ -153,10 +157,10 @@
 \newcommand{\sect}[1]{Section \ref{#1}}
 \newcommand{\app}[1]{Appendix \ref{#1}}
 \newcommand{\chap}[1]{Chapter \ref{#1}}
-\newcommand{\eqn}[1]{equation \ref{#1}}
-\newcommand{\eqns}[2]{equations \ref{#1} and \ref{#2}}
-\newcommand{\Eqns}[2]{Equations \ref{#1} and \ref{#2}}
-\newcommand{\eqnto}[2]{equations \ref{#1}-\ref{#2}}
+\newcommand{\eqn}[1]{equation \eqref{#1}}
+\newcommand{\eqns}[2]{equations \eqref{#1} and \eqref{#2}}
+\newcommand{\Eqns}[2]{Equations \eqref{#1} and \eqref{#2}}
+\newcommand{\eqnto}[2]{equations \eqref{#1}-\eqref{#2}}
 %\usepackage{authblk}
 \usepackage{url}
 \usepackage{soul}
@@ -172,6 +176,7 @@
 \newcommand{\Appendix}[1]{\appendix{#1}\label{#1}}
 \newcommand{\D}[2]{\frac{\partial #1}{\partial #2}}
 \newcommand{\DD}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+\newcommand{\Dd}[3]{\frac{\partial^2 #1}{\partial #2\partial #3}}
 \newcommand{\rd}{\text{ d}}
 \newcommand{\ttttp}{.24\textwidth}
 \newcommand{\tttp}{.32\textwidth}
@@ -179,36 +184,19 @@
 \newcommand{\tp}{\textwidth}
 \newcommand{\tbo}{.6\textwidth}
 
-%%% Title Page
-%%%-------------------------------------------------------------------------------
+\DeclareMathAlphabet{\pazocal}{OMS}{zplm}{m}{n}
+\newcommand{\unif}{\pazocal{U}}
 
-% Cardiff University Logo
-\newcommand*{\plogo}{\includegraphics[width=0.2\linewidth]{culogo.png}}
-\newlength{\drop}
-
-\newcommand*{\titlepage}{\begingroup
-	\drop = 0.2\textheight
-	\centering
-	\vfill
-	{\huge Title title}\\[\baselineskip]
-	{\Huge Title}\\[\baselineskip]
-	{\huge Lucy Henley}\\[\baselineskip]
-	{\Large Supervised by}\\
-	{\Large Dr~Thomas Woolley, Professor Owen Jones and Professor Fiona Mathews}\\[1.4\drop]
-	{\Large \plogo}\\[0.5\baselineskip]
-	{\Large Cardiff University}\\
-	{\large\scshape 2019}\par
-	\vfill\null
-	\endgroup}
+\renewcommand{\thesection}{\arabic{section}}
 
 
 %%%-------------------------------------------------------------------------------
 
 \author{Lucy Henley}
-\title{Title}
+\title{Deterministic models of bat movement during foraging}
 
 \begin{document}
-	\pagestyle{empty}
+
 	\pagenumbering{gobble}
 %	\titlepage
 
@@ -216,19 +204,19 @@
 	\pagestyle{standard}
 
 	\mainmatter
+\maketitle
 
-%\include{tex/abstract}
-%\include{tex/intro}
-%\include{tex/method}
-%\include{tex/diffusion}
-\include{tex/domaingrowth}
+\include{tex/intro}
+\include{tex/radiotrack}
+\include{tex/diffusion}
+%\include{tex/diffusion_solution}
+\include{tex/diffusionconvection_box}
+\include{tex/shrink}
+\include{tex/discussion}
+%	\backmatter
 
-
-	\backmatter
-
-%\cite{Barlow2015}
-%	\bibliographystyle{unsrt}
-% 	\bibliography{bib}
+	\bibliographystyle{unsrt}
+ 	\bibliography{bib}
 
 
 

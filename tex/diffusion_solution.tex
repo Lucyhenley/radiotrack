@@ -1,56 +1,80 @@
 
+\subsection{Solution to Diffusion Equation (FOURIER SOLUTION ONLY POSSIBLE ON INFINITE DOMAIN!!!)}
 
-\section{SOLUTION OF DIFFUSION EQUATION}
 
-The diffusion equation in cartesian coordinates, given by \eqn{eqn:diffusion_cartesian}, can be written as
+derive:
 
-{\huge What do i want from this}
 
- solved using a Fourier transform in the spatial dimensions. Writing the Fourier transform of $\phi_0(x,y,t)$ as $\mathscr{F}\left[ \phi_0(x,y,t) \right] = \tilde{\phi_0}(k_x,k_y,t)$, each term in equation
-
+Equating the rate of change of concentration in the elemental volume with the flux in and out gives the conservation form of the system,
+%
 \begin{equation}
-\begin{split}
-  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{x} \right] &= \int \int \DD{\phi_0(x,y,t)}{x} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
-  &= -4\pi^2k_x^2 \tilde{\phi_0}(k_x,k_y,t), \\
-  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{y} \right] &= \int \int \DD{\phi_0(x,y,t)}{y} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
-  &= -4\pi^2k_y^2 \tilde{\phi_0}(k_x,k_y,t) \\
-  \mathscr{F}\left[\DD{\phi_0(x,y,t)}{t}\right] &= \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} \\
-  \mathscr{F}\left[\phi_0(x,y,0)\right] &= \mathscr{F}\left[\delta(0)\right] \\
-  &= 1
-\end{split}
+\frac{d}{dt} \int_w(t) \phi d\mathbm{r} = \int_w(t) - \nabla \cdot \mathbm{J} d \mathbm{r},
+\end{equation}
+%
+where $\mathbm{J}$ is the diffusive flux. Applying Reynolds' Transport Theorem \cite{acheson1990elementary} to the left hand side,
+%
+\begin{equation}
+\frac{d}{dt} \int_w(t) \phi d\mathbm{r} = \int_w(t) \frac{d\phi}{dt} + \nabla \cdot (\mathbm{a}\phi) d \mathbm{r}.
+\end{equation}
+%
+Fick's Law of Diffusion,
+%
+\begin{equation}
+\mathbm{J} = - D\nabla \phi_i
 \end{equation}
 
 
-Substituting into \eqn{eqn:cartesian_diffusion}
-
+The diffusion equation in Cartesian coordinates,
 \begin{equation}
-  \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} = -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t).
+  \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) ,
+  \label{eqn:diffusion_cartesian}
 \end{equation}
-
-Integrating with respect to time gives
-
+ can be solved using a Fourier transform in the spatial dimensions. Writing the Fourier transforms of $x$ as $\mathscr{F}\left[x \right] = k_x$, $y$ as $\mathscr{F}\left[y \right] = k_y$, and $\phi(x,y,t)$ as $\mathscr{F}\left[ \phi(x,y,t) \right] = \tilde{\phi}(k_x,k_y,t)$, each term in \eqn{eqn:diffusion_cartesian} can be Fourier transformed as
+ %
+\begin{align}
+  \mathscr{F}\left[ \DD{\phi(x,y,t)}{x} \right] &= \int \int \DD{\phi(x,y,t)}{x} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_x^2 \tilde{\phi}(k_x,k_y,t), \\
+  \mathscr{F}\left[ \DD{\phi(x,y,t)}{y} \right] &= \int \int \DD{\phi(x,y,t)}{y} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_y^2 \tilde{\phi}(k_x,k_y,t), \\
+  \mathscr{F}\left[\D{\phi(x,y,t)}{t}\right] &= \D{\tilde{\phi}(k_x,k_y,t)}{t},\\
+  \mathscr{F}\left[\phi(x,y,0)\right] &= \mathscr{F}\left[\delta(0)\right]  \\
+  &= 1 .
+\end{align}
+%
+The Fourier transform of \eqn{eqn:diffusion_cartesian} is then
+%
 \begin{equation}
-\begin{split}
-  \tilde{\phi_0}(k_x,k_y,t) &= \int -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t) dt \\
-  &= \tilde{\phi_0}(k_x,k_y,0)\mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
-\end{split}
+  \D{\tilde{\phi}(k_x,k_y,t)}{t} = -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi}(k_x,k_y,t).
 \end{equation}
-
-IC $ \tilde{\phi_0}(k_x,k_y,0) = 1$ and so
-
+%
+Integrating with respect to time,
+%
+\begin{align}
+  \tilde{\phi}(k_x,k_y,t) &= \int -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi}(k_x,k_y,t) dt, \\
+  &= \tilde{\phi}(k_x,k_y,0)\mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t}.
+  \label{eqn:fourier_diffusion}
+\end{align}
+%
+Writing the Fourier transform of the initial condition in \eqn{eqn:IC},
+%
 \begin{equation}
-  \tilde{\phi_0}(k_x,k_y,t) = \mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\mathscr{F}\left[\phi_0(x,y,0)\right] = \tilde{\phi_0}(k_x,k_y,0) = 1,
 \end{equation}
-
-Then inverse fourier transform to recover $\phi_0(x,y,t)$
-
+%
+and substituting into \eqn{eqn:fourier_diffusion} gives
+%
 \begin{equation}
-  \phi_0(x,y,t) = \mathscr{F}^{-1}\left[\tilde{\phi_0}(k_x,k_y,t)\right] = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{x^2 + y^2}{4Dt}} \\
+  \tilde{\phi}(k_x,k_y,t) = \mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t}. \\
 \end{equation}
-
-Transforming back to polar coordinates gives
-
+%
+Taking the inverse Fourier transform to recover $\phi(x,y,t)$,
+%
 \begin{equation}
-  \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} .\\
-  \label{eqn:phi_0}
+  \phi(x,y,t) = \mathscr{F}^{-1}\left[\tilde{\phi}(k_x,k_y,t)\right] = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{x^2 + y^2}{4Dt}}, \\
+\end{equation}
+%
+and transforming back to polar coordinates gives
+\begin{equation}
+  \phi(r,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} .\\
+  \label{eqn:diffusion_solution}
 \end{equation}

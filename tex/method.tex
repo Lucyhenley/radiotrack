@@ -1,8 +1,24 @@
 \section{Radoiotracking data}
 
-Shortly after sunset, bats emerge from the roost and fly around to forage. Studying this movement is difficult as bats they are nocturnal, elusive and difficult to track. GPS tracking devices are unsuitable, as they are large enough that they are likely to impede bat movement. Instead, radio transmitters are often used as these are smaller and less likely to affect foraging behaviour. Data from radio tracking surveys are widely used to identify habitat use of bats \cite{Bontadina2002, Encarnacao2005}.  The signal from transmitters is picked up using scanning radio-receivers, and the position of the bat is estimated. Field workers can then follow the bat and attempt to maintain contact, taking regular recordings of location until the signal is lost, or the bat returns to the roost. Due to the nature of the tracking, locations are not recorded at regular intervals, and instead when the signal is found.
 
-A study was conducted at Greater Horseshoe bat roosts in Devon to identify roosts used in the area. 12 bats were fit with radio tags and studied over 24 nights. Due to a limited number of workers and limited battery life on the tags, bats were not tracked every night. Four day roosts were used by bats in the study, with some bats using different roosts on different days. The roost used by each bat was identified for 2/3 of bat-nights. For this analysis, only  the data from nights when a bat's roost was known was used, since the dispersal from the roost is important. As bats were followed each night until the signal was lost, the frequency of recordings reduced over time when signals were lost. A total of 322 bat locations were used for this analysis, and these are shown along with the location of day roosts in \fig{fig:radiotrack_locations}. Since the data is recorded at irregular time intervals locations were linearly interpolated between recordings at intervals of $\Delta t = 200$ seconds. The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along with the two day roosts used by bat 1 during the survey. These trajectories indicate that the bat travelled in different directions each night whilst foraging and remained within 3km of the roost at all times.
+A study was conducted at Greater Horseshoe bat roosts in Devon to identify
+roosts used in the area. 12 bats were fit with radio tags and studied over 24
+nights. Due to a limited number of workers and limited battery life on the tags,
+bats were not tracked every night. Four day roosts were used by bats in the
+study, with some bats using different roosts on different days. The roost used
+by each bat was identified for 2/3 of bat-nights. For this analysis, only the
+data from nights when a bat's roost was known was used, since the dispersal
+from the roost is important. As bats were followed each night until the signal
+was lost, the frequency of recordings reduced over time when signals were lost.
+A total of 322 bat locations were used for this analysis, and these are shown
+along with the location of day roosts in \fig{fig:radiotrack_locations}. Since
+the data is recorded at irregular time intervals locations were linearly
+interpolated between recordings at intervals of $\Delta t = 200$ seconds.
+The interpolated trajectories for bat 1 are shown in \fig{fig:bat1} along
+with the two day roosts used by bat 1 during the survey. These trajectories
+indicate that the bat travelled in different directions each night whilst
+foraging and remained within 3km of the roost at all times.
+
 %Max distance from roost = 2962m
 \begin{figure} [h]
     \centering
@@ -114,61 +130,195 @@ Integrating with respect to time gives
 %
 and therefore MSD is directly proportional to time for a simple diffusion model, consistent with the initial straight line segment in the radio tracking data.
 
-\section{A stochastic model for bat movement}
 
-\begin{figure} [h]
-    \centering
-        \includegraphics[width=\textwidth]{RadioTrack_simulation.pdf}
-        \caption{Mean squared distance from the roost for radio tracked bats in Devon, UK. The initial straight line segment corresponds to diffusion with $D = 65 ms^{-s^2}$. Diffusion/leapfrog simulation fit with $r^2 = 0.92$}
-    \label{fig:radiotrack_fit}
-\end{figure}
-%
-Diffusion of real animals is a stochastic process and can be described in terms of a Markov chain. Let the location of bat $i$ at time $t$ be $\bm{X}_{i,t}$. The initial condition
-%
+
+
+\subsection{Advection-Diffusion model}
+
+A simple diffusion model does not
+
+Bats don't diffuse for the whole night
+
+Maximum distance away from the roost: sustenance zone
+
+Return to roost in the morning
+
+Motion in later portion of the night is described by an advection-diffusion model:
+
 \begin{equation}
-X_{i,0} = (0,0)         \forall i
+  \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) - \chi \nabla \phi(x,y,t),
+  \nonumber
+\end{equation}
+
+where $\chi$ is the strength of the drift back towards the roost.
+
+The same method can be used to calculate the MSD for the advection-diffusion model in terms of $D$ and $\chi$,
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\infty}r^2 \phi(r,t) d\Omega \\
+                              &= \frac{d}{dt} \int_0^{2\pi}\int_0^{\infty} r^2 \phi(r,t) r dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{t} dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^3 \frac{D}{r} \D{}{r}\left(r \D{\phi}{r}\right)- r^3\chi\D{\phi}{r} dr d\theta \\
+\end{split}
+\end{equation}
+
+
+Substituting the first term from \eqn{eqn:diffusion_1},
+
+\begin{equation}
+\begin{split}
+                              &= 4D - \chi \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{r} dr d\theta \\
+                              &= 4D - \chi \int_0^{2\pi} \left[ r^3 \phi \right]_0^{\infty} - \int_0^{\infty}  3 r^2 \phi dr d\theta \\
+                              &= 4D + 3\chi \int_0^{2\pi} \int_0^{\infty}  r^2 \phi dr d\theta  \\
+                              &= 4D + 3\chi \int_{\infty} r \phi d\Omega \\
+                              &= 4D + 3\chi \left<r\right>
+\nonumber
+\end{split}
+\end{equation}
+
+The mean distance $ \left<r\right>$ can be calculated in the same way:
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r\right> &= \frac{d}{dt}\int_{\infty}r \phi(r,t) d\Omega \\
+                              &= \frac{d}{dt} \int_0^{2\pi}\int_0^{\infty} r \phi(r,t)r dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^2 \D{\phi}{t} dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^2 \left[ \frac{D}{r} \D{}{r}\left(r \D{\phi}{r}\right)-\chi\D{\phi}{r} \right] dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} rD  \D{}{r}\left(r \D{\phi}{r}\right) -  \chi r^2 \D{\phi}{r} dr d\theta \\
+\nonumber
+\end{split}
+\end{equation}
+
+
+For simple diffusion, $\left<r\right> = 0$ and
+
+
+\begin{equation}
+\int_0^{2\pi} \int_0^{\infty} rD  \D{}{r}\left(r \D{\phi}{r}\right) = 0 .
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r\right> &= \int_0^{2\pi} \int_0^{\infty} -  \chi r^2 \D{\phi}{r} dr d\theta \\
+                            &= \int_0^{2\pi} - \left[ \chi r^2 \phi \right]_0^{\infty} + \int_0^{\infty} 2 \chi r \phi dr d\theta \\
+                            &= \int_0^{2\pi} \int_0^{\infty} 2 \chi r \phi dr d\theta \\
+                            &= \int_{\infty} 2 \chi \phi d\omega \\
+                            &= 2\chi
+\nonumber
+\end{split}
+\end{equation}
+
+So then:
+
+\begin{equation}
+\left<r\right> = 2\chi t
+\nonumber
+\end{equation}
+
+Substituting into the equation for $\left<r^2\right>$ gives
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= 4D + 6\chi^2t \\
+\left<r^2\right>              &= 4Dt + 3\chi^2t^2 ,
+\nonumber
+\end{split}
 \end{equation}
 %
-specifies that all bats begin the night at the roost. The diffusion model can then be described by the stochastic difference equation,
-%
+
+
+\section{Diffusion modelling}
+
+Bats leave the roost after sunset and fly away from the roost in search of food.
+Foraging bats are modelled as diffusive particles for the first hour after
+sunset. If the roost is at the origin and bats leave the roost at time $t =0$,
+the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+finding a bat at position $(x,y)$ at time $t$,
+
 \begin{equation}
-X_{t+1} = X_t + N(0,D) .
+  \frac{\partial \phi(x,y,t)}{\partial t} = D \nabla^2 \phi(x,y,t) ,
+  \nonumber
 \end{equation}
 %
+where $D$ is the diffusion coefficient, calculated using the mean squared distance bats travel from the roost over time. A typical value is calculated using radio tracking surveys is $D = 75.5$ m\textsuperscript{2}s\textsuperscript{-1}. $\phi(x,y,0)$ is
+the Dirac delta function.
+
+Solving for $\phi(x,y,t)$ gives
+
+\begin{equation}
+  \phi(x,y,t) = \frac{1}{4 \pi D t} e^{-\frac{x^2 + y^2}{4Dt}}. \cite{Ovaskainen2016}
+  \nonumber
+\end{equation}
+
+This model assumes infinite space and there are no boundary conditions, so that bats can travel any distance away from the roost. However, it can be shown that the probability of a bat travelling further than the maximum foraging radius $R_f =$ 3000m calculated using $\phi$ is typically small. Integrating $\phi$ using a numerical integration algorithm, \cite{Berntsen1991}, over the time we will be considering (the first hour of movement after sunset) and over space for $x^2 + y^2 > R_f^2$ gives a proability that a bat will exceed $R_f$ of $p = 4.5 \times 10^{-6}$.
+
+Integrating $\phi(x,y,t)$ over the range $R$ of a detector $i$ at $(x_i, y_i)$ gives
+the expected density of bats in range of detector $i$ at time $t$. The
+integral is approximated using a quadratic Taylor expansion around $(x_i, y_i)$:
+%Need to add details of Taylor expansion and integral for thesis
 
 
+\begin{equation}
+  N_i(t) = \frac{1}{4Dt} e^{-\frac{x_i^2 + y_i^2}{4Dt}} \left[ R^2 + \frac{R^4}{4} \left( \frac{x_i^2 + y_i^2}{8D^2t^2} - \frac{1}{2Dt} \right)\right]
+\end{equation}
+%
+where $R$ is the detector range. The total number of hits expected at each
+detector for $0 < t < T$ is calculated by integrating over time,
 
-\section{Movement back to the roost}
+\begin{equation}
+  \tilde{N_i}(T) = \int_{t=0}^{t=T} N_i(t) dt.
+\end{equation}
+%
+At present, this is approximated using a Riemann sum at intervals $\Delta t$:
 
-Convection-diffusion doesn't work: wrong shape because particles close to the origin return faster than those far away and avg is wrong.
-Plot of multiple bats SD and MSD?
+\begin{equation}
+  \tilde{N_i}(T) \simeq \sum_{t=0}^{t=T} N_i(t) \Delta t.
+  \label{eqn:expect_hits}
+\end{equation}
+%
+In future, this approximation will be improved by using a better numerical
+integration method. The number of hits expected at each detector $\tilde{N_i}(T)$ for a possible roost location $\bm{\theta'}$ will be compared to the number of hits found in bat surveys to estimate the probability that the true roost is at $\bm{\theta'}$.
 
-Leapfrogging: write out SDE or write as algorithm/pseudocode?
+\section{Diffusion on a shrinking domain}
 
-\section{Fitting the model to radiotracking data}
+In \cite{woolley2011stochastic}
 
-{\huge Maybe write something about basic Bayesian stats here?}
+The PDE for diffusion on a 1D domain with apical growth $l(t)$ is
+%
+\begin{equation}
+\D{\phi}{t} = \frac{D}{l(t)^2} \DD{\phi}{x} + x \frac{\dot{l(t)}}{l(t)} \D{\phi}{x} .
+\end{equation}
+%
+For growth of the form $l = \mathrm{e}^{rt}$, the PDE becomes
+%
+\begin{equation}
+\D{\phi}{t} = \frac{D}{\mathrm{e}^{2rt}} \DD{\phi}{x} + x r \D{\phi}{x} .
+\label{eqn:exp_apical}
+\end{equation}
 
-The models are fit to the data using Approximate Bayesian Computation (ABC), a simulation-based approach to Bayesian inference \cite{Beaumont2002, Sisson2010}. It is used to update knowledge about a parameter $\theta$ given related data $\bm{Y}$.
-
-Simulations of the model are run using possible parameter values $\theta$ to produce an artificial dataset $\bm{X}$. Some distance metric $\rho (\bm{X}, \bm{Y}) $, usually defined
-as a distance between summary statistics of $\bm{X}$ and $\bm{Y}$, is used to
-compare simulated data $\bm{X}$ to observations $\bm{Y}$. If $\rho (\bm{X},
-\bm{Y}) $ is smaller than some threshold value $\epsilon$, the simulated data is
-close enough to observations that the candidate parameter $\theta'$ has some
-nonzero probability of being in the posterior distribution $ p(\theta \mid
-\bm{Y})$, and the sample $\theta'$ is accepted into the simulated posterior. This is repeated until the desired sample size is reached. For small $\epsilon$, the simulated posterior distribution produced approximates the
-true posterior $ p(\theta \mid \bm{Y})$.
-
-The parameters $\theta$ are:
-
- Diffusion coefficient $D_1$ for initial diffusive part
-
-TIme when diffusion ends and leapfrogging begins $T_L$
-
-Diffusion coefficient $D_2$ for leapfrogging
-
-Distance moved in a leapfrog move $u?$
+Using
+%
+\begin{equation}
+\D{}{x} (rx\phi) = r\phi + xr \D{\phi}{x},
+\end{equation}
+%
+\eqn{eqn:exp_apical} can be written as
+%
+\begin{equation}
+\D{\phi}{t} = \D{}{x}\left( \frac{D}{\mathrm{e}^{2rt}}\D{\phi}{x} + xr \phi \right) - ru .
+\end{equation}
+%
+Integrating the convection term gives
+\begin{equation}
+\int_0^x x'r\D{\phi}{x'} dx = xr\phi - r\int_0^x \phi dx ,
+\end{equation}
+%
+and therefore \eqn{eqn:exp_apical} can also be written as
+%
+\begin{equation}
+\D{\phi}{t} = \D{}{x}\left( \frac{D}{\mathrm{e}^{2rt}}\D{\phi}{x} + xr \phi - r\int_0^x \phi dx \right) .
+\end{equation}
 
 
 

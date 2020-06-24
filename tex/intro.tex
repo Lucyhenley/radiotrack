@@ -1,24 +1,168 @@
 \section{Introduction}
 
-Bats are very cool and useful, ecosystem services etc.
-Difficult to study because tiny, nocturnal, elusive.
-Therefore not much known about their movement while foraging.
-Radio tracking useful method!
+  Bats play an important role in the UK ecosystem, as they help control insect
+  populations \cite{Kunz2011} and act as ecological indicators \cite{Jones2009}.
+  However, they are susceptible to human impacts due to their sensitivity to
+  light, noise and temperature. Additionally, habitat fragmentation due to roads
+  and building work can reduce foraging opportunities and lead to a significant
+  risk of population decline \cite{rossiter2000genetic}.
+ As a result, bat habitats are protected by law in
+Europe under the EUROBATS agreement \cite{Eurobats}. Therefore, identifying
+roosts and important foraging areas is an important step in ensuring that
+habitats remain protected. One measure often used to identify key patches of
+habitat is the Core Sustenance Zone, the area surrounding a roost within which
+habitat quality has a significant influence on the resilience of the colony
+using the roost \cite{CSZ}. Bats are expected to remain within this area for
+the majority of the time whilst foraging, however this approach does not provide
+any insight into the usage of land inside the Core Sustenance Zone.
 
+  Radio tracking surveys are commonly used to identify the habitat use of bats
+   by using radio transmitters to
+ locate bats during foraging
+   \cite{Bontadina2002,
+Encarnacao2005}.
+  In order to
+ track bats, they must first be caught using a
+humane method such as a harp trap.
+ Once a bat is caught, a radio
+   transmitter
+is attached to its back and it is
+ released to forage. The
+  signal from a
+transmitter is then picked up by field
+ workers using scanning radio-receivers, and the position of the bat is
+ estimated. Field workers then follow the bat and attempt to maintain contact
+ throughout the night, taking regular recordings of location until the signal is
+ lost, or the bat returns to
+the roost. Due to the nature of the tracking,
+ locations are not recorded at regular intervals, and instead when the signal is
+ found. Although useful, radio
+tracking surveys are highly labour intensive as
+ they require first locating a
+roost in order to catch bats, and then teams of
+ workers following each bat over the entire night. Transmitters have a limited
+ range, and workers therefore
+must remain close to the bat in order to pick up
+ the signal, which can often be
+difficult in a rural environment with obstacles
+ such as impassable waterways
+and hedgerows. Additionally,
+  transmitters have a
+ limited battery life and are
+often detached and lost before the end of the
+ survey, meaning that surveys can
+be cut short.
 
+  Mathematical models are an
+ invaluable tool in understanding
+ecological
+  mechanisms as they help us to
+ understand the ecological mechanisms
+that lead to certain patterns in behaviour
+ \cite{Ovaskainen2016}. There are
+many possible formalisms, such as stochastic,
+ deterministic, spatial, or
+discrete depending on the population and behaviour
+ \cite{Murray2011}. The aim
+of this study
+  will be to derive deterministic
+ partial differential equation
+(PDE) models to compare with data to describe
+  bat
+ movement during foraging. Three different PDE models will be considered here. First, a diffusion model to describe the dispersal of bats away from the roosts. Two models describing movement for the remainder of the night whilst bats are foraging, a convection-diffusion model and a model describing diffusion on a shrinking domain. Convection-diffusion models are widely used in ecology to model population migration, however we will show here that a convection-diffusion model is not consistent with radio tracking data. Instead, a shrinking domain diffusion model provides a better description of bat movement whilst foraging.
 
-Bats play an important role in the UK ecosystem as they control insect
-populations \cite{Kunz2011} and act as ecological indicators \cite{Jones2009}.
-However, they are susceptible to human impacts due to their sensitivity to
-light, noise and temperature, especially during hibernation \cite{Jones2009}. As
-a result, many species are under threat, and bats are now protected by law under
-the EUROBATS agreement \cite{Eurobats}. The breeding sites or resting places of
-bats are known as roosts, and can be found in trees and buildings as well as
-underground in caves and mines \cite{Eurobats}. Some species are highly site
-faithful, returning to the same roosts year after year and are therefore reliant
-on the suitability of the surrounding habitat \cite{Lewis1995}. Locating roosts
-is important for conservation, in ensuring the roosts as well as the surrounding
-habitat is preserved. Locating roosts is also important for research: monitoring
-bat populations tends to be challenging as most species are small, nocturnal and
-elusive, and roost surveys provide a useful way of studying populations
-\cite{Flaquer2007}.
+ \subsection{Bayesian Statistics}
+ Bayesian
+statistics is a statistical
+paradigm for updating knowledge about a
+ parameter
+given related data
+\cite{Gelman2013}. The probability distribution of a
+parameter
+ $\theta$
+conditioned on observations $\bm{Y} = \{ Y_1, Y_2, ..., Y_n
+\}$ is
+ given by
+Bayes' Theorem,
+
+ \begin{equation}
+   p(\theta \mid \bm{Y})
+\propto
+p(\bm{Y} \mid \theta) p(\theta)
+   \nonumber,
+ \end{equation}
+ %
+ where
+$p(\theta \mid \bm{Y})$ is the posterior probability distribution, formally
+describing the probability that the parameter value is $\theta$ given
+observations $\bm{Y}$. The likelihood is given by $p(\bm{Y} \mid \theta)$ and
+is the probability of observing $\bm{Y}$ if the parameter value is $\theta$.
+The
+ prior distribution is $p(\theta)$, describing the initial knowledge of
+possible
+ parameter values.
+
+ \subsection{Approximate Bayesian Computation
+(ABC)}
+ Approximate Bayesian Compuation (ABC) is an approach to Bayesian
+inference using
+ simulation and random sampling \cite{Beaumont2002,
+Sisson2010}.
+ ABC replaces the calculation
+ of the likelihood function
+$p(\bm{Y}
+\mid \theta)$ with simulation of a model using a specific parameter
+value
+$\theta'$ to produce an artificial dataset
+ $\bm{X}$. Then, some
+distance metric
+$\rho (\bm{X}, \bm{Y}) $, usually defined
+ as a distance
+between summary
+statistics of $\bm{X}$ and $\bm{Y}$, is used to
+ compare
+simulated data $\bm{X}$
+to observations $\bm{Y}$. If $\rho (\bm{X},
+ \bm{Y}) $
+is smaller than some
+threshold value $\epsilon$, the simulated data is
+ close
+enough to observations
+that the candidate parameter $\theta'$ has some
+nonzero probability of being in
+the posterior distribution $ p(\theta \mid \bm{Y})$, and the sample $\theta'$
+is accepted into the simulated posterior
+distribution. This is repeated until
+the desired sample size is reached. For
+small $\epsilon$, assuming that the
+model is correct, the simulated posterior
+distribution produced approximates
+the
+ true posterior $ p(\theta \mid
+\bm{Y})$.
+
+ First, the threshold parameter
+$\epsilon$ and sample size $n$
+are fixed and the
+ prior distribution for
+parameters $\theta$ is
+set, $p(\theta)$. The pseudocode is as
+follows:
+ %
+ \begin{algorithmic}
+\While {$i < n$}
+     \State Sample $\theta'$ from $p(\theta)$
+     \State Simulate $\bm{X}$ from $theta'$
+     \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
+\If {$\rho < \epsilon$}
+  \State $\theta_i \gets \theta'$
+  \State $i \gets i + 1$
+\EndIf
+\EndWhile
+ \end{algorithmic}
+ %
+The parameters $\theta_i$ are an approximate sample from the posterior distribution $p(\theta \mid \bm{Y})$, and the posterior mean $\mathbb{E}(\theta \mid \bm{Y})$ can be estimated using
+
+\begin{equation}
+\frac{1}{n} \sum_i \theta_i .
+\end{equation}
