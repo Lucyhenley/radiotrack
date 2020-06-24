@@ -1,0 +1,41 @@
+
+\section{Radio Tracking Survey}
+
+A radio tracking study was conducted at 3 Greater Horseshoe bat roosts in Devon to
+study the usage of land surrounding the roosts \cite{Mathews2009}. 12 bats were fitted with
+radio tags and studied over 24 nights. Due to a limited number of workers and
+ limited battery life on the tags, bats were not tracked every night. Four day
+ roosts were used by bats in the study, with some bats using different roosts on
+ different days. The roost used by each bat was identified for 2/3 of nights.
+ For this analysis, only the
+data from nights when a bat's roost was known was used, since the dispersal
+from the roost is important.
+A total of 322 bat locations were used for this analysis. The trajectory for bat
+one over the 6 nights it was tracked is shown in \fig{fig:bat1}.  The bat visits different areas whilst foraging and each trajectory resembles a random walk. The number of
+locations recorded varies each night because the signal was lost during the night
+ on some nights.
+
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.8\textwidth]{bat1_locations.png}
+        \caption{The locations of bat 1 over 6 nights of the survey.}
+    \label{fig:bat1}
+\end{figure}
+
+Since the data is recorded at irregular time intervals, locations were linearly
+interpolated between recordings at intervals of $\Delta t = 200$ seconds.
+The mean-squared distance (MSD) from the roost was calculated using the
+interpolated positions and is shown in \fig{fig:MSD}. The standard error is given by $\sigma_{\bar{x}} = \sigma/\sqrt{n}$, where
+$\sigma$ is the standard deviation and $n$ is the number of observations, and is
+shown as a ribbon. The data indicates two movement phases, an initial dispersal from the roosts, followed by a gradual return whilst bats are foraging.
+
+During phase 1, for $0 \leq t < 1.6$ hours, the mean squared distance seems to increase linearly as bats are dispersing. The standard error grows during this phase because the number of recordings $n$ increases as tagged bats are found and the signal is picked up. During phase 2, for $1.6 \leq t < 8$ hours, the mean squared distance decreases at an increasing rate as bats move back towards the roost, shrinking to zero at $t \approx 8$ hours. The variation shrinks to zero during this phase because the number of recordings $n$ reduces later
+in the night when the signal is lost.
+%
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=\textwidth]{RadioTrack_MSD.png}
+        \caption{The mean-squared distance (MSD) for all radio tracked bats.
+        The red dots are the averaged values over 56 trajectories and the standard error is shown as a ribbon.}
+    \label{fig:MSD}
+\end{figure}

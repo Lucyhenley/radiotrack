@@ -1,0 +1,99 @@
+
+ \subsection{Diffusion on a shrinking domain} \label{shrink}
+ Next we will consider diffusion on a shrinking domain, assuming that bats disperse at the beginning of the night, but tend to move back towards the roost, narrowing the area in which they forage as the night goes on. As shown in \sect{diffusion}, the solution to the diffusion equation on a bounded domain tends to uniformity. On a circular domain, as $t\rightarrow  \infty$,
+ %
+  \begin{equation}
+  \phi \rightarrow \frac{1}{\pi R^2}.
+  \label{eqn:uniform_circle}
+  \end{equation}
+  %
+ To model diffusion on a shrinking domain, we consider a frame of reference that moves with a flow caused by the domain shrinking \cite{crampinnonuniform}. Considering an elemental volume $w(t)$, the velocity field $\bm{a}$ of the flow at position $\bm{X}$ is
+%
+\begin{equation}
+\bm{a}(\bm{X},t) = \frac{d\bm{X}}{dt}.
+\end{equation}
+%
+Moving from the stationary to the shrinking domain frame of reference requires a Lagrangian description of the domain which maps each point in the domain from the stationary frame to the shrinking frame. If $\bm{X} = (r_0,\theta_0)$ is the initial location of an element $w(t)$ and $\bm{x} = (r(t),\theta(t))$ is the location of the element at time $t$ then the mapping is defined by the function $\Gamma(\bm{X},t) $ as $\bm{x}(t) =\Gamma(\bm{X},t) $. For a growth rate $l(t)$, the mapping function is $\Gamma(X,t) = Xl(t)$. Then, the velocity field is defined by
+%
+\begin{equation}
+\bm{a}(\bm{X},t) = \frac{d\bm{\Gamma}(\bm{X},t)}{dt} .
+\label{dgammadt}
+\end{equation}
+%
+Using the chain rule to expand \eqn{dgammadt} gives
+%
+\begin{equation}
+    \Dd{\Gamma_i}{t}{X_k} = \sum_{j=1}^{3}\D{a_i}{x_j}\D{\Gamma_j}{X_k},
+\end{equation}
+%
+where $\Gamma_i$ and $a_i$ are the $i^{th}$ components of $\bm{\Gamma}$ and $\bm{a}$.
+
+We will consider a domain shrinking apically, in which shrinking is restricted to a region of width $\delta$ at the tip of domain. The shrinking rate $\rho$ is zero everywhere except at the edge,
+%
+\begin{equation}
+\D{a}{r} = \rho = \begin{cases}
+		0, & 0 \leq r \leq R(t) - \delta, \\
+		S_{tip}(t), & R(t) - \delta \leq x \leq R(t), \\
+		\end{cases}
+\end{equation}
+%
+where $S_{tip}(t)$ is the shrinking rate in the element at the edge of the boundary. Therefore, the size of the domain $R(t)$ is given by $R(t) = 1 + \delta \int_0^t S_{tip}(t')dt'$. Considering the shrinking region to be much smaller than the domain size, the system can be reduced to an Eulerian moving boundary problem. The scaled diffusion equation, in the stationary frame of reference, is
+%
+\begin{equation}
+\D{\phi}{t} = \frac{D}{l^2}\DD{\phi}{X} + X \frac{\dot{l}}{l}\D{\phi}{X}.
+\end{equation}
+%
+Assuming that the growth rate $l$ is small, the equation reduces to the diffusion equation
+%
+\begin{equation}
+\D{\phi}{t} = \frac{D}{l^2}\DD{\phi}{X}.
+\end{equation}
+%
+In this case, the diffusion rate is larger than the rate at which
+ the domain changes size and the probability distribution should remain
+ approximately uniform over the domain, as in \eqn{eqn:uniform_circle}. Then the expected MSD at time $t$ can be calculated using this probability distribution,
+ %
+ \begin{align}
+ \left<r^2\right> 	&= \int_{\Omega}r^2 \phi(r,t) d\Omega ,\\
+                 	&= \int_0^{2\pi}\int_0^{\infty} \frac{r^3}{\pi R(t)^2} dr d\theta, \\
+ \left<r^2\right>	&= \frac{R(t)^2}{2} .
+ \label{eqn:shrink_domain}
+ \end{align}
+ %
+   \begin{figure} [h]
+       \centering
+           \includegraphics[width=0.5\textwidth]{shrinking_diagram.pdf}
+           \caption{A diagram illustrating a discretised diffusion process on a shrinking domain. The diffusion process is denoted by $d$ and the probability density in box $i$ is denoted by $\phi_i$}
+       \label{fig:shrinking_diagram}
+   \end{figure}
+%
+The diffusion process on a shrinking domain can be simulated using the diffusion model described in \sect{discretised_model}. The simulation consists of two stages at each timestep, illustrated in \fig{fig:shrinking_diagram}. First, the diffusion process moves probability density between boxes. Then, the size of the domain is reduced by adding the concentration in box $N$ to box $N-1$ and removing box $N$.
+
+Since the MSD for this phase is a negative parabola, the shrinking rate is chosen to give
+%
+ \begin{equation}
+ \left<r^2\right> \propto a - t^2.
+ \label{eqn:MSD_shrink}
+ \end{equation}
+%
+From \eqn{eqn:shrink_domain}, a time dependent domain size $R(t)$ of
+%
+\begin{equation}
+R(t) = R_0 - \sqrt{\alpha t^2}
+\label{eqn:Rt}
+\end{equation}
+%
+gives an expected MSD of
+ \begin{equation}
+ = {R_0}^2 - 2R_0\sqrt{\alpha t} -\alpha t^2.
+ \end{equation}
+
+The result of a simulation of diffusion on a domain shrinking with rate $R(t)$ given by \eqn{eqn:Rt} is shown in \fig{fig:shrink_phi}. The probability density spreads across the domain due to the diffusion process, however the shrinking causes the probability density to clump at the right edge of the domain. In this case, the rate of diffusion is slower than the rate at which the domain shrinks, and therefore the probability density does not spread evenly across the domain.
+%
+    \begin{figure} [h]
+        \centering
+            \includegraphics[width=0.8\textwidth]{shrink.png}
+            \caption{The probability density $\phi$ for diffusion simulation on a shrinking domain at $t = 1$,4 and 6 hours. The initial condition is a delta function at $r = 0$ and the
+             parameters for this simulation are $N = 100$, $D = 65\mathrm{m^2s^{-1}}$, $R_0 = 1800$m, $t_s = 1000$ seconds and $\alpha  = 3.24 \mathrm{m^2s^{-2}}$.}
+        \label{fig:shrink_phi}
+    \end{figure}

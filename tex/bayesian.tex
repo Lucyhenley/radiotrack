@@ -1,0 +1,52 @@
+
+\section{Bayesian Statistics}
+
+Bayesian statistics is a statistical paradigm for updating knowledge about a
+parameter given related data \cite{Gelman2013}. The probability distribution of a parameter
+$\theta$ conditioned on observations $\bm{Y} = \{ Y_1, Y_2, ..., Y_n \}$ is
+given by Bayes' Theorem:
+
+\begin{equation}
+  p(\theta \mid \bm{Y}) \propto p(\bm{Y} \mid \theta) p(\theta)
+  \nonumber
+\end{equation}
+%
+where $p(\theta \mid Y)$ is the posterior probability distribution, formally
+describing the probability that the parameter value is $\theta$ given
+observations $\bm{Y}$. The likelihood is given by $p(\bm{Y} \mid \theta)$ and
+is the probability of observing $\bm{Y}$ if the parameter value is $\theta$. The
+prior distribution is $p(\theta)$, describing the initial knowledge of possible
+parameter values.
+
+\subsection{Approximate Bayesian Computation (ABC)}
+
+Approximate Bayesian Compuation (ABC) is an approach to Bayesian inference using
+simulation and random sampling \cite{Beaumont2002, Sisson2010}.
+ABC replaces the calculation
+of the likelihood function $p(\bm{Y} \mid \theta)$ with simulation of a model using a specific parameter value $\theta'$ to produce an artificial dataset
+$\bm{X}$. Then, some distance metric $\rho (\bm{X}, \bm{Y}) $, usually defined
+as a distance between summary statistics of $\bm{X}$ and $\bm{Y}$, is used to
+compare simulated data $\bm{X}$ to observations $\bm{Y}$. If $\rho (\bm{X},
+\bm{Y}) $ is smaller than some threshold value $\epsilon$, the simulated data is
+close enough to observations that the candidate parameter $\theta'$ has some
+nonzero probability of being in the posterior distribution $ p(\theta \mid
+\bm{Y})$, and the sample $\theta'$ is accepted into the simulated posterior
+distribution. This is repeated until the desired sample size is reached. For small $\epsilon$, assuming that the model is correct, the simulated posterior distribution produced approximates the
+true posterior $ p(\theta \mid \bm{Y})$.
+
+First, the threshold parameter $\epsilon$ and sample size $n$ are fixed and the
+prior distribution for parameters $\theta = (\rho, t_s)$ is set, $p(\theta)$. The pseudocode is as follows:
+%
+\begin{algorithmic}
+  \While {$i < n$}
+    \State  Sample $\theta'$ from $p(\theta)$
+    \State Calculate $\bm{X}$
+    \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
+    \If {$\bar{\rho} < \epsilon$}
+      \State $\bm{\theta_i} \gets \theta'$
+    	\State $i \gets i + 1$
+    \EndIf
+  \EndWhile
+\end{algorithmic}
+%
+The probability distribution function of each parameter is then given by $\bm{\theta}$, and the true parameters can be estimated by taking the mean of the posterior $\bm{\theta}$.

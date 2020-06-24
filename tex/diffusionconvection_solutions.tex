@@ -1,0 +1,97 @@
+
+\section{The return phase/convection-diffusion?}
+
+{\huge return phase now: msd is decreasing}
+ consider the convection-diffusion equation,
+%
+\begin{equation}
+  \D{\phi(x,y,t)}{t} = D\nabla^2\phi(x,y,t) - \chi \nabla\phi(x,y,t),
+\end{equation}
+%
+where $D$ is the diffusion coefficient, and $\chi$ is the convection coefficient. The convection-diffusion equation describes the movement of a quantity $\phi$ due to a combination of diffusion and convection. The initial condition,
+%
+\begin{equation}
+  \phi(x,y,0) = \delta(\theta),
+\end{equation}
+%
+where $\theta$ is the location of the roost, specifies that all bats start the night in the roost.
+%
+In this case, bats are returning towards the a point, the roost location $\theta$, and therefore we will consider the diffusion-convection equation in polar coordinates, assuming symmetric diffusion,
+%
+\begin{equation}
+  \D{\phi(r,t)}{t} = \frac{D}{r} \D{}{r}\left(r \D{\phi(r,t)}{r} \right) - \chi \D{\phi(r,t)}{r}.
+\end{equation}
+%
+Approximate solutions can be found using perturbations, assuming that either convection or diffusion dominates \cite{hinchperturbation}. The solution $\phi(r,t)$ can be written as a superposition of two solutions with a perturbation,
+%
+\begin{equation}
+  \phi(r,t) \approx \phi_0(r,t) + \epsilon \phi_1(r,t),
+  \label{eqn:phi_perturbation}
+\end{equation}
+%
+where $\epsilon$ is an arbitrary constant describing the strength of the perturbation. Since $\epsilon$ is arbitrary, the initial condition means that
+%
+\begin{equation}
+  \phi(r,0) = \phi_0(r,0) = \phi_1(r,0).
+\end{equation}
+%
+When diffusion dominates, the convection term acts as a perturbation, and the equation becomes
+%
+\begin{equation}
+  \D{\phi(r,t)}{t} = \frac{D}{r} \D{}{r}\left(r \D{\phi(r,t)}{r} \right) - \epsilon\chi \D{\phi(r,t)}{r}.
+  \label{eqn:convection_perturbation}
+\end{equation}
+%
+Substituting \eqn{eqn:phi_perturbation} into \eqn{eqn:convection_perturbation} gives
+%
+\begin{equation}
+\begin{split}
+  \D{\phi_0(r,t)}{t} + \epsilon\D{\phi_1(r,t)}{t} &= \frac{D}{r} \left( \D{\phi_0(r,t)}{r} + r \DD{\phi_0(r,t)}{r} + \epsilon\D{\phi_1(r,t)}{r} + r\epsilon \DD{\phi_1(r,t)}{r}\right)  \\
+  &- \epsilon\chi \left( \D{\phi_0(r,t)}{r} + \epsilon \D{\phi_1(r,t)}{r} \right) .
+  \end{split}
+\end{equation}
+%
+An equation for $\phi_0(r,t)$ can be found by collecting coefficients of $\epsilon^0$,
+%
+\begin{equation}
+  \D{\phi_0(r,t)}{t} = \frac{D}{r} \left(\D{\phi_0)(r,t)}{r} + r\DD{\phi_0(r,t)}{r}\right) - \epsilon\chi \D{\phi_0(r,t)}{r}.
+  \label{eqn:diffusion_eps0}
+\end{equation}
+%
+This is the diffusion equation in polar coordinates and it can be solved as in \sect{diffusion}. The solution for $\phi_0$ is given by
+%
+\begin{equation}
+  \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}}.\\
+  \label{eqn:phi_0}
+\end{equation}
+%
+Then gathering coefficients of $\epsilon^1$:
+%
+\begin{equation}
+\D{\phi_1(x,y,t)}{t} = \frac{D}{r}\left(\D{\phi_1(x,y,t)} + r \DD{\phi_1(x,y,t)}{r}\right) - \chi\D{\phi_0}{r},
+\label{eqn:eps1}
+\end{equation}
+%
+and for $\epsilon^2$,
+%
+\begin{equation}
+\D{\phi_1(x,y,t)}{r} = 0 .
+\label{eqn:eps2}
+\end{equation}
+%
+Substituting \eqn{eqn:eps2} into \eqn{eqn:eps1} gives
+%
+\begin{equation}
+\begin{split}
+  \D{\phi_1(x,y,t)}{t} &= - \chi\D{\phi_0(x,y,t)}{r}, \\
+                       &= - \frac{\chi r}{2Dt} \phi_0(x,y,t) .
+\end{split}
+\end{equation}
+
+
+ \begin{figure} [t]
+     \centering
+         \includegraphics[width=0.6\textwidth]{diffusion_diagram.pdf}
+         \caption{The movement of probability density between boxes in the discretised diffusion model.}
+     \label{fig:diffusion_diagram}
+ \end{figure}

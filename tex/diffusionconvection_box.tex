@@ -1,0 +1,50 @@
+\section{A convection-diffusion model}
+The diffusion model described in \sect{diffusion} explains the initial dispersal in phase 1, however it cannot explain the decrease in MSD for phase 2. Here, we will consider a convection-diffusion model to describe the drift of bats back towards the roost.
+
+The 2D symmetric convection-diffusion equation, in polar coordinates, is
+%
+\begin{equation}
+  \D{\phi(r,t)}{t} = \frac{D}{r} \D{}{r}\left(r \D{\phi(r,t)}{r} \right) - \chi \D{\phi(r,t)}{r}.
+  \label{eqn:convection}
+\end{equation}
+%
+where $D$ is the diffusion coefficient and $\chi$ is the convection coefficient. In this case, bats are returning to a point, the roost location $(x_0,y_0)$, and the convection component of \eqn{eqn:convection} describes a drift towards $r=0$. As bats undergo diffusive movement whilst dispersing from the roost for a time $T$ before their behaviour changes, the initial condition is the state of the system after diffusion for time $T$.
+
+\subsection{A discretised convection-diffusion model}
+
+
+ \begin{figure} [b]
+     \centering
+         \includegraphics[width=0.5\textwidth]{diffusion_convection.pdf}
+         \caption{A diagram to illustrate the movement of probability density between boxes in the discretised convection-diffusion model. Diffusion between boxes is represented by $d$ and the drift due to convection is represented by $c$. The probability density in each box $i$ is denoted by $\phi_i$.}
+     \label{fig:convection_diffusion_diag}
+ \end{figure}
+
+The convection-diffusion model will be solved using a discretised ODE model, as with the diffusion model in \sect{discretised_model}. The domain $\Omega$ of length $R$ is discretised into $N$ boxes, each of length $\Delta x = R/N$. The probability density in each box $i$ is denoted by $\phi_i$ and evolves over time according to the diffusion and convection processes, as illustrated in \fig{fig:convection_diffusion_diag}. The diffusion component is unchanged from \sect{discretised_model}, however this time there is an additional convection component pushing bats away from the domain boundary and back towards the roost at $\theta$. The convection process shifts probability density towards the left, towards box $i = 1$, and the discretised equations are
+%
+\begin{equation}
+\frac{d\phi_i}{dt} = \begin{cases}
+		d(\phi_{i+1} - \phi_i) - c \phi_{i+1}, & \text{for } i = 1, \\
+		d(\phi_{i-1}-2\phi_i +\phi_{i+1}) - c(\phi_{i+1}-\phi_{i}), & \text{for } 2 \leq i \leq N-1, \\
+		d(\phi_{i-1}-\phi_i) - c(\phi_{i}), & \text{for } i = N.
+		\end{cases}
+        \label{eqn:discrete_convection}
+\end{equation}
+%
+The discretised diffusion coefficient is $d = D/(\Delta x)^2$ as before and $c=\chi/\Delta x$ is the discretised convection coefficient. The initial condition is the state of the system after diffusion for time $T$.
+
+The model was simulated using DifferentialEquations.jl, initially running the
+diffusion model in \eqn{eqn:discrete_diffusion} for $T = 4000$ seconds and
+then switching to the convection-diffusion model in \eqn{eqn:discrete_convection}. The
+simulation was run with a domain of length $R = 2000$m, split into $N = 100$
+boxes. The diffusion coefficient was $D = 65\mathrm{m^2s^{-1}}$, and the convection coefficient
+was $\chi =  - 0.15\mathrm{ms^{-1}}$. The results
+of this simulation are shown in \fig{fig:convection_diffusion}. The convection process pushes $\phi$ uniformly in the direction of the drift, towards the left side of the domain, whereas the diffusion tends to spread $\phi$ across the domain. The boundary acts as a barrier stopping $\phi$ from moving any further and $\phi$ collects at the boundary. The movement towards the edge slows as $t$ increases because it is unable to move any further, and eventually the system reaches a steady state when diffusion and convection are balanced.
+
+  \begin{figure} [t]
+      \centering
+          \includegraphics[width=0.7\textwidth]{convection_diffusion.png}
+          \caption{The probability density $\phi$ for a convection diffusion simulation after $t = 0.2$,2 and 8 hours. The parameters for this simulation are $R = 2000$m, $N = 100$,
+          $D = 65\mathrm{m^2s^{-1}}$, and $\chi = - 0.15\mathrm{ms^{-1}}$ and the initial condition is given by the state of the diffusion simulation at time $T = 4000$ seconds.}
+      \label{fig:convection_diffusion}
+  \end{figure}

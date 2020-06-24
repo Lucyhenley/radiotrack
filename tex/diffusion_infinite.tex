@@ -1,0 +1,263 @@
+\section{A diffusion model for bat movement} \label{diffusion}
+
+Diffusion models are widely used to model animal movement for a number of
+species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to
+describe dispersal as bats fly away from the roost. The third dimension is not
+included as height is not measured in the radio tracking survey, and it is not
+needed to describe landscape use.
+
+If the roost is at $(x_0,y_0)$ and bats leave the roost at time $t =0$,
+the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+finding a bat at position $(x,y)$ at time $t$,
+%
+\begin{equation}
+  \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) ,
+  \label{eqn:diffusion_cartesian}
+\end{equation}
+%
+where $D$ is the diffusion coefficient, a positive constant that quantifies the rate of spread.
+%
+The diffusion equation can also be written in polar coordinates,
+%
+\begin{equation}
+\D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
+\label{eqn:diffusion_polar}
+\end{equation}
+%
+where $r$ is the distance from the roost, given by $r=\sqrt{(x-x_0)^2 +
+(y-y_0)^2}$. As diffusion is symmetric, $\phi$ is only dependent on $r$ and not
+ on the angle.
+
+The initial condition,
+%
+\begin{equation}
+\phi(x_0,y_0,0) = \delta(x_0,y_0),
+\label{eqn:IC}
+\end{equation}
+%
+specifies that all bats begin the night at the roost. For diffusion on an
+infinite domain, the boundary conditions
+
+{\huge no idea also make these equations better i think not sure}
+%
+%\begin{equation}
+%    \lim_{\r\to\infty} \phi(r) = 0
+%\end{equation}
+%
+and
+%
+\begin{equation}
+\D{\phi(r=\infty,t)}{t} = 0
+\end{equation}
+%
+specify that the probability density decays as $r\rightarrow\infty$.
+The relationship between the expected mean squared displacement (MSD) and time $t$
+can be calculated using the probability density $\phi$,
+%
+{\huge define a domain :(, maybe write this as bounded diffusion first}
+\begin{equation}
+\left<r^2\right> = \int_{r=0}^{r=\infty}r^2 \phi(r,t) d\Omega ,
+\end{equation}
+%
+where the integral is over all space. Taking the time derivative of both
+sides and substituting
+\begin{equation}
+    \D{\phi(r,t)}{ t}
+\end{equation} from \eqn{eqn:diffusion_polar},
+%
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\infty}r^2 \phi(r,t) d\Omega ,\\
+                           &= \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{t} dr d\theta ,\\
+                            &= \int_0^{2\pi} \int_0^{\infty} r^3 \frac{D}{r} \D{}{r } \left( r \D{ \phi}{ r}\right) dr d\theta , \\
+                            &= \int_0^{2\pi} \left( \left[ D r^2 \left( r \D{ \phi}{ r}\right) \right]_0^{\infty} - \int_0^{\infty} 2rD \left(r \frac{\partial \phi}{\partial r} \right) dr \right) d\theta , \\
+                            &= \int_0^{2\pi} \int_0^{\infty} -2r^2D \D{ \phi}{r}dr d\theta , \\
+                            &= \int_0^{2\pi} \left( \left[-2r^2D \phi \right]_0^{\infty} + \int_0^{\infty} 4rD \phi dr \right)d\theta , \\
+                            &= \int_0^{2\pi} \int_0^{\infty} 4rD\phi dr d\theta , \\
+                            &= 4D \int_{\infty} \phi d\Omega , \\
+\frac{d}{dt} \left<r^2\right>  &= 4D .\\
+\label{eqn:diffusion_1}
+\end{split}
+\end{equation}
+%
+Integrating with respect to time gives
+%
+\begin{equation}
+\left<r^2\right> = 4Dt ,
+\label{eqn:diffusion_msd}
+\end{equation}
+and therefore the expected MSD for diffusion is directly proportional to time.
+
+
+\begin{equation}
+  \D{\phi_0(x,y,t)}{t} = D \left( \DD{\phi_0(x,y,t)}{x}+\DD{\phi_0(x,y,t)}{y}\right),
+  \label{eqn:cartesian_diffusion}
+\end{equation}
+
+and using a Fourier transform in the spatial dimensions. Writing the Fourier transform of $\phi_0(x,y,t)$ as $\mathscr{F}\left[ \phi_0(x,y,t) \right] = \tilde{\phi_0}(k_x,k_y,t)$, each term in equation
+
+\begin{equation}
+\begin{split}
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{x} \right] &= \int \int \DD{\phi_0(x,y,t)}{x} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_x^2 \tilde{\phi_0}(k_x,k_y,t), \\
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{y} \right] &= \int \int \DD{\phi_0(x,y,t)}{y} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_y^2 \tilde{\phi_0}(k_x,k_y,t) \\
+  \mathscr{F}\left[\DD{\phi_0(x,y,t)}{t}\right] &= \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} \\
+  \mathscr{F}\left[\phi_0(x,y,0)\right] &= \mathscr{F}\left[\delta(0)\right] \\
+  &= 1
+\end{split}
+\end{equation}
+
+
+Substituting into \eqn{eqn:cartesian_diffusion}
+
+\begin{equation}
+  \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} = -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t).
+\end{equation}
+
+Integrating with respect to time gives
+
+\begin{equation}
+\begin{split}
+  \tilde{\phi_0}(k_x,k_y,t) &= \int -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t) dt \\
+  &= \tilde{\phi_0}(k_x,k_y,0)\mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{split}
+\end{equation}
+
+IC $ \tilde{\phi_0}(k_x,k_y,0) = 1$ and so
+
+\begin{equation}
+  \tilde{\phi_0}(k_x,k_y,t) = \mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{equation}
+
+Then inverse fourier transform to recover $\phi_0(x,y,t)$
+
+\begin{equation}
+  \phi_0(x,y,t) = \mathscr{F}^{-1}\left[\tilde{\phi_0}(k_x,k_y,t)\right] = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{x^2 + y^2}{4Dt}} \\
+\end{equation}
+
+Transforming back to polar coordinates gives
+
+\begin{equation}
+  \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} \\
+  \label{eqn:phi_0}
+\end{equation}
+
+
+\subsection{A discretised diffusion model} \label{discretised_model}
+
+
+You need to add Crampin's work in before this to demonstrate how we get to this approximation. Firstly, you should note that the solution to the non-growing case tends to uniformity. This can be done solving the equation in Fourier terms and demonstrating that as t\rightarrow\infty then \phi \rightarrow 1/(\pi R^2_0).
+
+Then, moving into a growing domain frame of reference we assume that the growth is really slow. Eliminating the growth term as small in the PDE we see that the uniform distribution satisfies it.
+
+The diffusion model in a domain can be solved using a discretised ODE
+description of the diffusion equation \cite{woolley2011stochastic}. For a domain
+$\Omega$ of length $R_0$, the domain is discretised into $N$ boxes $u_i$ each of
+length $\Delta x=R_0/N$. The diffusion process is described by the finite
+difference approximations
+%
+\begin{equation}
+\frac{du_i}{dt} = \begin{cases}
+		d(u_i - u_{i+1}), & \text{for } i = 1, \\
+		d(u_{i-1}-2u_i +u_{i+1}), & \text{for } 2 \leq i \leq N-1, \\
+		d(u_{i-1}-u_i), & \text{for } i = N .
+		\end{cases}
+\end{equation}
+%
+where $d = D/(\Delta x)^2$ is the discretised diffusion coefficient.
+%
+This generates a system of $N$ ODEs for the domain at each timestep which can be
+ solved using a numerical ODE solver. The equations for $i=1$ and $i=N$
+ correspond to reflective, zero flux boundary conditions.
+
+ \subsection{Diffusion on a growing or shrinking domain} \label{shrink}
+
+Bats tend to remain close to the roost during foraging, within a Core Sustenance Zone \cite{Mathews2009}. After the initial dispersal, bats are assumed to be uniformly distributed
+ around a circular domain of radius $R_0$. The probability distribution within this domain is
+ uniform,
+ %
+ \begin{equation}
+ \phi(r,t) = \frac{1}{\pi R_0^2}.
+ \end{equation}
+ %
+ For a domain that is shrinking or growing, the radius of the domain at time $t$
+ is given by $R(t)$. If the rate of diffusion is larger than the rate at which
+ the domain changes size, the probability distribution should remain
+ approximately uniform over the domain,
+%
+\begin{equation}
+\phi(r,t) = \frac{1}{\pi R(t)^2}.
+\end{equation}
+%
+ Then the expected MSD at time $t$ can be calculated using this probability distribution,
+ %
+ \begin{equation}
+ \begin{split}
+ \left<r^2\right> 	&= \int_{\Omega}r^2 \phi(r,t) d\Omega ,\\
+                 	&= \int_0^{2\pi}\int_0^{\infty} \frac{r^3}{\pi R(t)^2} dr d\theta, \\
+ \left<r^2\right>	&= \frac{R(t)^2}{2} .\\
+ \label{eqn:shrink_domain}
+ \end{split}
+ \end{equation}
+
+ To simulate diffusion on a shrinking domain, the diffusion model described in
+ \sect{discretised_model} was used. To simulate the domain shrinking, the
+ concentration of bats in boxes at the right boundary is added to the
+ concentration in the next box, and $N$ is decreased so that the boundary is moved
+ to the left.
+
+ \section{abc etc}
+
+
+ In this case, the parameters $\theta$ are $R_0$ and $t_s$, and $\bm{Y}$ is the
+ MSD at each point in time. The posterior
+ distribution $ p(\theta \mid \bm{Y})$ will be a distribution describing the
+ probability of each set of possible parameters $\theta$. As there is initially no information about parameters $\theta$, the prior distribution $p(\theta)$
+ is assumed to be uniform over plausible values.
+
+ In this case uniform priors were used since there was no prior knowledge of the parameter values.
+
+
+ In this case, the observations $\bm{Y}$ are the values of the MSD at each time
+ point from the radio tracking data and $\bm{X}$ is the expected MSD at each time
+ point for parameters $\theta' = (R_0',t_s') $, calculated using the model for
+ diffusion on a shrinking domain described in  \sect{shrink}. The
+ posterior distribution $p(\theta \mid \bm{Y})$ for set of parameters will be
+ given by $\bm{\theta}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
+
+\section{Model validation using radio tracking data}
+
+
+The diffusion coefficient for the initial, linear dispersal was calculated from
+the gradient of the line using \eqn{eqn:diffusion_msd} as $D = 63 m^2s^{-1}$.
+For the later decrease in MSD, the model described in  \sect{shrink} for diffusion
+on a shrinking domain was used. The shrinking rate was chosen to give a
+quadratically decreasing MSD,
+%
+\begin{equation}
+R(t) = R_0 - \sqrt{\alpha t^2}.
+\end{equation}
+%
+The expected MSD for this $R(t)$ can be calculated using \eqn{eqn:shrink_domain}
+as
+%
+ \begin{equation}
+ \left<r^2\right>	= {R_0}^2 - 2R_0\sqrt{\alpha t} -\alpha t^2.
+ \label{eqn:MSD_shrink}
+ \end{equation}
+
+The parameters to fit are $\alpha$, the rate at which the domain shrinks,
+$t_s$, the time at which the domain begins to shrink and $R_0$, the initial size
+of the domain. Since bats return to the roost at sunrise, the MSD is 0 at the end of the night and $\alpha$ was chosen from $R_0$ to ensure the domain size shrinks to 0 by sunrise. The parameters were fit using Approximate Bayesian Computation (ABC).
+
+\subsection{Results}
+
+The ABC algorithm was run for a sample size of $n = 10000$, and $\epsilon$ was chosen such that the best 1\% of parameter values were added to the posterior. The MSD for estimates of the true parameters is shown in \fig{fig:fit}. The curve shows a good fit with the radio tracking data, within the standard error for the majority of the night. The coefficient of determination ($r^2$ value) was calculated to compare the deterministic model and the radio tracking data, giving $r^2 = 0.904$, suggesting that the model provides a good description of bat movement during foraging.
+
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=\textwidth]{shrinking_bound.png}
+        \caption{The MSD for a deterministic diffusion model on a shrinking domain of size $R(t) = R_0 - \sqrt{\alpha t^2}$. }
+    \label{fig:fit}
+\end{figure}
