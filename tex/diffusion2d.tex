@@ -1,0 +1,70 @@
+\section{Diffusion in 2D}
+
+\cite{Kunz2011}
+
+
+%
+\begin{equation}
+  \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) ,
+  \label{eqn:diffusion_cartesian}
+\end{equation}
+%
+In polar coordinates,
+\begin{equation}
+\D{\phi(r,\theta,t)}{t} = D \left(\DD{\phi}{r} + \frac{1}{r}\D{\phi}{r} \right).
+\label{eqn:diffusion_polar}
+\end{equation}
+
+For a domain discretised into strips of length $h$, the central difference approximation to a first order differential is given by
+\begin{equation}
+\D{\phi}{r} = \frac{u_{i+1}-u_{i-1}}{2 h} .
+\end{equation}
+%
+The central difference approcimation to a second order differential is given by
+\begin{equation}
+\DD{\phi}{r} = \frac{\phi_{i+1}-2u_i+u_{i-1}}{h^2} .
+\end{equation}
+%
+The central difference approximation to \eqn{eqn:diffusion_polar} is therefore
+%
+\begin{equation}
+\D{\phi}{t} = D\frac{u_{i+1}-2u_i + u_{i-1}}{h^2} + \frac{D}{r} \frac{u_{i+1}-u_{i-1}}{2 h} .
+\end{equation}
+%
+The distance $r$ at strip $i$ is given by
+\begin{equation}
+r = i h ,
+\end{equation}
+%
+and the equation can therefore be written as
+%
+\begin{equation}
+\D{\phi}{t} = \frac{D}{h^2} \left(u_{i+1}-2u_i + u_{i-1}) \right) + \frac{D}{2ih^2}\left(u_{i+1}-u_{i-1} \right).
+\end{equation}
+
+
+1D algorithm:
+%
+\begin{equation}
+\frac{d\phi_i}{dt} = \begin{cases}
+		d(\phi_{i+1} - \phi_{i}), & \text{for } i = 1, \\
+		d(\phi_{i-1}-2\phi_i +\phi_{i+1}), & \text{for } 2 \leq i \leq N-1, \\
+		d(\phi_{i-1}-\phi_i), & \text{for } i = N ,
+		\end{cases}
+        \label{eqn:discrete_diffusion}
+\end{equation}
+%
+where the discretised diffusion coefficient is given by
+$d = D/(\Delta x)^2$.
+
+2D algorithm:
+%
+\begin{equation}
+\frac{d\phi_i}{dt} = \begin{cases}
+		\frac{D}{h^2}(\phi_{i+1} - \phi_{i}) + \frac{D}{2h^2} (u_{i}), & \text{for } i = 1, \\
+		\frac{D}{h^2}(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{D}{2h^2} (u_{i+1}-u_{i}), & \text{for } 2 \leq i \leq N-1, \\
+		\frac{D}{h^2}(\phi_{i-1}-\phi_i) - \frac{D}{2h^2} (u_{i}), & \text{for } i = N ,
+		\end{cases}
+        \label{eqn:discrete_diffusion}
+\end{equation}
+%
