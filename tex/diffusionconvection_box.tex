@@ -33,7 +33,7 @@ The convection-diffusion model will be solved using a discretised ODE model, as 
 %
 The discretised diffusion coefficient is $d = D/(\Delta x)^2$ as before and $c=\chi/\Delta x$ is the discretised convection coefficient. The initial condition is the state of the system after diffusion for time $T$.
 
-The model was simulated using DifferentialEquations.jl, initially running the
+The model was simulated using DifferentialEquations.jl \cite{DifferentialEquations}, initially running the
 diffusion model in \eqn{eqn:discrete_diffusion} for $T = 4000$ seconds and
 then switching to the convection-diffusion model in \eqn{eqn:discrete_convection}. The
 simulation was run with a domain of length $R = 2000$m, split into $N = 100$

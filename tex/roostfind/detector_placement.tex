@@ -1,0 +1,49 @@
+
+\section{Optimising detector placement}
+
+Let $\vec{x} = x_1, \dots, x_n$ be the locations of detectors. Then $f(\vec{x})
+= \mathbb{E} \lvert \lvert \hat{R} - R \rvert \rvert^2$ is the expected error in
+roost estimate. $R$ is the roost prior, $\hat{R}$ is the estimate. 
+
+To optimise the detector placement for a given $n$, we need to find $\vec{x}$ to
+maximise $f(\vec{x})$.
+
+\subsection{Stochastic gradient descent}
+
+Stochastic optimisation technique to find a local maxima/minima. 
+
+
+For $f : \mathbb{R}^d \rightarrow \mathbb{R}$, a stochastic gradient descent
+algortihm for finding a local minimum has the form: 
+
+\begin{equation}
+Z_{n+1} = Z_n - a_n G_n(Z_n)
+\end{equation}
+Where $G_n(x)$ is a stochastic approximation to $\nabla f(x)$. $\mathbb{E}
+\phi(\vec{x}) = f(\vec{x})$.
+
+Sampling from $\phi(\vec{x}) = \lvert \lvert \hat{R} - R \rvert \rvert^2$ where
+$\mathbb{E} \phi(\vec{x}) = f(\vec{x})$, we can use finite differences to
+estimate $\nabla f(\vec{x}).$
+
+\begin{equation} 
+[G_n(\vec{x})]_i = \frac{\phi(\vec{x} + c_n \vec{e_i}) - \phi(\vec{x} - c_n \vec{e_i})}{2c_n}
+\end{equation}
+
+where $e_i$ = $i$th co-ordinate vector and $c_n$ is small. 
+
+
+\subsection{Simultaneous perturbations}
+
+Calculating $G_n$ is expensive if $d$ is large (for many detectors).
+Simultaneous perturbations can be used to estimate $G_n$, reducing the number of
+calculations at each iteration. \cite{Spall1998}. Let $\Delta _n$ be i.i.d
+random vectors in $\mathbb{R}^d$. Each has i.i.d components $\delta \in [-1,
+1]^n$. 
+
+\begin{equation} 
+    [G_n(\vec{x})]_i = \frac{\phi(\vec{x} + c_n \Delta_n) - \phi(\vec{x} - c_n \Delta_n)}{2c_n[\Delta_n]_i}
+\end{equation}
+
+
+For some reason: this only requires 2 calculations of $\phi$.

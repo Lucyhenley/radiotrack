@@ -1,10 +1,8 @@
-\section{A diffusion model for bat movement} \label{diffusion}
+\section{A diffusion model for bat movement in one dimension} \label{diffusion}
 
 Diffusion models are widely used to model animal movement, specifically dispersal, for a number of
-species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to
-describe dispersal during phase 1 of movement as bats fly away from the roost. The third dimension is not
-included as height is not measured in the radio tracking survey, and it is not
-needed to describe landscape use. Since it is commonly accepted that bats tend
+species \cite{Ovaskainen2016}. In this case, a diffusion model is used to
+describe dispersal during phase 1 of movement as bats fly away from the roost. Since it is commonly accepted that bats tend
 to forage within the Core Sustenance Zone and remain within a certain distance
  of the roost, a diffusion model on a bounded domain is considered here.
 
@@ -86,6 +84,21 @@ Over short timescales, $\phi(R,t) \approx 0$, since the probability of a reachin
 \label{eqn:diffusion_short}
 \end{equation}
 %
+An expression for mean-squared displacement over a long timescale can also be derived using \eqn{eqn:MSD_expectation}. Over long timescales, we expect the probability density to be uniformly spread across the domain,
+%
+\begin{equation}
+\phi(r,t) = \frac{1}{\pi R^2} .
+\end{equation}
+%
+Substituting this into \eqn{eqn:MSD_expectation} gives
+%
+\begin{align}
+\left<r^2\right> &= \frac{1}{\phi R^2}\int_{0}^{2\pi} \int_{0}^{R} r^2 dr d\theta \\
+&= \frac{1}{2} R^2,
+\end{align}
+%
+and therefore the mean squared displacement is constant over long timescales.
+%
 \subsection{A discretised diffusion model} \label{discretised_model}
 
 The diffusion equation in a bounded domain can be solved using a discretised ODE
@@ -115,7 +128,7 @@ $d = D/(\Delta x)^2$. The initial condition corresponding to \eqn{eqn:IC} means 
 \begin{figure} [t]
     \centering
         \includegraphics[width=0.5\textwidth]{diffusion_diagram.pdf}
-        \caption{A diagram to illustrate the movement of probability density between boxes in the discretised diffusion model. Diffusion between boxes is represented by $d$ and the probability density in each box $i$ is denoted by $\phi_i$}
+        \caption{A diagram to illustrate the movement of probability density between boxes in the discretised diffusion model. Diffusion between boxes is represented by $d$ and the probability density in each box $i$ is denoted by $\phi_i$.}
     \label{fig:diffusion_diagram}
 \end{figure}
 

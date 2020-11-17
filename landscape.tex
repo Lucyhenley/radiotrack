@@ -1,0 +1,142 @@
+
+\section{Circuitscape: resistance/current maps (data from Finch's model)}
+
+Using GIS software, a resistance value is generated for each coordinate on the grid. Higher resistance values correspond to less movement through the grid square. Proximity to lights and roads increases the resistance value and proximity to linear features (hedgerows/woodland edges) where bats are likely to forage decreases the resistance value. Lights are by far the most important contributor to resistance, with a value $10^4$ times higher than any other contributor. A resistance map is shown in Figure \ref{fig:resistance}. Blue areas correspond to lower resistance values, and therefore bats are expected to travel through these areas. Yellow areas correspond to high resistance (mainly due to street lights), and bats are expected to avoid these areas.
+
+Bats are expected to take the path of least resistance, and a current map of
+movement can be created using resistance scores, roost locations and detector
+data. This is shown in Figure ~\ref{fig:current}. Yellow areas correspond to high current, so the yellow lines show likely flight paths. The model was trained using one greater horseshoe roost site (Buckfastleigh), and transferred to 3 other roost sites. The model was tested using detector data and roost locations for the 3 other sites, and resistance values for each landscape feature were shown to be transferrable. The model has also been tested for lesser horseshoes which have similar behaviour, but not for other species.
+
+\begin{figure}
+    \centering
+    \includegraphics[width = \linewidth]{src/R.jpg}
+    \caption{Resistance map of the Buckfastleigh site. }
+    \label{fig:resistance}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width = \linewidth]{src/R_log.jpg}
+    \caption{Resistance map (log scale) of the Buckfastleigh site.}
+    \label{fig:resistance_log}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width = \linewidth]{src/current.jpg}
+    \caption{Current map (log scale) of the Buckfastleigh site.}
+    \label{fig:current}
+\end{figure}
+
+
+\section{Updated diffusion model}
+
+Instead of a completely random walk, moves are proposed and accepted with probability $p = 1/R$, where $R$ is the resistance value of the move (taken to be the maximum $R$ value the bat would pass through during the move). $R$ is normalised so that $max(R) = 1$.
+No results so far.
+
+
+%\section{Landscape effects}
+
+%$ D = \alpha_0 e^{\alpha_1H + \alpha_2L + \alpha_3R}$
+
+%Where $\alpha_0$ = base diffusion constant where there are no roads, hedgerows
+%or lights, $\alpha_1, \alpha_2, \alpha_3$ are the diffusion constants for
+%hedgerows, lights and roads respectively. $H, L, R$ are occupancy values for
+%hedgerows, lights and roads respectively (eg $H = 1$ in grid squares containing
+%hedgerows, $H = 0$ in grid squares not containing hedgerows)?.
+
+
+\section{Lightscape}
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/log_point_irradiance.png}
+    \label{fig:point_irradiance}
+    \caption{Point irradiance (log scale) at each square on the grid.}
+\end{figure}
+
+\subsection{Binary point irradiance}
+Light is either present or not: grid squares with light above a certain
+threshold $\epsilon$ are 'light', all others are 'dark'. The model is fit using
+ABC with 2 parameters: $\epsilon$, the threshold, and $\alpha$, the diffusion
+coefficient multiplier for 'light' grid squares.
+
+The diffusion coefficient for each square is given by:
+
+$$D = D_0 e^{\alpha l} $$
+
+where $D_0 = 75.5$, the base diffusion coefficient when no light is present, and
+$l_{i,j} = 0$ for 'dark' grid squares and $l_{i,j} = 1$ for 'light' grid
+squares. A uniform prior was used for $\alpha$, $-2 < \alpha < 3$. $\epsilon$
+was chosen from a uniform distribution of the percentiles of non-zero lightscape
+elements.
+
+
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_threshold_percentile.png}
+    \label{fig:epsilon_threshold}
+    \caption{Prior and posterior for $\epsilon$}
+\end{figure}
+
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_alpha.png}
+    \label{fig:alpha_threshold}
+    \caption{Prior and posterior for $\alpha$}
+\end{figure}
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_alpa_threshold.png}
+    \label{fig:}
+    \caption{Posteriors for $\alpha$ and $\epsilon$}
+\end{figure}
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_intensity_bar.png}
+    \label{fig:nnz_frequency}
+    \caption{Frequency of different levels of light intensity (for non-zero grid squares).}
+
+
+\end{figure}
+
+Peak at 0: include picture
+
+
+\pagebreak
+\pagebreak
+\pagebreak
+
+\subsection{Log scaled point irradiance}
+
+Non-zero elements log scaled and then scaled between 0 and 1.
+The diffusion coefficient for each square is given by:
+
+$$D = D_0 e^{\alpha l} $$
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_log_diffusion_alpha.png}
+    \label{fig:log_diffusion}
+    \caption{Prior and posterior for $\alpha$ with log scaled irradiance scores.}
+\end{figure}
+
+
+%\subsection{Rejection}
+
+%log or no log
+
+%$$ P_{accept} = \alpha l $$
+
+
+\section{Roads}
+
+Use distance to any roads and do the same threshold/alpha business as with
+lights. Do we have any info on the traffic on these roads?
+
+However, minor roads will have much less of an effect: unlikely to have someone
+driving down a minor road at night? So try with minimum distance to A/B roads
+and dual carriageways too.

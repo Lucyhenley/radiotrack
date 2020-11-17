@@ -1,0 +1,26 @@
+
+\chapter{Proposed methodology}
+\label{chapter:methods}
+
+Three different methods have been used to estimate the locations of bat roosts, each requiring data from acoustic surveys. Two use a diffusion model for bat movement, fitting the model to acoustic detector data to estimate the most likely roost location. Approximate Bayesian Computation uses Bayesian inference to compare the model to the data, and generalised method of moments estimation generates a point estimate by minimising a function of the parameters and data. Geographic profiling does not use the diffusion model, and instead generates a probability surface of the search area using the distance from each grid square to each bat detection.
+
+\section{Bat surveys}
+
+Many bats use echolocation to navigate and catch prey
+\cite{schnitzler2003}, and acoustic surveys using bat detectors have proved a
+useful and cost-effective method to study populations \cite{Walters2012}.
+Acoustic bat detectors are microphones calibrated to record the high-frequency
+sound of bat calls and allow for long-term, autonomous surveying.
+
+Surveys are conducted by placing static acoustic detectors within a search
+area which record the calls of bats passing through their range. The coordinates
+of each detector are noted and a series of recordings is produced. The species
+for each recording can be identified using the sound of the call and a list of
+times at which a bat of the species in question has been recorded at each
+detector is produced.
+
+%\input{tex/method_DiffusionConvection}
+%\input{tex/method_Diffusion}
+%\input{tex/method_Bayes}
+%\input{tex/method_GMM}
+%\input{tex/method_GP}

@@ -1,0 +1,543 @@
+\section{Abstract}
+
+Locating bat roosts is vital for both conservation and research purposes, as it
+allows biologists to study bat populations and the impact of human behaviour on
+populations. However, it is usually both difficult and labour intensive to find
+roosts using traditional search methods. I propose a novel approach for locating
+greater horseshoe bat roosts using data from static acoustic detectors and a
+mathematical model of bat movement using diffusion modelling. The model is
+fitted using Bayesian statistics. This method gives an actionable estimate of
+the roost location and narrows the search area.
+
+
+
+Bats populations are declining due to many reasons, including loss of habitat from human activity, thus, all bat species are fully protected by law. As bats play an important role in the UK ecosystem a reduction in the population could have catastrophic effects on biodiversity. As a result, ecological surveys are legally required when undertaking large-scale building work to locate breeding or resting places (roosts) in the area and determine whether the work will negatively impact on the local bat populations. However, locating roosts is generally a difficult, labour intensive task, requiring many hours of manually searching a vast area, and as a result surveys can be expensive. In collaboration with ecological experts I propose a novel approach for locating roosts using data from static acoustic detectors and a mathematical model using diffusive movement, fitted using Bayesian statistics. This provides an estimate of the roost location and a credible area in which the roost is likely to be. The method has been successful in locating Greater Horseshoe bat roosts, estimating the location to within 250m of the true roost and reducing the area to be searched by up to 90%. The use of this method in locating roosts could save surveyors countless hours of searching and significantly reduce the cost for developers. Future model developments will include effects such as roads, sound pollution and light pollution, allowing us to develop evidence for policy makers.
+
+	\section{Introduction}
+
+Bats play an important role in the UK ecosystem as they control insect
+populations \cite{Kunz2011} and act as ecological indicators \cite{Jones2009}.
+However, they are susceptible to human impacts due to their sensitivity to
+light, noise and temperature, especially during hibernation \cite{Jones2009}. As
+a result, many species are under threat, and bats are now protected by law under
+the EUROBATS agreement \cite{Eurobats}. The breeding sites or resting places of
+bats are known as roosts, and can be found in trees and buildings as well as
+underground in caves and mines \cite{Eurobats}. Some species are highly site
+faithful, returning to the same roosts year after year and are therefore reliant
+on the suitability of the surrounding habitat \cite{Lewis1995}. Locating roosts
+is important for conservation, in ensuring the roosts as well as the surrounding
+habitat is preserved. Locating roosts is also important for research: monitoring
+bat populations tends to be challenging as most species are small, nocturnal and
+elusive, and roost surveys provide a useful way of studying populations
+\cite{Flaquer2007}.
+
+\section{Objectives}
+
+Bat roosts tend to be difficult to find as they are generally located in rural
+areas. The maximum foraging radius, $R_f$, is the maximum straight line distance from
+the roost bats will travel. This varies between species, and for most species in the
+UK is between 2km and 4km \cite{CSZ}. Detecting a bat therefore indicates that
+there is a roost within distance $R_f$ of that point. For $R_f$=3km, this equates to
+an area of approximately 30km\textsuperscript{2} to be searched, a task that is
+both expensive and labour intensive.
+
+The aim of this project is to develop a mathematical model to estimate roost
+locations. The model should narrow down the search area in order to decrease the
+time taken to locate roosts.
+
+
+Three different methods have been used to estimate the locations of bat roosts, each requiring data from acoustic surveys. Two use a diffusion model for bat movement, fitting the model to acoustic detector data to estimate the most likely roost location. Approximate Bayesian Computation uses Bayesian inference to compare the model to the data, and generalised method of moments estimation generates a point estimate by minimising a function of the parameters and data. Geographic profiling does not use the diffusion model, and instead generates a probability surface of the search area using the distance from each grid square to each bat detection.
+
+\section{Bat surveys}
+
+Many bats use echolocation to navigate and catch prey
+\cite{schnitzler2003}, and acoustic surveys using bat detectors have proved a
+useful and cost-effective method to study populations \cite{Walters2012}.
+Acoustic bat detectors are microphones calibrated to record the high-frequency
+sound of bat calls and allow for long-term, autonomous surveying.
+
+Surveys are conducted by placing static acoustic detectors within a search
+area which record the calls of bats passing through their range. The coordinates
+of each detector are noted and a series of recordings is produced. The species
+for each recording can be identified using the sound of the call and a list of
+times at which a bat of the species in question has been recorded at each
+detector is produced.
+
+
+\section{Existing methods to locate roosts}
+
+Radio tracking surveys are often used to directly trail bats back to their
+roost. Unfortunately, radio tracking is challenging as it involves catching a
+bat in order to collar it, and then following the bat in order to keep the radio
+signal \cite{Lewis1995}.
+
+Geographic profiling is a method used in criminology to identify areas where a
+criminal is likely to live based on a series of related crimes
+\cite{Rossmo1999}. The method creates a probability surface of the area using
+the distance between crimes and each grid square. This has been applied to
+locating bat roosts \cite{Comber2006} using foraging sites instead of crimes.
+The disadvantage of this method is that it requires knowledge of foraging sites
+used by the bats, which are often as difficult to discover as the roosts themselves.
+
+
+\section{Geographic profiling}
+Geographic profiling is a method used in criminology to identify areas where a criminal is likely to live based on a series of related crimes
+\cite{Rossmo1999}. The method creates a probability surface of the area using the distance between crimes and each grid square. The method assumes that crimes are most likely to occur close to the offenders residence. However, it also includes an area of low probability in the offenders immediate neighbourhood, termed the buffer zone. This is because criminals are less likely to offend very close to their own home, due to to low anonymity and the risk of being seen by their neighbours. The model splits the area where crimes have occurred into a grid, and for each grid square calculates a score function which describes the probability density of the offenders residence being in that square. The score function is given by
+
+\begin{equation}
+p_{ij} = \sum_{n=1}^{C}\left[ \frac{\phi}{\left(|x_i - x_n| + |y_i - y_n|\right)^f} + \frac{(1-\phi)(B^{g-f})}{\left(2B - |x_i - x_n| - |y_i - y_n|\right)^g}    \right]  ,
+\label{eqn:geo}
+\end{equation}
+%
+where $B$ is the radius of the buffer zone, $C$ is the number of foraging sites, $f$ and $g$ are empirically determined exponents, chosen to give the most efficient search procedure. The coordinates of point $(i,j)$ are $(x_i,y_j)$ and $(x_n,y_n)$ are the coordinates of the $n$th site. $\phi$ is a weighting factor set to $0$ for sites within the buffer zone and $1$ for sites outside the buffer zone. The result of the model is a 3D probability surface, where the higher the grid square, the greater likelihood of offender residence. This surface provides an optimal search process based on searching the locations with the highest probability density first.
+
+Geographic profiling has been successfully applied to locating pipistrelle bat roosts using the distribution of foraging sites instead of crimes \cite{Comber2006}. The size of the buffer zone was set to the mean distance pipistrelles travel from the roost, found to be 1.8km \cite{Racey1985}.
+
+The disadvantage of this method is that it requires knowledge of foraging sites
+used by the bats, which are often as difficult to locate as the roosts themselves. Instead, the method can be adapted to use use detector hits rather than foraging sites. As bats start the night at the roost, there will most likely be the most hits close to the roost and therefore the buffer zone was removed. Additionally, bats travel in straight lines rather than following a grid system and so the distance measure was changed from Manhattan distance to Euclidean distance. The equation was also modified to sum over detectors rather than hits. The new score function is given by
+
+\begin{equation}
+p_{ij} = \sum_{n=1}^{C}\left[ \frac{N_n}{\left((x_i - x_n)^2 + (y_i - y_n)^2\right) ^{\frac{f}{2}}   }   \right] ,
+\label{eqn:geo2}
+\end{equation}
+%
+where $(x_n,y_n)$ is now the coordinates of the $n$th detector and $N_n$ is the number of hits recorded at the $n$th detector.
+
+
+\section{A diffusion model for bat movement}
+
+Diffusion models are widely used to model animal movement for a number of species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to describe the movement of bats flying away from the roost.
+
+If the roost is at $(x_0,y_0)$ and bats leave the roost at time $t =0$,
+the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+finding a bat at position $(x,y)$ at time $t$,
+
+\begin{equation}
+  \D{\phi(x,y,t)}{ t} = D \nabla^2 \phi(x,y,t) ,
+  \nonumber
+\end{equation}
+%
+where $D$ is the diffusion coefficient and quantifies the speed with which bats diffuse.
+
+The diffusion equation can also be written in polar coordinates:
+
+\begin{equation}
+\D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
+\end{equation}
+%
+where $r$ is the distance from the roost, given by $r=\sqrt{(x-x_0)^2 + (y-y_0)^2}$. As diffusion is symmetric, $\phi$ is only dependent on $r$ and not on the angle.
+
+The initial condition
+
+\begin{equation}
+\phi(x_0,y_0,0) = \delta(x_0,y_0)
+\label{eqn:IC}
+\end{equation}
+%
+specifies that all bats begin the night at the roost.
+
+Motion is determined by the parameter $D$, the diffusion coefficient. The diffusion coefficient determines the speed of motion away from the origin and can be calculated using the mean squared distance (MSD) $\mathbb{E}[r^2]$. The expected MSD at time $t$ can be calculated using the diffusion equation:
+
+\begin{equation}
+\left<r^2\right> = \int_{\infty}r^2 \phi(r,t) d\Omega ,
+\end{equation}
+%
+where the integral is over all space.
+
+The rate of change of the MSD with time can be used to calculate the relationship between MSD and time:
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\infty}r^2 \phi(r,t) d\Omega \\
+                            &= \frac{d}{dt} \int_0^{2\pi}\int_0^{\infty} r^2 \phi(r,t) r dr d\theta \\
+                           &= \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{l t} dr d\theta \\
+                            &= \int_0^{2\pi} \int_0^{\infty} r^3 \frac{D}{r} \D{}{r } \left( r \D{ \phi}{ r}\right) dr d\theta \\
+                            &= \int_0^{2\pi} \left( \left[ D r^2 \left( r \D{ \phi}{ r}\right) \right]_0^{\infty} - \int_0^{\infty} 2rD \left(r \frac{\partial \phi}{\partial r} \right) dr \right) d\theta \\
+                            &= \int_0^{2\pi} \int_0^{\infty} -2r^2D \D{ \phi}{r}dr d\theta \\
+                            &= \int_0^{2\pi} \left( \left[-2r^2D \phi \right]_0^{\infty} + \int_0^{\infty} 4rD \phi dr \right)d\theta \\
+                            &= \int_0^{2\pi} \int_0^{\infty} 4rD\phi dr d\theta \\
+                            &= 4D \int_{\infty} \phi d\Omega \\
+\frac{d}{dt} \left<r^2\right>  &= 4D \\
+\label{eqn:diffusion_1}
+\end{split}
+\end{equation}
+
+Integrating with respect to time gives
+
+\begin{equation}
+\left<r^2\right> = 4Dt ,
+\label{eqn:diffusion_msd}
+\end{equation}
+
+and therefore MSD is directly proportional to time.
+
+
+\subsection{Advection-Diffusion model}
+
+A simple diffusion model does not
+
+Bats don't diffuse for the whole night
+
+Maximum distance away from the roost: sustenance zone
+
+Return to roost in the morning
+
+Motion in later portion of the night is described by an advection-diffusion model:
+
+\begin{equation}
+  \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) - \chi \nabla \phi(x,y,t),
+  \nonumber
+\end{equation}
+
+where $\chi$ is the strength of the drift back towards the roost.
+
+The same method can be used to calculate the MSD for the advection-diffusion model in terms of $D$ and $\chi$:
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\infty}r^2 \phi(r,t) d\Omega \\
+                              &= \frac{d}{dt} \int_0^{2\pi}\int_0^{\infty} r^2 \phi(r,t) r dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{t} dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^3 \frac{D}{r} \D{}{r}\left(r \D{\phi}{r}\right)- r^3\chi\D{\phi}{r} dr d\theta \\
+\end{split}
+\end{equation}
+
+
+Substituting the first term from \eqn{eqn:diffusion_1}:
+
+\begin{equation}
+\begin{split}
+                              &= 4D - \chi \int_0^{2\pi} \int_0^{\infty} r^3 \D{\phi}{r} dr d\theta \\
+                              &= 4D - \chi \int_0^{2\pi} \left[ r^3 \phi \right]_0^{\infty} - \int_0^{\infty}  3 r^2 \phi dr d\theta \\
+                              &= 4D + 3\chi \int_0^{2\pi} \int_0^{\infty}  r^2 \phi dr d\theta  \\
+                              &= 4D + 3\chi \int_{\infty} r \phi d\Omega \\
+                              &= 4D + 3\chi \left<r\right>
+\nonumber
+\end{split}
+\end{equation}
+
+The mean distance $ \left<r\right>$ can be calculated in the same way:
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r\right> &= \frac{d}{dt}\int_{\infty}r \phi(r,t) d\Omega \\
+                              &= \frac{d}{dt} \int_0^{2\pi}\int_0^{\infty} r \phi(r,t)r dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^2 \D{\phi}{t} dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} r^2 \left[ \frac{D}{r} \D{}{r}\left(r \D{\phi}{r}\right)-\chi\D{\phi}{r} \right] dr d\theta \\
+                              &= \int_0^{2\pi} \int_0^{\infty} rD  \D{}{r}\left(r \D{\phi}{r}\right) -  \chi r^2 \D{\phi}{r} dr d\theta \\
+\nonumber
+\end{split}
+\end{equation}
+
+
+For simple diffusion, $\left<r\right> = 0$ and
+
+
+\begin{equation}
+\int_0^{2\pi} \int_0^{\infty} rD  \D{}{r}\left(r \D{\phi}{r}\right) = 0 .
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r\right> &= \int_0^{2\pi} \int_0^{\infty} -  \chi r^2 \D{\phi}{r} dr d\theta \\
+                            &= \int_0^{2\pi} - \left[ \chi r^2 \phi \right]_0^{\infty} + \int_0^{\infty} 2 \chi r \phi dr d\theta \\
+                            &= \int_0^{2\pi} \int_0^{\infty} 2 \chi r \phi dr d\theta \\
+                            &= \int_{\infty} 2 \chi \phi d\omega \\
+                            &= 2\chi
+\nonumber
+\end{split}
+\end{equation}
+
+So then:
+
+\begin{equation}
+\left<r\right> = 2\chi t
+\nonumber
+\end{equation}
+
+Substituting into the equation for $\left<r^2\right>$ gives
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} \left<r^2\right> &= 4D + 6\chi^2t \\
+\left<r^2\right>              &= 4Dt + 3\chi^2t^2 ,
+\nonumber
+\end{split}
+\end{equation}
+%
+
+
+\section{Diffusion modelling}
+
+Bats leave the roost after sunset and fly away from the roost in search of food.
+Foraging bats are modelled as diffusive particles for the first hour after
+sunset. If the roost is at the origin and bats leave the roost at time $t =0$,
+the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+finding a bat at position $(x,y)$ at time $t$,
+
+\begin{equation}
+  \frac{\partial \phi(x,y,t)}{\partial t} = D \nabla^2 \phi(x,y,t) ,
+  \nonumber
+\end{equation}
+%
+where $D$ is the diffusion coefficient, calculated using the mean squared distance bats travel from the roost over time. A typical value is calculated using radio tracking surveys is $D = 75.5$ m\textsuperscript{2}s\textsuperscript{-1}. $\phi(x,y,0)$ is
+the Dirac delta function.
+
+Solving for $\phi(x,y,t)$ gives
+
+\begin{equation}
+  \phi(x,y,t) = \frac{1}{4 \pi D t} e^{-\frac{x^2 + y^2}{4Dt}}. \cite{Ovaskainen2016}
+  \nonumber
+\end{equation}
+
+This model assumes infinite space and there are no boundary conditions, so that bats can travel any distance away from the roost. However, it can be shown that the probability of a bat travelling further than the maximum foraging radius $R_f =$ 3000m calculated using $\phi$ is typically small. Integrating $\phi$ using a numerical integration algorithm, \cite{Berntsen1991}, over the time we will be considering (the first hour of movement after sunset) and over space for $x^2 + y^2 > R_f^2$ gives a proability that a bat will exceed $R_f$ of $p = 4.5 \times 10^{-6}$.
+
+Integrating $\phi(x,y,t)$ over the range $R$ of a detector $i$ at $(x_i, y_i)$ gives
+the expected density of bats in range of detector $i$ at time $t$. The
+integral is approximated using a quadratic Taylor expansion around $(x_i, y_i)$:
+%Need to add details of Taylor expansion and integral for thesis
+\begin{equation}
+  N_i(t) = \frac{1}{4Dt} e^{-\frac{x_i^2 + y_i^2}{4Dt}} \left[ R^2 + \frac{R^4}{4} \left( \frac{x_i^2 + y_i^2}{8D^2t^2} - \frac{1}{2Dt} \right)\right]
+\end{equation}
+%
+where $R$ is the detector range. The total number of hits expected at each
+detector for $0 < t < T$ is calculated by integrating over time,
+
+\begin{equation}
+  \tilde{N_i}(T) = \int_{t=0}^{t=T} N_i(t) dt.
+\end{equation}
+%
+At present, this is approximated using a Riemann sum at intervals $\Delta t$:
+
+\begin{equation}
+  \tilde{N_i}(T) \simeq \sum_{t=0}^{t=T} N_i(t) \Delta t.
+  \label{eqn:expect_hits}
+\end{equation}
+%
+In future, this approximation will be improved by using a better numerical
+integration method. The number of hits expected at each detector $\tilde{N_i}(T)$ for a possible roost location $\bm{\theta'}$ will be compared to the number of hits found in bat surveys to estimate the probability that the true roost is at $\bm{\theta'}$.
+
+
+
+
+\subsection{The ABC Algorithm}
+
+First, the threshold parameter $\epsilon$ and sample size $n$ are fixed and the
+prior distribution $p(\theta)$ is defined as uniform over the circle of 3km
+radius around the original detected bat, $p(\theta) = \frac{1}{3^2 \pi}$.
+
+Observations $\bm{Y}$ are given by the number of hits at each detector from bat
+surveys and dataset $\bm{X}$ is the expected number of hits at each detector for
+a roost at $\theta'$ given by Equation \ref{eqn:expect_hits}. The posterior
+distribution $p(\theta \mid \bm{Y})$ for roost locations will be given by
+$\bm{\theta}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
+
+The pseudocode is as follows:
+
+\begin{algorithmic}
+  \While {$i < n$}
+    \State  Sample $\theta'$ from $p(\theta)$
+    \State Calculate $\bm{X}$ using Equation \ref{eqn:expect_hits}
+    \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
+    \If {$\bar{\rho} < \epsilon$}
+      \State $\bm{\theta_i} \gets \theta'$
+    	\State $i \gets i + 1$
+    \EndIf
+  \EndWhile
+\end{algorithmic}
+
+The probability distribution function of the roost search area is then given by $\bm{\theta}$, and the true location of the
+roost can be estimated by taking the mean of the posterior $\bm{\theta}$.
+
+
+\section{Generalised Method of Moments}
+
+Generalised method of moments (GMM) estimation is an alternative parameter estimation method, and is commonly used in econometrics \cite{Hansen1982, Hall1993}. It provides a point estimate by minimising a function of the parameters and the data, and is usually a more efficient method than a random search as in ABC. GMM is based on the specificication of certain moment conditions, functions of a model's parameters $\theta$ and a set of observations $Y$,
+%
+\begin{equation}
+g(\theta) = \mathbb{E}[f(Y, \theta)] ,
+\label{eqn:moment}
+\end{equation}
+%
+where $f$ is a set of functions, one for each observation in $Y$. The functions $f$ are specified such that the expectation is zero at the true parameter value $\theta_0$,
+%
+\begin{equation}
+g(\theta_0) = \mathbb{E}[f(Y, \theta_0)] = 0.
+\label{eqn:moment}
+\end{equation}
+
+Calculating the expectation for a given sample $t$ is often impossible, so this can be replaced with sample averages to obtain sample moments,
+%
+\begin{equation}
+g_T(\theta) = \frac{1}{T} \sum_{t=1}^{T} f(Y_t, \theta) .
+\end{equation}
+%
+The moment condition becomes
+%
+\begin{equation}
+g_T(\theta_0) = \frac{1}{T} \sum_{t=1}^T f(Y_t, \theta_0) .
+\end{equation}
+
+In the case where there are more functions $f$ than parameters $\theta$, the problem is over-identified and there is no solution to $g_T(\theta_0) = 0$. Instead, the distance $g_T(\theta) - 0$ is minimized. This distance is measured by the quadratic form
+%
+\begin{equation}
+Q_T(\theta) = g_T(\theta)^T W_T g_T(\theta),
+\label{eqn:GMM_distance}
+\end{equation}
+%
+where $W_T$ is a symmetric and positive weight matrix and $g_T(\theta)^T$ denotes the transpose of $g_T(\theta)$. The GMM estimator is then the minimiser of \eqn{eqn:GMM_distance},
+%
+\begin{equation}
+\begin{split}
+\theta_0 &= \arg \min_{\theta}(g_T(\theta)^T W_Tg_T(\theta)) \\
+         &= \arg \min_{\theta} \left[ \left( \frac{1}{T}\sum_{t=1}^T f(Y_t, \theta_0) \right)^T W_T \left( \frac{1}{T}\sum_{t=1}^T f(Y_t, \theta_0) \right) \right] .
+\end{split}
+\label{eqn:GMM}
+\end{equation}
+
+Usually, the data is collected with successive measurements, with mean values $Y$. The variance $\sigma^2$ of each entry of $Y$ is used to determine an optimal weighting matrix which should provide the most efficient search,
+%
+\begin{equation}
+W_T = \textrm{diag} \left(\frac{1}{\sigma^2} \right) .
+\end{equation}
+
+The most likely parameter value $\theta_0$ is generally found using numerical optimisation to minimise \eqn{eqn:GMM}.
+
+\subsection{Applying GMM to locating roosts}
+
+The distances $g_T(\theta)$ are calculated as the difference between $X$, the expected number of hits calculated using \eqn{eqn:expect_hits} and $Y$, the number of hits at each detector in the bat surveys,
+%
+\begin{equation}
+g_T(\theta) = \mathbb{E}X(\theta) - Y .
+\end{equation}
+%
+However, the weighting matrix is more problematic as the variance of successive samples is not always calculable. Detectors are placed out for multiple nights, but sometimes fail as they can be damaged by animals. Therefore, some detectors record only one night's data and so there is no variance in these measurements. Instead, since the time between recordings is analagous to waiting times we can assume that the time between detector hits are poisson distributed. The variance of a poisson distribution is equal to its mean, so the mean number of hits for each detector is used instead of variance for the weighting matrix, $\sigma^2 \approx Y$. Some detectors record no hits and $Y=0$ in this case, so the value is shifted to avoid dividing by zero, $\sigma^2 \approx Y+1$. The weighting matrix is therefore
+
+\begin{equation}
+W_T = \textrm{diag} \left(\frac{1}{1+Y} \right) .
+\label{eqn:weighting}
+\end{equation}
+
+The GMM optimiser is then given by
+
+\begin{equation}
+\theta_0 = \arg \min_{\theta} \left( (\mathbb{E}X(\theta) - Y)^T\textrm{diag} \left(\frac{1}{1+Y} \right) .(\mathbb{E}X(\theta) - Y) \right) .
+\label{eqn:roost_gmm}
+\end{equation}
+
+The minimum can be found using a numerical optimiser. In this case, the function given by \eqn{eqn:roost_gmm} has many local minima so a global optimiser is needed. The adaptive differential evolution optimiser \textproc{adaptive\_de\_rand\_1\_bin} found in Julia package BlackBoxOptim.jl \cite{Feldt2018} is used.
+
+
+\section{Preliminary Results}
+\label{chapter:results}
+
+In order to test the validity of the model, data from greater horseshoe bat
+roosts in Devon, UK has been analysed. The results are presented in
+\fig{fig:fixed_D}. The diffusion coefficient $D = 75.5$
+m\textsuperscript{2}s\textsuperscript{-1} was calculated using data from radio
+tracking surveys. Each set of data was collected by distributing detectors near
+a variety of different landscape features (in hedgerows, near roads etc), marked
+by blue crosses around Greater Horseshoe roost sites, marked in cyan in \fig{fig:fixed_D}. In
+\fig{fig:buckfastleigh_250716}, the posterior distribution shown successfully
+predicted the location of the roost, as the true roost location falls inside the
+posterior distribution. The error between the true roost and the estimate,
+shown in red, is 77m. For this set of data, the search area required would have
+been narrowed down significantly, saving valuable time and resources in locating
+the roost.
+
+However, \fig{fig:gunnislake_080816} shows that the model is less successful for
+the second roost studied. Whilst the posterior distribution is close to the true
+roost, the roost still falls outside the posterior. The distance from the
+estimated roost location and the true roost is 795m, significantly higher than
+that calculated for roost 1.
+
+There could be a number of reasons for this error due to the differences in the
+data from each roost. Firstly, roost 1 has a larger population than roost 2, and
+therefore the data collected is likely to be more representative of the
+movements of the population. The landscape is also likely to play an important
+part in bat movement, as bats prefer to forage along linear features such as
+hedgerows and rivers and avoid noisy or brightly lit areas \cite{Stone2009}. As the model assumes
+bats move completely homogeneously, it does not take this preference into
+account. As detectors were placed near different landscape features for both
+roosts, those close to suitable foraging locations are likely to have seen
+proportionately more bats than those close to unsuitable habitat at the same
+distance from the roost. The diffusion model also predicts a high density of
+bats around the origin for all $t$, which may be inaccurate as bats tend to fly
+away from the roost to forage. This therefore may lead to an overestimate in the
+number of hits expected at detectors close to the roost, skewing the results
+of the model by rejecting possible roost sites because they are close to a
+detector.
+
+
+\begin{figure} [h]
+    \centering
+    \begin{subfigure}[b]{\ttp}
+        \includegraphics[width=\textwidth]{buckfastleigh_250716.png}
+        \caption{Roost 1: Buckfastleigh, 25/07/2016}
+        \label{fig:buckfastleigh_250716}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{\ttp}
+        \includegraphics[width=\textwidth]{gunnislake_080816.png}
+        \caption{Roost 2: Gunnislake, 08/08/2016}
+        \label{fig:gunnislake_080816}
+    \end{subfigure}
+    \caption{The results for surveys at two roosts. Each was implemented using the algorithm set out in section \sect{section:ABC} with $n=10^5$ and $\epsilon$ was chosen to give an acceptance rate of 3\%. The posterior distribution is shown as a heatmap.}\label{fig:fixed_D}
+\end{figure}
+
+
+\section{Future improvements to the model}
+
+The model would be improved by including landscape features in the model. The
+diffusion coefficient $D$ could be varied over space to account for the
+avoidance of lights/roads and preferential foraging close to hedgerows and
+rivers. The distance measure $\rho(\bm{X}, \bm{Y})$ used to compare the
+simulated dataset to the results of the bat surveys could be improved by
+including the number of hits over multiple time intervals.
+
+The survey process could be improved by investigating if there is some optimum
+detector placement to provide the best estimate. For example, does a regular
+grid of detectors provide a better estimate than a random array, or is it best
+to place all of the detectors near the same type of landscape?
+
+%The error could be due to differing landscape features around the
+%roost which are likely to affect bat movement. To investigate this, the
+%diffusion coefficient $D$ was added as a second parameter to be varied. The
+%prior was given by $D \sim N[\mu, \mu/2]$, where $\mu =75.5$, the value
+%calculated from radio tracking surveys. The results are shown in
+%\fig{fig:vary_D}. The results show more variation in the posterior distributions
+%leading to a larger search area for both roosts. The results for roost 2 have
+%improved as the posterior distribution now contains the roost. The prior and
+%posterior distributions for $D$ shown in \fig{fig:D_dists} suggest that the
+%value of $D = 75.5$ m\textsuperscript{2}s\textsuperscript{-1} calculated using
+%the radio tracking survey may be an underestimate for both roosts.
+
+
+%This could be due to the date of the survey: later in the summer,
+%%once pups are old enough to survive the night alone, mothers will often sleep
+%outside of the main roost, which could contribute to noise in the data. There
+%could also be effects from the location of detectors; if a detector was placed
+%close to a popular foraging site, it would be likely to detect a
+%disproportionately large number of bats.
+
+%Three surveys were conducted at roost 1 in Buckfastleigh, Devon during summer
+%2016, in June, July and September. The results of the model are shown in Figure
+%\ref{fig:buckfastleigh}. The results show that the model works well for survey
+%2, in July, successfully locating the roost and narrowing down the search area.
+%However, the model was less successful for surveys 1 and 3 in June and
+%September: the posterior distributions do not include the roost.
+
+%To improve roost estimates, the diffusion coefficient $D$ was added to the model
+%as a second parameter to be varied. The prior is given by $D \sim N[\mu,
+%\mu/2]$, where $\mu =75.5$, the value calculated from radio tracking surveys.
+%The results are shown in Figure \ref{fig:buckfastleigh_varyD}. These results show
+%that the posterior for $D$ is very different from the prior; the mean has
+%shifted to $D = 118$ m\textsuperscript{2}s\textsuperscript{-1}.  The model is
+%improved with varying $D$ for some sites, shown in Table \ref{table: results}.
+
+
+%This is possibly due to the time of year; roosting and
+%foraging behaviour varies over the summer, with some bats tending to roost in
+%'day roosts' outside of the main roost later on in the summer. Also there are no
+%detectors close to the roost for the other surveys.

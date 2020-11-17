@@ -1,0 +1,114 @@
+
+\chapter{Preliminary Results}
+\label{chapter:results}
+
+In order to test the validity of the model, data from greater horseshoe bat
+roosts in Devon, UK has been analysed. The results are presented in
+\fig{fig:fixed_D}. The diffusion coefficient $D = 75.5$
+m\textsuperscript{2}s\textsuperscript{-1} was calculated using data from radio
+tracking surveys. Each set of data was collected by distributing detectors near
+a variety of different landscape features (in hedgerows, near roads etc), marked
+by blue crosses around Greater Horseshoe roost sites, marked in cyan in \fig{fig:fixed_D}. In
+\fig{fig:buckfastleigh_250716}, the posterior distribution shown successfully
+predicted the location of the roost, as the true roost location falls inside the
+posterior distribution. The error between the true roost and the estimate,
+shown in red, is 77m. For this set of data, the search area required would have
+been narrowed down significantly, saving valuable time and resources in locating
+the roost.
+
+However, \fig{fig:gunnislake_080816} shows that the model is less successful for
+the second roost studied. Whilst the posterior distribution is close to the true
+roost, the roost still falls outside the posterior. The distance from the
+estimated roost location and the true roost is 795m, significantly higher than
+that calculated for roost 1.
+
+There could be a number of reasons for this error due to the differences in the
+data from each roost. Firstly, roost 1 has a larger population than roost 2, and
+therefore the data collected is likely to be more representative of the
+movements of the population. The landscape is also likely to play an important
+part in bat movement, as bats prefer to forage along linear features such as
+hedgerows and rivers and avoid noisy or brightly lit areas \cite{Stone2009}. As the model assumes
+bats move completely homogeneously, it does not take this preference into
+account. As detectors were placed near different landscape features for both
+roosts, those close to suitable foraging locations are likely to have seen
+proportionately more bats than those close to unsuitable habitat at the same
+distance from the roost. The diffusion model also predicts a high density of
+bats around the origin for all $t$, which may be inaccurate as bats tend to fly
+away from the roost to forage. This therefore may lead to an overestimate in the
+number of hits expected at detectors close to the roost, skewing the results
+of the model by rejecting possible roost sites because they are close to a
+detector.
+
+
+\begin{figure} [h]
+    \centering
+    \begin{subfigure}[b]{\ttp}
+        \includegraphics[width=\textwidth]{buckfastleigh_250716.pdf}
+        \caption{Roost 1: Buckfastleigh, 25/07/2016}
+        \label{fig:buckfastleigh_250716}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{\ttp}
+        \includegraphics[width=\textwidth]{gunnislake_080816.pdf}
+        \caption{Roost 2: Gunnislake, 08/08/2016}
+        \label{fig:gunnislake_080816}
+    \end{subfigure}
+    \caption{The results for surveys at two roosts. Each was implemented using the algorithm set out in section \sect{section:ABC} with $n=10^5$ and $\epsilon$ was chosen to give an acceptance rate of 3\%. The posterior distribution is shown as a heatmap.}\label{fig:fixed_D}
+\end{figure}
+
+
+\section{Future improvements to the model}
+
+The model would be improved by including landscape features in the model. The
+diffusion coefficient $D$ could be varied over space to account for the
+avoidance of lights/roads and preferential foraging close to hedgerows and
+rivers. The distance measure $\rho(\bm{X}, \bm{Y})$ used to compare the
+simulated dataset to the results of the bat surveys could be improved by
+including the number of hits over multiple time intervals.
+
+The survey process could be improved by investigating if there is some optimum
+detector placement to provide the best estimate. For example, does a regular
+grid of detectors provide a better estimate than a random array, or is it best
+to place all of the detectors near the same type of landscape?
+
+%The error could be due to differing landscape features around the
+%roost which are likely to affect bat movement. To investigate this, the
+%diffusion coefficient $D$ was added as a second parameter to be varied. The
+%prior was given by $D \sim N[\mu, \mu/2]$, where $\mu =75.5$, the value
+%calculated from radio tracking surveys. The results are shown in
+%\fig{fig:vary_D}. The results show more variation in the posterior distributions
+%leading to a larger search area for both roosts. The results for roost 2 have
+%improved as the posterior distribution now contains the roost. The prior and
+%posterior distributions for $D$ shown in \fig{fig:D_dists} suggest that the
+%value of $D = 75.5$ m\textsuperscript{2}s\textsuperscript{-1} calculated using
+%the radio tracking survey may be an underestimate for both roosts.
+
+
+%This could be due to the date of the survey: later in the summer,
+%%once pups are old enough to survive the night alone, mothers will often sleep
+%outside of the main roost, which could contribute to noise in the data. There
+%could also be effects from the location of detectors; if a detector was placed
+%close to a popular foraging site, it would be likely to detect a
+%disproportionately large number of bats.
+
+%Three surveys were conducted at roost 1 in Buckfastleigh, Devon during summer
+%2016, in June, July and September. The results of the model are shown in Figure
+%\ref{fig:buckfastleigh}. The results show that the model works well for survey
+%2, in July, successfully locating the roost and narrowing down the search area.
+%However, the model was less successful for surveys 1 and 3 in June and
+%September: the posterior distributions do not include the roost.
+
+%To improve roost estimates, the diffusion coefficient $D$ was added to the model
+%as a second parameter to be varied. The prior is given by $D \sim N[\mu,
+%\mu/2]$, where $\mu =75.5$, the value calculated from radio tracking surveys.
+%The results are shown in Figure \ref{fig:buckfastleigh_varyD}. These results show
+%that the posterior for $D$ is very different from the prior; the mean has
+%shifted to $D = 118$ m\textsuperscript{2}s\textsuperscript{-1}.  The model is
+%improved with varying $D$ for some sites, shown in Table \ref{table: results}.
+
+
+%This is possibly due to the time of year; roosting and
+%foraging behaviour varies over the summer, with some bats tending to roost in
+%'day roosts' outside of the main roost later on in the summer. Also there are no
+%detectors close to the roost for the other surveys.

@@ -1,0 +1,139 @@
+
+\section{A Diffusion-Convection model for bat movement}
+
+%Partial differential equations are widely used to model a variety of phenomena, a
+
+The diffusion-convection equation is a combination of diffusion and convection
+\begin{equation}
+  \D{\phi(r,t)}{t} = D\nabla^2\phi(x,y,t) - \chi \nabla\phi(x,y,t),
+\end{equation}
+
+$r \geq 0$
+
+where $D$ is the diffusion coefficient, and $\chi$ is the convection coefficient. The initial condition
+
+\begin{equation}
+  \phi(r,0) = \delta(\theta),
+\end{equation}
+
+where $\theta$ is the location of the roost, specifies that all bats start the night in the roost.
+
+The diffusion-convection equation can also be written in polar coordinates, noting that since diffusion is symmetric,  $\D{\phi}{\theta} = 0$.
+
+\begin{equation}
+  \D{\phi(r,t)}{t} = \frac{D}{r} \D{}{r}\left(r \D{\phi(r,t)}{r} \right) - \chi \D{\phi(r,t)}{r}.
+\end{equation}
+
+Approximate solutions can be found using perturbations, assuming that either convection or diffusion dominates. The solution $\phi(r,t)$ can be written as a superposition of two solutions with a perturbation,
+
+\begin{equation}
+  \phi(r,t) \approx \phi_0(r,t) + \epsilon \phi_1(r,t),
+  \label{eqn:phi_perturbation}
+\end{equation}
+
+where $\epsilon$ is an arbitrary constant describing the strength of the perturbation. Since $\epsilon$ is arbitrary, the initial condition means that
+
+\begin{equation}
+  \phi(r,0) = \phi_0(r,0) = \phi_1(r,0),
+\end{equation}
+
+When diffusion dominates, the convection term acts as a perturbation, and the equation becomes
+
+\begin{equation}
+  \D{\phi(r,t)}{t} = \frac{D}{r} \D{}{r}\left(r \D{\phi(r,t)}{r} \right) - \epsilon\chi \D{\phi(r,t)}{r}.
+  \label{eqn:convection_perturbation}
+\end{equation}
+
+Substituting \eqn{eqn:phi_perturbation} into \eqn{eqn:convection_perturbation} gives
+
+\begin{equation}
+\begin{split}
+  \D{\phi_0(r,t)}{t} + \epsilon\D{\phi_1(r,t)}{t} &= \frac{D}{r} \left( \D{\phi_0(r,t)}{r} + r \DD{\phi_0(r,t)}{r} + \epsilon\D{\phi_1(r,t)}{r} + r\epsilon \DD{\phi_1(r,t)}{r}\right)  \\
+  &- \epsilon\chi \left( \D{\phi_0(r,t)}{r} + \epsilon \D{\phi_1(r,t)}{r} \right)
+  \end{split}
+\end{equation}
+
+An equation for $\phi_0(r,t)$ can be found by collecting coefficients of $\epsilon^0$,
+
+\begin{equation}
+  \D{\phi_0(r,t)}{t} = \frac{D}{r} \left(\D{\phi_0)(r,t)}{r} + r\DD{\phi_0(r,t)}{r}\right) - \epsilon\chi \D{\phi_0(r,t)}{r}.
+  \label{eqn:diffusion_eps0}
+\end{equation}
+
+This is the diffusion equation in polar coordinates and can be solved by first converting to Cartesian coordinates,
+
+\begin{equation}
+  \D{\phi_0(x,y,t)}{t} = D \left( \DD{\phi_0(x,y,t)}{x}+\DD{\phi_0(x,y,t)}{y}\right),
+  \label{eqn:cartesian_diffusion}
+\end{equation}
+
+and using a Fourier transform in the spatial dimensions. Writing the Fourier transform of $\phi_0(x,y,t)$ as $\mathscr{F}\left[ \phi_0(x,y,t) \right] = \tilde{\phi_0}(k_x,k_y,t)$, each term in equation
+
+\begin{equation}
+\begin{split}
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{x} \right] &= \int \int \DD{\phi_0(x,y,t)}{x} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_x^2 \tilde{\phi_0}(k_x,k_y,t), \\
+  \mathscr{F}\left[ \DD{\phi_0(x,y,t)}{y} \right] &= \int \int \DD{\phi_0(x,y,t)}{y} \mathrm{e}^{-2\pi i(xk_x + yk_y)} dx dy \\
+  &= -4\pi^2k_y^2 \tilde{\phi_0}(k_x,k_y,t) \\
+  \mathscr{F}\left[\DD{\phi_0(x,y,t)}{t}\right] &= \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} \\
+  \mathscr{F}\left[\phi_0(x,y,0)\right] &= \mathscr{F}\left[\delta(0)\right] \\
+  &= 1
+\end{split}
+\end{equation}
+
+
+Substituting into \eqn{eqn:cartesian_diffusion}
+
+\begin{equation}
+  \DD{\tilde{\phi_0}(k_x,k_y,t)}{t} = -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t).
+\end{equation}
+
+Integrating with respect to time gives
+
+\begin{equation}
+\begin{split}
+  \tilde{\phi_0}(k_x,k_y,t) &= \int -4\pi^2D (k_x^2 + k_y^2) \tilde{\phi_0}(k_x,k_y,t) dt \\
+  &= \tilde{\phi_0}(k_x,k_y,0)\mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{split}
+\end{equation}
+
+IC $ \tilde{\phi_0}(k_x,k_y,0) = 1$ and so
+
+\begin{equation}
+  \tilde{\phi_0}(k_x,k_y,t) = \mathrm{e}^{-4\pi^2D(k_x^2 + k_y^2)t} \\
+\end{equation}
+
+Then inverse fourier transform to recover $\phi_0(x,y,t)$
+
+\begin{equation}
+  \phi_0(x,y,t) = \mathscr{F}^{-1}\left[\tilde{\phi_0}(k_x,k_y,t)\right] = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{x^2 + y^2}{4Dt}} \\
+\end{equation}
+
+Transforming back to polar coordinates gives
+
+\begin{equation}
+  \phi_0(x,y,t) = \frac{1}{4\pi Dt}\mathrm{e}^{-\frac{r^2}{4Dt}} \\
+  \label{eqn:phi_0}
+\end{equation}
+
+Then gathering coefficients of $\epsilon^1$:
+
+\begin{equation}
+\D{\phi_1(x,y,t)}{t} = \frac{D}{r}\left(\D{\phi_1(x,y,t)} + r \DD{\phi_1(x,y,t)}{r}\right) - \chi\D{\phi_0}{r}
+\label{eqn:eps1}
+\end{equation}
+
+and for $\epsilon^2$:
+
+\begin{equation}
+\begin{split}
+0 &= -\chi\D{\phi_1(x,y,t)}{r} \\
+\D{\phi_1(x,y,t)}{r} &= 0
+\end{split}
+\end{equation}
+
+Substituting this into \eqn{eqn:eps1} gives
+
+\begin{equation}
+  \D{\phi_1(x,y,t)}{t} = - \chi\D{\phi_0(x,y,t)}{r} = - \frac{\chi r}{2Dt} \phi_0(x,y,t)
+\end{equation}

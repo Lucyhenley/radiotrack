@@ -1,70 +1,158 @@
-\section{Diffusion in 2D}
-
-\cite{Kunz2011}
+\section{A diffusion model in two dimensions}
 
 
+Diffusion models are widely used to model animal movement, specifically dispersal, for a number of
+species \cite{Ovaskainen2016}. In this case, a 2D diffusion model is used to
+describe dispersal during phase 1 of movement as bats fly away from the roost. The third dimension is not
+included as height is not measured in the radio tracking survey, and it is not
+needed to describe landscape use. Since it is commonly accepted that bats tend
+to forage within the Core Sustenance Zone and remain within a certain distance
+ of the roost, a diffusion model on a bounded domain is considered here.
+
+If the roost is at $(x_0,y_0)$ and bats leave the roost at time $t =0$,
+the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
+finding a bat at position $(x,y)$ at time $t$,
 %
 \begin{equation}
   \D{\phi(x,y,t)}{t} = D \nabla^2 \phi(x,y,t) ,
-  \label{eqn:diffusion_cartesian}
+  \label{eqn:diffusion_cartesian2d}
 \end{equation}
 %
-In polar coordinates,
+where $D$ is the diffusion coefficient, a positive constant that quantifies the
+ rate of spread. The Core Sustenance Zone is denoted by $\Omega \subset \mathbb{R}^2$ and modelled as a disk of radius $R$ centred around the roost. Therefore we will consider the diffusion equation in polar coordinates,
+ %
+ \begin{equation}
+ \D{ \phi(r,t)}{t} = \frac{D}{r} \D{}{ r} \left( r \D{\phi(r,t)}{r} \right),
+ \label{eqn:diffusion_polar2d}
+ \end{equation}
+ %
+ where $r$ is the distance from the roost, given by $r=\sqrt{(x-x_0)^2 +
+ (y-y_0)^2}$. Since the domain is symmetric, $\phi$ is only dependent on $r$ and not
+  on the angle. The initial condition,
+%
+ \begin{equation}
+ \phi(r = 0) = \delta(0),
+ \label{eqn:IC2d}
+ \end{equation}
+%
+specifies that all bats begin the night at the roost before moving away at time $t$ to begin foraging. The boundary condition,
+%
 \begin{equation}
-\D{\phi(r,\theta,t)}{t} = D \left(\DD{\phi}{r} + \frac{1}{r}\D{\phi}{r} \right).
-\label{eqn:diffusion_polar}
+\D{\phi(r=R,t)}{r} = 0,
+\label{eqn:BC}
 \end{equation}
+%
+specifies zero-flux across the boundary.
 
-For a domain discretised into strips of length $h$, the central difference approximation to a first order differential is given by
+\subsection{Discretising the diffusion model}
+
+The diffusion equation in a bounded domain can be solved using a discretised ODE
+description of the diffusion equation \cite{woolley2011stochastic}. For a circular domain in polar coordinates $\Omega = [0,R] \times [0, 2\pi]$, the domain can be discretised into $N$ annuli, each of
+width $h=R/N$.The probability density in each annulus $i$ is denoted by $\phi_i$, and evolves over time according to the diffusion process.  The distance from the origin to the inner edge of annulus $i$ is given by $r_i$.  A central difference approximation to \eqn{eqn:diffusion_polar2d} is used to describe the movement of probability density between boxes.
+
+The central difference approximations to first and second order derivatives at annulus $i$ are given by
+%
+\begin{align}
+ \at{\D{\phi}{r}}{r=r_i}&= \frac{\phi(r_i+h)-\phi(r_i-h)}{2 h} ,\label{eqn:diffusion_discrete1} \\
+ \at{\DD{\phi}{r}}{r=r_i}&= \frac{\phi(r_i-h)-2\phi(r_i)+\phi(r_i+h)}{h^2} .\label{eqn:diffusion_discretei}
+\end{align}
+%
+The central difference approximation to \eqn{eqn:diffusion_polar2d} is then
+%
 \begin{equation}
-\D{\phi}{r} = \frac{u_{i+1}-u_{i-1}}{2 h} .
+ \at{\D{\phi}{t}}{r=r_i} = D \left(\frac{\phi(r-h)-2\phi(r)+\phi(r+h)}{h^2} + \frac{1}{r} \frac{\phi(r+h)-\phi(r-h)}{2 h} \right).
+ \label{eqn:diffusion_polar_cd}
 \end{equation}
 %
-The central difference approcimation to a second order differential is given by
-\begin{equation}
-\DD{\phi}{r} = \frac{\phi_{i+1}-2u_i+u_{i-1}}{h^2} .
-\end{equation}
-%
-The central difference approximation to \eqn{eqn:diffusion_polar} is therefore
-%
-\begin{equation}
-\D{\phi}{t} = D\frac{u_{i+1}-2u_i + u_{i-1}}{h^2} + \frac{D}{r} \frac{u_{i+1}-u_{i-1}}{2 h} .
-\end{equation}
-%
-The distance $r$ at strip $i$ is given by
+The distance $r_i$ at strip $i$ is given by
 \begin{equation}
 r = i h ,
 \end{equation}
 %
-and the equation can therefore be written as
+and \eqn{eqn:diffusion_polar_cd} can therefore be written as
 %
 \begin{equation}
-\D{\phi}{t} = \frac{D}{h^2} \left(u_{i+1}-2u_i + u_{i-1}) \right) + \frac{D}{2ih^2}\left(u_{i+1}-u_{i-1} \right).
+\D{\phi(r)}{t} = \frac{D}{h^2} \left(\phi(r-h)-2\phi(r)+\phi(r+h)\right) + \frac{D}{2ih^2}\left(\phi(r+h)-\phi(r-h) \right).
+\label{eqn:diffusion_polar_final}
 \end{equation}
-
-
-1D algorithm:
+%
+Changing notation for the discretised version:
 %
 \begin{equation}
-\frac{d\phi_i}{dt} = \begin{cases}
-		d(\phi_{i+1} - \phi_{i}), & \text{for } i = 1, \\
-		d(\phi_{i-1}-2\phi_i +\phi_{i+1}), & \text{for } 2 \leq i \leq N-1, \\
-		d(\phi_{i-1}-\phi_i), & \text{for } i = N ,
-		\end{cases}
-        \label{eqn:discrete_diffusion}
+\frac{d\phi_i}{dt} = \frac{D}{h^2}(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{D}{2ih^2} (\phi_{i+1}-\phi_{i})
+        \label{eqn:discrete_diffusion_i}
 \end{equation}
-%
-where the discretised diffusion coefficient is given by
-$d = D/(\Delta x)^2$.
 
-2D algorithm:
+The boundary condition in \eqn{eqn:BC} specifies that bats in strips at the edge of the domain in trajectories that would pass through the boundary are reflected back in the direction of the roost.
+
+
+From \eqn{eqn:diffusion_discrete1}, the equation for strip 1 at $r=0$ is
 %
 \begin{equation}
-\frac{d\phi_i}{dt} = \begin{cases}
-		\frac{D}{h^2}(\phi_{i+1} - \phi_{i}) + \frac{D}{2h^2} (u_{i}), & \text{for } i = 1, \\
-		\frac{D}{h^2}(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{D}{2h^2} (u_{i+1}-u_{i}), & \text{for } 2 \leq i \leq N-1, \\
-		\frac{D}{h^2}(\phi_{i-1}-\phi_i) - \frac{D}{2h^2} (u_{i}), & \text{for } i = N ,
-		\end{cases}
-        \label{eqn:discrete_diffusion}
+\frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{0}-2\phi_1 +\phi_{2}) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}).
 \end{equation}
 %
+However, due to the reflective boundary condition, any bats that would have pass through the boundary from strip 1 to an imaginary strip 0 are instead reflected back, and therefore the value of $\phi$ in the imaginary strip 0 is the same as in strip 1, and $\phi_0$ = $\phi_1$.
+%
+\begin{equation}
+\frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{2}- \phi_1) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}) .
+        \label{eqn:strip_1}
+\end{equation}
+
+Similarly, from \eqn{eqn:diffusion_discrete1}, for strip $n$ at $r=R$,
+%
+\begin{equation}
+\frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-2\phi_n +\phi_{n+1}) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n}) .
+\end{equation}
+%
+Due to the reflective boundary condition between strip $n$ and strip $n+1$, $\phi_n+1 = \phi_n$, and
+\begin{equation}
+\frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-\phi_n) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n-1}) .
+        \label{eqn:strip_n}
+\end{equation}
+
+ A diagram of the motion is shown in \fig{fig:2d_diffusion_diag}. Gathering up \eqnto{eqn:discrete_diffusion_i}{eqn:strip_n}, the set of equations describing the full system is
+%
+  \begin{equation}
+  \frac{d\phi_i}{dt} = \begin{cases}
+  		\frac{D}{h^2}(\phi_{i+1} - \phi_{i}) + \frac{D}{2h^2} (\phi_{i+1}-\phi_i), & \text{for } i = 1, \\
+  		\frac{D}{h^2}(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{D}{2ih^2} (\phi_{i+1}-\phi_{i}), & \text{for } 2 \leq i \leq N-1, \\
+  		\frac{D}{h^2}(\phi_{i-1}-\phi_i) - \frac{D}{2ih^2} (\phi_{i}-\phi_{i-1}), & \text{for } i = N .
+  		\end{cases}
+          \label{eqn:discrete_diffusion2d}
+  \end{equation}
+
+
+ A 2D discretised diffusion simulation with $N=1000$ particles and diffusion coefficient $D=65$ms\textsuperscript{-2} was run using DifferentialEquations.jl \cite{DifferentialEquations} to validate the model. The mean squared displacement is shown in \fig{fig:2d_diffusion}. The mean squared displacement for the discretised simulation is initially linear and equal to $4Dt$ before the curve flattens and tends towards a constant value. This is consistent with the mean squared displacement expected for a bounded diffusion model, calculated in section \ref{diffusion}.
+
+  \begin{figure}
+  \centering
+      \includegraphics[width=0.5\textwidth]{figs/2d_diffusion_diag.pdf}
+      \caption{A diagram of the discretised diffusion process. Each box represents an annular region around the roost centre. The probability density shifts between boxes due to the diffusion process, denoted by $d$. Reflective boundary conditions ensure that probability density never leaves the domain.}
+  \label{fig:2d_diffusion_diag}
+  \end{figure}
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\textwidth]{figs/2d_diffusion.png}
+    \caption{The mean squared displacement for a discretised diffusion simulation with $N=1000$ particles in a bounded 2D domain for $D=65$ms\textsuperscript{-2} compared to the analytical result of $4Dt$ from section \ref{diffusion}.}
+\label{fig:2d_diffusion}
+\end{figure}
+%
+\section{Results}
+%
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.7\textwidth]{figs/2dshrink_sweep.png}
+    \caption{A parameter sweep of parameters $R_0$ and $t_s$, denoting the initial domain radius and time at which the domain begins to shrink. The coefficient of determination $R^2$ is used as a measure of fit. The set of parameters with the highest coefficient of determination is marked with a cross, $R_0$ = 1450m and $t_0$ = 0s.}
+\label{fig:2dshrink_sweep}
+\end{figure}
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.6\textwidth]{figs/2dshrink_result.png}
+    \caption{
+    The MSD for a deterministic diffusion model on a shrinking domain of size $R(t) = \sqrt{R_0^2 - \frac{R_0^2}{t_s^2} t^2}$ with parameters $R_0$ = 1450m and $t_s$ = 0s.}
+\label{fig:2dshrink_result}
+\end{figure}

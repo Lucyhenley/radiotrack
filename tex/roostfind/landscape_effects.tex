@@ -1,0 +1,106 @@
+%\section{Landscape effects}
+
+%$ D = \alpha_0 e^{\alpha_1H + \alpha_2L + \alpha_3R}$
+
+%Where $\alpha_0$ = base diffusion constant where there are no roads, hedgerows
+%or lights, $\alpha_1, \alpha_2, \alpha_3$ are the diffusion constants for
+%hedgerows, lights and roads respectively. $H, L, R$ are occupancy values for
+%hedgerows, lights and roads respectively (eg $H = 1$ in grid squares containing
+%hedgerows, $H = 0$ in grid squares not containing hedgerows)?.
+
+
+\section{Lightscape} 
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/log_point_irradiance.png}
+    \label{fig:point_irradiance}
+    \caption{Point irradiance (log scale) at each square on the grid.}
+\end{figure}
+
+\subsection{Binary point irradiance}
+Light is either present or not: grid squares with light above a certain
+threshold $\epsilon$ are 'light', all others are 'dark'. The model is fit using
+ABC with 2 parameters: $\epsilon$, the threshold, and $\alpha$, the diffusion
+coefficient multiplier for 'light' grid squares.
+
+The diffusion coefficient for each square is given by:
+
+$$D = D_0 e^{\alpha l} $$ 
+
+where $D_0 = 75.5$, the base diffusion coefficient when no light is present, and
+$l_{i,j} = 0$ for 'dark' grid squares and $l_{i,j} = 1$ for 'light' grid
+squares. A uniform prior was used for $\alpha$, $-2 < \alpha < 3$. $\epsilon$
+was chosen from a uniform distribution of the percentiles of non-zero lightscape
+elements. 
+
+
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_threshold_percentile.png}
+    \label{fig:epsilon_threshold}
+    \caption{Prior and posterior for $\epsilon$}
+\end{figure}
+
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_alpha.png}
+    \label{fig:alpha_threshold}
+    \caption{Prior and posterior for $\alpha$}
+\end{figure}
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_threshold_diffusion_alpa_threshold.png}
+    \label{fig:}
+    \caption{Posteriors for $\alpha$ and $\epsilon$}
+\end{figure}
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_intensity_bar.png}
+    \label{fig:nnz_frequency}
+    \caption{Frequency of different levels of light intensity (for non-zero grid squares).}
+
+
+\end{figure}
+
+Peak at 0: include picture
+
+
+\pagebreak
+\pagebreak
+\pagebreak
+
+\subsection{Log scaled point irradiance}
+
+Non-zero elements log scaled and then scaled between 0 and 1.  
+The diffusion coefficient for each square is given by:
+
+$$D = D_0 e^{\alpha l} $$ 
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width = 0.9\linewidth]{landscape_diffusion/lightscape_log_diffusion_alpha.png}
+    \label{fig:log_diffusion}
+    \caption{Prior and posterior for $\alpha$ with log scaled irradiance scores.}
+\end{figure}   
+
+
+%\subsection{Rejection}
+
+%log or no log 
+
+%$$ P_{accept} = \alpha l $$
+
+
+\section{Roads}
+
+Use distance to any roads and do the same threshold/alpha business as with
+lights. Do we have any info on the traffic on these roads?
+
+However, minor roads will have much less of an effect: unlikely to have someone
+driving down a minor road at night? So try with minimum distance to A/B roads
+and dual carriageways too. 

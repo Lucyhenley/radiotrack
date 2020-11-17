@@ -1,0 +1,23 @@
+
+\section{Geographic profiling}
+Geographic profiling is a method used in criminology to identify areas where a criminal is likely to live based on a series of related crimes
+\cite{Rossmo1999}. The method creates a probability surface of the area using the distance between crimes and each grid square. The method assumes that crimes are most likely to occur close to the offenders residence. However, it also includes an area of low probability in the offenders immediate neighbourhood, termed the buffer zone. This is because criminals are less likely to offend very close to their own home, due to to low anonymity and the risk of being seen by their neighbours. The model splits the area where crimes have occurred into a grid, and for each grid square calculates a score function which describes the probability density of the offenders residence being in that square. The score function is given by
+
+\begin{equation}
+p_{ij} = \sum_{n=1}^{C}\left[ \frac{\phi}{\left(|x_i - x_n| + |y_i - y_n|\right)^f} + \frac{(1-\phi)(B^{g-f})}{\left(2B - |x_i - x_n| - |y_i - y_n|\right)^g}    \right]  ,
+\label{eqn:geo}
+\end{equation}
+%
+where $B$ is the radius of the buffer zone, $C$ is the number of foraging sites, $f$ and $g$ are empirically determined exponents, chosen to give the most efficient search procedure. The coordinates of point $(i,j)$ are $(x_i,y_j)$ and $(x_n,y_n)$ are the coordinates of the $n$th site. $\phi$ is a weighting factor set to $0$ for sites within the buffer zone and $1$ for sites outside the buffer zone. The result of the model is a 3D probability surface, where the higher the grid square, the greater likelihood of offender residence. This surface provides an optimal search process based on searching the locations with the highest probability density first.
+
+Geographic profiling has been successfully applied to locating pipistrelle bat roosts using the distribution of foraging sites instead of crimes \cite{Comber2006}. The size of the buffer zone was set to the mean distance pipistrelles travel from the roost, found to be 1.8km \cite{Racey1985}.
+
+The disadvantage of this method is that it requires knowledge of foraging sites
+used by the bats, which are often as difficult to locate as the roosts themselves. Instead, the method can be adapted to use use detector hits rather than foraging sites. As bats start the night at the roost, there will most likely be the most hits close to the roost and therefore the buffer zone was removed. Additionally, bats travel in straight lines rather than following a grid system and so the distance measure was changed from Manhattan distance to Euclidean distance. The equation was also modified to sum over detectors rather than hits. The new score function is given by
+
+\begin{equation}
+p_{ij} = \sum_{n=1}^{C}\left[ \frac{N_n}{\left((x_i - x_n)^2 + (y_i - y_n)^2\right) ^{\frac{f}{2}}   }   \right] ,
+\label{eqn:geo2}
+\end{equation}
+%
+where $(x_n,y_n)$ is now the coordinates of the $n$th detector and $N_n$ is the number of hits recorded at the $n$th detector.

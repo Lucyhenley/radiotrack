@@ -1,0 +1,65 @@
+% Encoding: UTF-8
+\begin{bibliography}{
+
+@book{ovaskainen2016quantitative,
+  title={Quantitative Ecology and Evolutionary Biology: Integrating Models with Data},
+  author={Ovaskainen, Otso and de Knegt, Henrik Johan and del Mar Delgado, Maria},
+  year={2016},
+  publisher={Oxford University Press}
+}
+@article{Beaumont1963,
+annote = {Weighted estimate: weights},
+archivePrefix = {arXiv},
+arxivId = {1112.4755},
+author = {{Mark A. Beaumont,*}, 1 Wenyang Zhang† and David J. Balding},
+doi = {10.1016/S0065-2296(08)60182-2},
+eprint = {1112.4755},
+file = {:C$\backslash$:/Users/c1863988/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Mark A. Beaumont, - 1963 - Approximate Bayesian Computation in Population Genetics.pdf:pdf},
+isbn = {0016-6731},
+issn = {00652296},
+journal = {Advances in Botanical Research},
+number = {C},
+pages = {209--278},
+pmid = {12524368},
+title = {{Approximate Bayesian Computation in Population Genetics}},
+volume = {1},
+year = {1963}
+}
+@article{Giles2008,
+abstract = {We show that multigrid ideas can be used to reduce the computational complexity of estimating an expected value arising from a stochastic differential equation using Monte Carlo path simulations. In the simplest case of a Lipschitz payoff and a Euler discretisation, the computational cost to achieve an accuracy of OOOO is reduced from OOO −3 to OOO −2 log 2. The analysis is supported by numerical results showing significant computational savings. Subject classifications: analysis of algorithms: computational complexity; finance; simulation: efficiency.},
+author = {Giles, Michael B and Research, Operations},
+doi = {10.1287/opre.1070.0496},
+file = {:C$\backslash$:/Users/c1863988/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Giles, Research - 2008 - Multilevel Monte Carlo Path Simulation.pdf:pdf},
+journal = {Operations Research},
+number = {3},
+title = {{Multilevel Monte Carlo Path Simulation}},
+volume = {56},
+year = {2008}
+}
+@techreport{Scott2010,
+archivePrefix = {arXiv},
+arxivId = {1001.2058v1},
+author = {Scott, Carlo and Sisson, A and Fan, Yanan},
+eprint = {1001.2058v1},
+file = {:C$\backslash$:/Users/c1863988/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Scott, Sisson, Fan - 2010 - Likelihood-free Markov chain Monte Carlo.pdf:pdf},
+title = {{Likelihood-free Markov chain Monte Carlo}},
+url = {https://arxiv.org/pdf/1001.2058.pdf},
+year = {2010}
+}
+@article{LeComber2006,
+abstract = {Geographic profiling was originally developed as a statistical tool for use in criminal cases, particularly those involving serial killers and rapists. It is designed to help police forces prioritize lists of suspects by using the location of crime scenes to identify the areas in which the criminal is most likely to live. Two important concepts are the buffer zone (criminals are less likely to commit crimes in the immediate vicinity of their home) and distance decay (criminals commit fewer crimes as the distance from their home increases). In this study, we show how the techniques of geographic profiling may be applied to animal data, using as an example foraging patterns in two sympatric colonies of pipistrelle bats, Pipistrellus pipistrellus and P. pygmaeus, in the northeast of Scotland. We show that if model variables are fitted to known roost locations, these variables may be used as numerical descriptors of foraging patterns. We go on to show that these variables can be used to differentiate patterns of foraging in these two species.},
+author = {{Le Comber}, Steven C and Nicholls, Barry and Rossmo, D Kim and Racey, Paul A},
+doi = {10.1016/j.jtbi.2005.09.012},
+file = {:C$\backslash$:/Users/c1863988/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Le Comber et al. - 2006 - Geographic profiling and animal foraging.pdf:pdf},
+journal = {Journal of Theoretical Biology},
+keywords = {Buffer zone,Chiroptera,Distance decay,Nest,Roost},
+pages = {233--240},
+title = {{Geographic profiling and animal foraging}},
+url = {www.elsevier.com/locate/yjtbi},
+volume = {240},
+year = {2006}
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}
+
+}

@@ -1,4 +1,4 @@
-\section{Introduction}
+\chapter{Introduction} \label{chap:intro}
 
   Bats play an important role in the UK ecosystem, as they help control insect
   populations \cite{Kunz2011} and act as ecological indicators \cite{Jones2009}.
@@ -14,7 +14,8 @@ habitat is the Core Sustenance Zone, the area surrounding a roost within which
 habitat quality has a significant influence on the resilience of the colony
 using the roost \cite{CSZ}. Bats are expected to remain within this area for
 the majority of the time whilst foraging, however this approach does not provide
-any insight into the usage of land inside the Core Sustenance Zone.
+any insight into the usage of land inside the Core Sustenance Zone. Here we will consider the movment of Greater Horseshoe Bats, a species highly dependent on linear
+landscape features, such as hedgerows and waterways for movement whilst foraging \cite{froidevaux2017factors, duverge1994greater}.
 
   Radio tracking surveys are commonly used to identify the habitat use of bats
    by using radio transmitters to
@@ -40,7 +41,7 @@ the roost. Due to the nature of the tracking,
 tracking surveys are highly labour intensive as
  they require first locating a
 roost in order to catch bats, and then teams of
- workers following each bat over the entire night. Transmitters have a limited
+ workers following each bat over the entire night. However, these methods have drawbacks. Transmitters have a limited
  range, and workers therefore
 must remain close to the bat in order to pick up
  the signal, which can often be
@@ -53,6 +54,8 @@ often detached and lost before the end of the
  survey, meaning that surveys can
 be cut short.
 
+\section{Mathematical models for animal movement}
+
   Mathematical models are an
  invaluable tool in understanding
 ecological
@@ -63,15 +66,14 @@ that lead to certain patterns in behaviour
 many possible formalisms, such as stochastic,
  deterministic, spatial, or
 discrete depending on the population and behaviour
- \cite{Murray2011}. The aim
-of this study
+ \cite{Murray2011}.
+
   will be to derive deterministic
  partial differential equation
 (PDE) models to compare with data to describe
-  bat
- movement during foraging. Three different PDE models will be considered here. First, a diffusion model to describe the dispersal of bats away from the roosts. Two models describing movement for the remainder of the night whilst bats are foraging, a convection-diffusion model and a model describing diffusion on a shrinking domain. Convection-diffusion models are widely used in ecology to model population migration, however we will show here that a convection-diffusion model is not consistent with radio tracking data. Instead, a shrinking domain diffusion model provides a better description of bat movement whilst foraging.
+  bat movement during foraging. Various PDE models will be considered here. Diffusion models in both one and two dimensions are discussed to describe the dispersal of bats away from the roosts. Two models are used to describe movement for the remainder of the night whilst bats are foraging, a convection-diffusion model and a model describing diffusion on a shrinking domain. Convection-diffusion models are widely used in ecology to model population migration, however we will show here that a convection-diffusion model is not consistent with radio tracking data. Instead, a shrinking domain diffusion model provides a better description of bat movement whilst foraging.
 
- \subsection{Bayesian Statistics}
+ \section{Bayesian Statistics}
  Bayesian
 statistics is a statistical
 paradigm for updating knowledge about a
@@ -107,7 +109,7 @@ possible
  Approximate Bayesian Compuation (ABC) is an approach to Bayesian
 inference using
  simulation and random sampling \cite{Beaumont2002,
-Sisson2010}.
+Sisson2010} and is widely used for problems where the analytical form of the likelihood function is intractable.
  ABC replaces the calculation
  of the likelihood function
 $p(\bm{Y}

@@ -1,0 +1,77 @@
+
+\section{Generalised Method of Moments}
+
+Generalised method of moments (GMM) estimation is an alternative parameter estimation method, and is commonly used in econometrics \cite{Hansen1982, Hall1993}. It provides a point estimate by minimising a function of the parameters and the data, and is usually a more efficient method than a random search as in ABC. GMM is based on the specificication of certain moment conditions, functions of a model's parameters $\theta$ and a set of observations $Y$,
+%
+\begin{equation}
+g(\theta) = \mathbb{E}[f(Y, \theta)] ,
+\label{eqn:moment}
+\end{equation}
+%
+where $f$ is a set of functions, one for each observation in $Y$. The functions $f$ are specified such that the expectation is zero at the true parameter value $\theta_0$,
+%
+\begin{equation}
+g(\theta_0) = \mathbb{E}[f(Y, \theta_0)] = 0.
+\label{eqn:moment}
+\end{equation}
+
+Calculating the expectation for a given sample $t$ is often impossible, so this can be replaced with sample averages to obtain sample moments,
+%
+\begin{equation}
+g_T(\theta) = \frac{1}{T} \sum_{t=1}^{T} f(Y_t, \theta) .
+\end{equation}
+%
+The moment condition becomes
+%
+\begin{equation}
+g_T(\theta_0) = \frac{1}{T} \sum_{t=1}^T f(Y_t, \theta_0) .
+\end{equation}
+
+In the case where there are more functions $f$ than parameters $\theta$, the problem is over-identified and there is no solution to $g_T(\theta_0) = 0$. Instead, the distance $g_T(\theta) - 0$ is minimized. This distance is measured by the quadratic form
+%
+\begin{equation}
+Q_T(\theta) = g_T(\theta)^T W_T g_T(\theta),
+\label{eqn:GMM_distance}
+\end{equation}
+%
+where $W_T$ is a symmetric and positive weight matrix and $g_T(\theta)^T$ denotes the transpose of $g_T(\theta)$. The GMM estimator is then the minimiser of \eqn{eqn:GMM_distance},
+%
+\begin{equation}
+\begin{split}
+\theta_0 &= \arg \min_{\theta}(g_T(\theta)^T W_Tg_T(\theta)) \\
+         &= \arg \min_{\theta} \left[ \left( \frac{1}{T}\sum_{t=1}^T f(Y_t, \theta_0) \right)^T W_T \left( \frac{1}{T}\sum_{t=1}^T f(Y_t, \theta_0) \right) \right] .
+\end{split}
+\label{eqn:GMM}
+\end{equation}
+
+Usually, the data is collected with successive measurements, with mean values $Y$. The variance $\sigma^2$ of each entry of $Y$ is used to determine an optimal weighting matrix which should provide the most efficient search,
+%
+\begin{equation}
+W_T = \textrm{diag} \left(\frac{1}{\sigma^2} \right) .
+\end{equation}
+
+The most likely parameter value $\theta_0$ is generally found using numerical optimisation to minimise \eqn{eqn:GMM}.
+
+\subsection{Applying GMM to locating roosts}
+
+The distances $g_T(\theta)$ are calculated as the difference between $X$, the expected number of hits calculated using \eqn{eqn:expect_hits} and $Y$, the number of hits at each detector in the bat surveys,
+%
+\begin{equation}
+g_T(\theta) = \mathbb{E}X(\theta) - Y .
+\end{equation}
+%
+However, the weighting matrix is more problematic as the variance of successive samples is not always calculable. Detectors are placed out for multiple nights, but sometimes fail as they can be damaged by animals. Therefore, some detectors record only one night's data and so there is no variance in these measurements. Instead, since the time between recordings is analagous to waiting times we can assume that the time between detector hits are poisson distributed. The variance of a poisson distribution is equal to its mean, so the mean number of hits for each detector is used instead of variance for the weighting matrix, $\sigma^2 \approx Y$. Some detectors record no hits and $Y=0$ in this case, so the value is shifted to avoid dividing by zero, $\sigma^2 \approx Y+1$. The weighting matrix is therefore
+
+\begin{equation}
+W_T = \textrm{diag} \left(\frac{1}{1+Y} \right) .
+\label{eqn:weighting}
+\end{equation}
+
+The GMM optimiser is then given by
+
+\begin{equation}
+\theta_0 = \arg \min_{\theta} \left( (\mathbb{E}X(\theta) - Y)^T\textrm{diag} \left(\frac{1}{1+Y} \right) .(\mathbb{E}X(\theta) - Y) \right) .
+\label{eqn:roost_gmm}
+\end{equation}
+
+The minimum can be found using a numerical optimiser. In this case, the function given by \eqn{eqn:roost_gmm} has many local minima so a global optimiser is needed. The adaptive differential evolution optimiser \textproc{adaptive\_de\_rand\_1\_bin} found in Julia package BlackBoxOptim.jl \cite{Feldt2018} is used.

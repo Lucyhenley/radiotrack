@@ -1,0 +1,76 @@
+
+\section{Bayesian statistics}
+
+Bayesian statistics is a statistical paradigm for updating knowledge about a
+parameter given related data \cite{Gelman2013}. The probability distribution of a parameter
+$\theta$ conditioned on observations $\bm{Y} = \{ Y_1, Y_2, ..., Y_n \}$ is
+given by Bayes' Theorem:
+
+\begin{equation}
+  p(\theta \mid \bm{Y}) \propto p(\bm{Y} \mid \theta) p(\theta)
+  \nonumber
+\end{equation}
+%
+where $p(\theta \mid Y)$ is the posterior probability distribution, formally
+describing the probability that the parameter value is $\theta$ given
+observations $\bm{Y}$. The likelihood is given by $p(\bm{Y} \mid \theta)$ and
+is the probability of observing $\bm{Y}$ if the parameter value is $\theta$. The
+prior distribution is $p(\theta)$, describing the initial knowledge of possible
+parameter values.
+
+In our case, the parameter $\theta$ is the roost location, and $\bm{Y}$ is the
+number of hits at each detector found in the bat surveys. The posterior
+distribution $ p(\theta \mid \bm{Y})$ will be a distribution describing the
+probability of possible roost locations. The prior distribution $p(\theta)$
+covers the initial search area, and is assumed to be uniform over the original
+search area (the circle of radius 3km centred around the original detected bat).
+The likelihood $p(\bm{Y} \mid \theta)$ is problematic as the dependencies
+between components of $\bm{Y}$ are unclear, and therefore the probability of
+recording a given $\bm{Y}$ is difficult to estimate.
+
+\section{Approximate Bayesian Computation (ABC)}
+\label{section:ABC}
+
+Approximate Bayesian Compuation (ABC) is an approach to Bayesian inference using
+simulation \cite{Beaumont2002, Sisson2010}. ABC replaces the calculation
+of the likelihood function $p(\bm{Y} \mid \theta)$ with simulation of the model
+using a specific parameter value $\theta'$ to produce an artificial dataset
+$\bm{X}$. Then, some distance metric $\rho (\bm{X}, \bm{Y}) $, usually defined
+as a distance between summary statistics of $\bm{X}$ and $\bm{Y}$, is used to
+compare simulated data $\bm{X}$ to observations $\bm{Y}$. If $\rho (\bm{X},
+\bm{Y}) $ is smaller than some threshold value $\epsilon$, the simulated data is
+close enough to observations that the candidate parameter $\theta'$ has some
+nonzero probability of being in the posterior distribution $ p(\theta \mid
+\bm{Y})$, and the sample $\theta'$ is accepted into the simulated posterior
+distribution. This is repeated until the desired sample size is reached. For
+small $\epsilon$, the simulated posterior distribution produced approximates the
+true posterior $ p(\theta \mid \bm{Y})$.
+
+\subsection{The ABC Algorithm}
+
+First, the threshold parameter $\epsilon$ and sample size $n$ are fixed and the
+prior distribution $p(\theta)$ is defined as uniform over the circle of 3km
+radius around the original detected bat, $p(\theta) = \frac{1}{3^2 \pi}$.
+
+Observations $\bm{Y}$ are given by the number of hits at each detector from bat
+surveys and dataset $\bm{X}$ is the expected number of hits at each detector for
+a roost at $\theta'$ given by Equation \ref{eqn:expect_hits}. The posterior
+distribution $p(\theta \mid \bm{Y})$ for roost locations will be given by
+$\bm{\theta}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
+
+The pseudocode is as follows:
+
+\begin{algorithmic}
+  \While {$i < n$}
+    \State  Sample $\theta'$ from $p(\theta)$
+    \State Calculate $\bm{X}$ using Equation \ref{eqn:expect_hits}
+    \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
+    \If {$\bar{\rho} < \epsilon$}
+      \State $\bm{\theta_i} \gets \theta'$
+    	\State $i \gets i + 1$
+    \EndIf
+  \EndWhile
+\end{algorithmic}
+
+The probability distribution function of the roost search area is then given by $\bm{\theta}$, and the true location of the
+roost can be estimated by taking the mean of the posterior $\bm{\theta}$.

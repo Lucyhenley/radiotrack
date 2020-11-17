@@ -1,19 +1,19 @@
 
-\section{Radio Tracking Survey}
+\section{Radio Tracking Survey} \label{sect:radiotrack}
 
 A radio tracking study was conducted at 3 Greater Horseshoe bat roosts in Devon to
 study the usage of land surrounding the roosts \cite{Mathews2009}. 12 bats were fitted with
 radio tags and studied over 24 nights. Due to a limited number of workers and
- limited battery life on the tags, bats were not tracked every night. Four day
+ limited battery life on the tags, each bat was not tracked every night. Four day
  roosts were used by bats in the study, with some bats using different roosts on
  different days. The roost used by each bat was identified for 2/3 of nights.
  For this analysis, only the
 data from nights when a bat's roost was known was used, since the dispersal
 from the roost is important.
 A total of 322 bat locations were used for this analysis. The trajectory for bat
-one over the 6 nights it was tracked is shown in \fig{fig:bat1}.  The bat visits different areas whilst foraging and each trajectory resembles a random walk. The number of
+one over the 6 nights it was tracked is shown in \fig{fig:bat1}. The bat visits different areas whilst foraging, and takes a different route on each night. Each trajectory resembles a random walk. The number of
 locations recorded varies each night because the signal was lost during the night
- on some nights.
+ on some nights. The recorded locations of all bats over the study period are displayed in a polar histogram in \fig{fig:polar_histogram}. The plot shows that most records are located close to the roost, and are distributed over all angles.
 
 \begin{figure} [h]
     \centering
@@ -21,6 +21,14 @@ locations recorded varies each night because the signal was lost during the nigh
         \caption{The locations of bat 1 over 6 nights of the survey.}
     \label{fig:bat1}
 \end{figure}
+
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\textwidth]{figs/polar_histogram.pdf}
+    \caption{Polar histogram of bat locations over the study period. The density for each segment is calculated as the number of locations recorded in the segment divided by the area of the segment.}
+\label{fig:polar_histogram}
+\end{figure}
+
 
 Since the data is recorded at irregular time intervals, locations were linearly
 interpolated between recordings at intervals of $\Delta t = 200$ seconds.
