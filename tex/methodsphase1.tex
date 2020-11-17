@@ -56,25 +56,25 @@ specifies that all bats begin the night at the roost before moving away to begin
 
  The equation for box 1 at $x = 0$ is
  \begin{equation}
- \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{0}-2\phi_1 +\phi_{2}) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}).
+ \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{0}-2\phi_1 +\phi_{2}).
  \end{equation}
  %
  However, due to the reflective boundary condition in \eqn{eqn:BC1d}, any bats in a trajectory that would pass through the boundary are reflected back in the direction of the roost. Bats that would pass from box 1 to an imaginary box 0 are instead reflected back, and therefore the value of $\phi$ in the imaginary box 0 is the same as in box 1, $\phi_0$ = $\phi_1$, and
  %
  \begin{equation}
- \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{2}- \phi_1) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}) .
+ \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{2}- \phi_1).
          \label{eqn:box_1}
  \end{equation}
 %
  Similarly, from \eqn{eqn:diffusion_discrete1di}, for strip $n$ at $r=R$,
  %
  \begin{equation}
- \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-2\phi_n +\phi_{n+1}) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n}) .
+ \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-2\phi_n +\phi_{n+1}).
  \end{equation}
  %
  Due to the reflective boundary condition between strip $n$ and strip $n+1$, $\phi_{n+1} = \phi_n$, and
  \begin{equation}
- \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-\phi_n) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n-1}) .
+ \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-\phi_n).
          \label{eqn:strip_n1d}
  \end{equation}
 
@@ -228,28 +228,29 @@ width $h=R/N$. Due to the assumption that the domain is symmetric, we will not c
 \label{fig:2d_diffusion_diag}
 \end{figure}
 
-The central difference approximation to the second order derivative at annulus $i$ is given by
+The central difference approximation to the first and second order derivatives at annulus $i$ are given by
 %
-\begin{equation}
- \at{\DD{\phi}{r}}{r=r_i}= \frac{\phi(r_i-h)-2\phi(r_i)+\phi(r_i+h)}{h^2}. .\label{eqn:diffusion_discretei}
-\end{equation}
+\begin{align}
+ \at{\D{\phi}{r}}{r=r_i}&= \frac{1}{r_i}\frac{\phi(r_i+h)-\phi(r_i-h)}{2h}, \\
+ \at{\DD{\phi}{r}}{r=r_i}&= \frac{\phi(r_i-h)-2\phi(r_i)+\phi(r_i+h)}{h^2}. \label{eqn:diffusion_discretei}
+\end{align}
 %
 The central difference approximation to \eqn{eqn:diffusion_polar2d} is then
 %
 \begin{equation}
- \at{\D{\phi}{t}}{r=r_i} = D \left(\frac{\phi(r-h)-2\phi(r)+\phi(r+h)}{h^2} + \frac{1}{r} \frac{\phi(r+h)-\phi(r-h)}{2 h} \right).
+ \at{\D{\phi}{t}}{r=r_i} = D \left(\frac{\phi(r_i-h)-2\phi(r_i)+\phi(r_i+h)}{h^2} + \frac{1}{r_i} \frac{\phi(r_i+h)-\phi(r_i-h)}{2 h} \right).
  \label{eqn:diffusion_polar_cd}
 \end{equation}
 %
 The distance $r_i$ at strip $i$ is given by
 \begin{equation}
-r = i h ,
+r_i = i h ,
 \end{equation}
 %
 and \eqn{eqn:diffusion_polar_cd} can therefore be written as
 %
 \begin{equation}
-\D{\phi(r)}{t} = \frac{D}{h^2} \left(\phi(r-h)-2\phi(r)+\phi(r+h)\right) + \frac{D}{2ih^2}\left(\phi(r+h)-\phi(r-h) \right).
+\D{\phi(r_i)}{t} = \frac{D}{h^2} \left(\phi(r_i-h)-2\phi(r_i)+\phi(r_i+h)\right) + \frac{D}{2ih^2}\left(\phi(r_i+h)-\phi(r_i-h) \right).
 \label{eqn:diffusion_polar_final}
 \end{equation}
 %
