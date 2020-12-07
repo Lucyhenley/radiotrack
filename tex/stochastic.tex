@@ -1,0 +1,126 @@
+
+\chapter{Stochastic models for bat movement}
+
+So far, only deterministic partial differential equation models have been
+considered. These models provide a good description of average behaviour with a
+population large enough to treat as a continuum. However, bat colonies tend to
+contain a finite number of individuals. Greater Horseshoe bat colonies typically
+have 50 - 200 individuals, although some colonies can number up to 600
+\cite{greenaway1990field}. As a result, it is important to consider stochastic
+effects in order to provide a realistic model for bat movement. Here we will
+consider a stochastic description of the diffusion model describing dispersal
+from the roost in two dimensions, and a model for the return to roost.
+
+	\section{A stochastic diffusion model}
+
+	For simplicity, we will first derive a stochastic diffusion model one
+	dimension, before extending to two dimensions.
+
+	Solution to diffusion equation in 1D with IC and BC describes the probability
+	density after time $t$.
+
+	\begin{equation}
+\phi(x,t) = \frac{1}{\sqrt{4\pi Dt}}\exp \left(\frac{-x^2}{4Dt} \right) ,
+\label{eqn:diffusion_solution1d}
+	\end{equation}
+%
+equivalent to a normal distribution with mean $\mu = 0$ and variance $\sigma^2 =
+2Dt$.
+
+To convert to a stochastic diffusion model, we can convert the deterministic
+diffusion equation to a stochastic differential equation with discrete time and
+continuous space \cite{ghoniem1985grid,roberts2002langevin}. We assume that bats
+are able to move freely through space, with the location recorded at regular
+timesteps, with interval $\tau$. If all particles are initially located at the
+origin (IC), $x(t=0)=0$, the probability density after one timestep $\tau$ must
+be
+%
+\begin{equation}
+\phi(x,t) = \frac{1}{\sqrt{4\pi D\tau}}\exp \left(\frac{-x^2}{4D\tau} \right) ,
+\end{equation}
+%
+equivalent to a normal distribution with mean $\mu = 0$ and variance $\sigma^2 =
+2D\tau$. Therefore, for the first timestep, each particle takes a step $dx$
+drawn at random from this distribution, $dx \sim \mathcal{N}(0,2D\tau)$. If each
+particle then takes a second step, drawn from the same distribution, the
+probability density at $x$ and $t = 2\tau$ is given by the sum of the
+probabilities that the particle reaches $x$ in 2 steps, the integral
+%
+\begin{equation}
+\phi(x,t=2\tau) = \int_{-\infty}^{\infty} \frac{1}{4\pi D \tau} \exp \left(\frac{-\eta^2}{4D\tau} \right) \exp \left(\frac{-(x-\eta)^2}{4D\tau}\right).
+\end{equation}
+The result of this integral is given by
+%
+\begin{equation}
+\phi(x,t=2\tau) = \frac{1}{\sqrt{8\pi D\tau}} \exp \left(\frac{-y^2}{8\pi D\tau} \right).
+\end{equation}
+%
+By induction, after $k$ steps, at time $k\tau$, each chosen from the same distribution, $dx \sim \mathcal{N}(0,2D\tau)$, the probability density at $x$ is
+%
+\begin{equation}
+\phi(x,t=k\tau) = \frac{1}{\sqrt{4k\pi D\tau}} \exp \left(\frac{-y^2}{4k\pi D\tau} \right),
+\end{equation}
+%
+equivalent to the distribution given by the solution to the diffusion equation at time $t=k\tau$, \eqn{eqn:diffusion_solution1d}.
+%
+We can write this process as a stochastic differential equation,
+%
+\begin{equation}
+dx_i = \rho_i,
+\label{eqn:SDE}
+\end{equation}
+%
+where $\{\rho_i\}$ is a set of random numbers chosen from the normal distribution with zero mean and standard deviation $\sqrt{2D\tau}$, such that $\rho_i \sim \mathcal{N}(0,2D\tau)$. The expression for $x_{i+1}$ can be written as
+%
+\begin{equation}
+x_{i+1} = x_i + \rho_i,
+\end{equation}
+%
+and an expression for $x_n$ can be written as a sum of random numbers,
+\begin{equation}
+x_{n} = x_0 + \sum_{i=1}^{n} \rho_i,
+\end{equation}
+%
+where $x_0$ is the initial position at time $t=0$.
+
+\subsection{Extending to two dimensions}
+
+To extend the stochastic differential equation from one to two dimensions, we can consider the solution to the two dimensional diffusion equation,
+%
+\begin{equation}
+\phi(x,y,t) = \frac{1}{4\pi Dt}\exp \left(\frac{-(x^2+y^2)}{4Dt} \right) .
+\label{eqn:diffusion_solution2d}
+\end{equation}
+%
+By separating this into $x$ and $y$ directions, we see that the solution to the two dimensional diffusion model is simply two one dimensional diffusion solutions multiplied together,
+\begin{equation}
+\phi(x,y,t) = \frac{1}{\sqrt{4\pi Dt}}\exp \left(\frac{-x^2}{4Dt} \right) \frac{1}{\sqrt{4\pi Dt}}\exp \left(\frac{-y^2}{4Dt} \right) .
+\end{equation}
+%
+By treating the $x$ and $y$ directions separately, we use \eqn{eqn:SDE} to generate two stochastic differential equations for movement in each direction,
+\begin{align}
+%
+dx_i &= \rho_i, \\
+dy_i &= \lambda_i,
+\end{align}
+%
+where $\{\rho_i\}$ and $\{\lambda_i\}$ are both sets of random numbers chosen from the normal distribution with zero mean and standard deviation $\sqrt{2D\tau}$, such that $\rho_i \sim \mathcal{N}(0,2D\tau)$ and $\lambda_i \sim \mathcal{N}(0,2D\tau)$.
+
+	\section{Leapfrog model: return to roost}
+
+\section{Results}
+
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.8\textwidth]{leapfrog_ABC.png}
+        \caption{Leapfrog ABC prior/posterior        }
+    \label{fig:leapfrog_abc}
+\end{figure}
+
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.8\textwidth]{leapfrog_fit.png}
+        \caption{MSD for leapfrog model compared to radio tracking data.
+        }
+    \label{fig:leapfrog_fit}
+\end{figure}

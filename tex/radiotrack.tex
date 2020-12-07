@@ -1,49 +1,62 @@
 
-\section{Radio Tracking Survey} \label{sect:radiotrack}
+\section{Radio tracking survey} \label{sect:radiotrack}
 
 A radio tracking study was conducted at 3 Greater Horseshoe bat roosts in Devon to
 study the usage of land surrounding the roosts \cite{Mathews2009}. 12 bats were fitted with
 radio tags and studied over 24 nights. Due to a limited number of workers and
  limited battery life on the tags, each bat was not tracked every night. Four day
  roosts were used by bats in the study, with some bats using different roosts on
- different days. The roost used by each bat was identified for 2/3 of nights.
+ different days. The roost used by each bat was not identified on every night.
+
  For this analysis, only the
 data from nights when a bat's roost was known was used, since the dispersal
 from the roost is important.
 A total of 322 bat locations were used for this analysis. The trajectory for bat
-one over the 6 nights it was tracked is shown in \fig{fig:bat1}. The bat visits different areas whilst foraging, and takes a different route on each night. Each trajectory resembles a random walk. The number of
+1 over the 6 nights it was tracked is shown in \fig{fig:bat1}. Bat 1 used 2 of the 4 roosts identified during the course of the study and visited different areas whilst foraging, taking a different route on each night. Each trajectory resembles a random walk. The number of
 locations recorded varies each night because the signal was lost during the night
- on some nights. The recorded locations of all bats over the study period are displayed in a polar histogram in \fig{fig:polar_histogram}. The plot shows that most records are located close to the roost, and are distributed over all angles.
+ on some nights. The recorded locations of all bats over the study period are displayed in a polar histogram in \fig{fig:polar_histogram}. The plot shows that most records are located close to the roost, and are distributed approximately uniformly over all angles.
 
 \begin{figure} [h]
     \centering
         \includegraphics[width=0.8\textwidth]{bat1_locations.png}
-        \caption{The locations of bat 1 over 6 nights of the survey.}
+        \caption{The locations of bat 1 over 6 nights of the survey. The two roosts bat 1 used during the course of the study are shown as diamonds.}
     \label{fig:bat1}
 \end{figure}
 
 \begin{figure}
 \centering
     \includegraphics[width=0.8\textwidth]{figs/polar_histogram.pdf}
-    \caption{Polar histogram of bat locations over the study period. The density for each segment is calculated as the number of locations recorded in the segment divided by the area of the segment.}
+    \caption{Polar histogram of bat locations over the study period. The density for each segment is calculated as the number of locations recorded in the segment divided by the area of the segment. A scatter plot displaying each recording is overlaid on the histogram.}
 \label{fig:polar_histogram}
 \end{figure}
 
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.6\textwidth]{time_interval.png}
+        \caption{A histogram of the time intervals between consecutive recordings. Outliers with time intervals over the 75th percentile at 5000 seconds have been removed, and the median value is 600 seconds.}
+    \label{fig:time_interval}
+\end{figure}
 
-Since the data is recorded at irregular time intervals, locations were linearly
-interpolated between recordings at intervals of $\Delta t = 200$ seconds.
-The mean-squared distance (MSD) from the roost was calculated using the
-interpolated positions and is shown in \fig{fig:MSD}. The standard error is given by $\sigma_{\bar{x}} = \sigma/\sqrt{n}$, where
+A histogram of time intervals between consecutive recordings is shown in \fig{fig:time_interval}. From this, it is clear that the data is recorded at irregular time intervals. In order to produce regularly spaced recordings, locations were linearly
+interpolated between recordings at intervals of $\Delta t = 600$ seconds, the median time interval shown in the data.
+The mean-squared distance (MSD) from the roost was calculated from the
+interpolated positions using
+%
+\begin{equation}
+\left<r^2(t)\right> = \frac{1}{N} \sum_{i=1}{N} |\bm{x_i}(t)-\bm{x_i}(0)|^2,
+\end{equation}
+%
+where $\bm{x_i}(t)$ is the location $(x,y)$ of bat $i$ at time $t$. The MSD is shown in \fig{fig:MSD}. The standard error is given by $\sigma_{\bar{x}} = \sigma/\sqrt{n}$, where
 $\sigma$ is the standard deviation and $n$ is the number of observations, and is
-shown as a ribbon. The data indicates two movement phases, an initial dispersal from the roosts, followed by a gradual return whilst bats are foraging.
+shown as an orange ribbon around the MSD in \fig{fig:MSD}. The data indicates two movement phases, an initial rapid dispersal from the roosts, followed by a gradual return whilst bats are foraging.
 
-During phase 1, for $0 \leq t < 1.6$ hours, the mean squared distance seems to increase linearly as bats are dispersing. The standard error grows during this phase because the number of recordings $n$ increases as tagged bats are found and the signal is picked up. During phase 2, for $1.6 \leq t < 8$ hours, the mean squared distance decreases at an increasing rate as bats move back towards the roost, shrinking to zero at $t \approx 8$ hours. The variation shrinks to zero during this phase because the number of recordings $n$ reduces later
-in the night when the signal is lost.
+During phase 1, for $0 \leq t < 1.6$ hours, the MSD seems to increase linearly as bats are dispersing. The standard error grows during this phase as the bats spread out. uring phase 2, for $1.6 \leq t < 8$ hours, the MSD decreases at an increasing rate as bats move back towards the roost, shrinking to zero at $t \approx 8$ hours. The variation shrinks to zero during this phase as bats start to converge on the roost.
+%The standard error grows during this phase because the number of recordings $n$ increases as tagged bats are found and the signal is picked up. During phase 2, for $1.6 \leq t < 8$ hours, the mean squared distance decreases at an increasing rate as bats move back towards the roost, shrinking to zero at $t \approx 8$ hours. The variation shrinks to zero during this phase because the number of recordings $n$ reduces later in the night when the signal is lost.
 %
 \begin{figure} [h]
     \centering
-        \includegraphics[width=\textwidth]{RadioTrack_MSD.png}
+        \includegraphics[width=\textwidth]{RadioTrack_MSD_annotated.pdf}
         \caption{The mean-squared distance (MSD) for all radio tracked bats.
-        The red dots are the averaged values over 56 trajectories and the standard error is shown as a ribbon.}
+        The red dots are the averaged values over 56 trajectories and the standard error is shown as an orange ribbon.}
     \label{fig:MSD}
 \end{figure}

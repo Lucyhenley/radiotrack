@@ -8,7 +8,7 @@ Diffusion models are widely used to model animal movement, specifically dispersa
 species \cite{Ovaskainen2016}. In this case, a diffusion model is used to
 describe dispersal during phase one of movement as bats fly away from the roost. Since it is commonly accepted that bats tend
 to forage within the Core Sustenance Zone and remain within a certain distance
- of the roost, a diffusion model on a bounded domain is considered here. As discussed in \chap{chap:intro}, Greater Horseshoe bats tend to move along linear features whilst foraging, and as such we will consider a one dimensional diffusion model in which bats are confined to moving along lines, as well as in two dimensions such that bats are able to travel anywhere within the domain.
+ of the roost, a diffusion model on a bounded domain is considered here. As discussed in \chap{chap:intro}, Greater Horseshoe bats tend to move along linear features whilst foraging, and as such we will consider a one dimensional diffusion model in which bats are confined to moving along lines, as well as in a two dimensional diffusion model such that bats are able to travel anywhere within the domain.
 
  \subsubsection{A diffusion model in one dimension}
 
@@ -19,7 +19,7 @@ First we will first consider diffusion on a one  dimensional domain, $\Omega \su
    \label{eqn:diffusion_cartesian}
  \end{equation}
  %
- where the diffusion coefficient $D$ quantifies the rate of spread. The boundary conditions,
+ where the diffusion coefficient, $D$, is a positive constant and quantifies the rate of spread. The boundary conditions,
  %
 \begin{align}
 \D{\phi(x=0,t)}{x} &= 0, \\
@@ -36,23 +36,87 @@ specify zero-flux across the boundary. The initial condition,
 %
 specifies that all bats begin the night at the roost before moving away to begin foraging.
 %
- \subsubsection{A Discretised Diffusion Model} \label{1ddiscrete}
+\subsubsection{Mean squared displacement in the one dimensional diffusion model} \label{msd1d}
+%
+The relationship between the expected mean squared displacement (MSD) and time $t$
+can be calculated using moments of the probability density $\phi$,
+%
+\begin{equation}
+\left<x^2\right> = \int_0^R x^2 \phi(x,t) dx .
+\label{eqn:MSD_expectation}
+\end{equation}
+%
+Taking the time derivative of both sides and substituting
+\begin{equation}
+    \D{\phi(x,t)}{t}
+\end{equation} from \eqn{eqn:diffusion_cartesian},
+%
+\begin{align}
+\frac{d}{dt} \left<x^2\right> &= \frac{d}{dt}\int_0^x x^2 \phi(x,t) dx ,\nonumber\\
+                           &= \int_0^{R}  x^2 \D{\phi}{t} dx ,\nonumber\\
+                           &= \int_0^{R} D \underbrace{\left[ x^2 \D{ \phi}{ x} \right]_0^{R}}_{=0} - D \int_0^{R} 2x \D{\phi}{x} dx, \nonumber\\
+                            &= -2D \left[ x \phi \right]_0^{R} + 2D \int_0^{R} \phi dx , \nonumber\\
+&= -2DR\phi(R,t) + 2D ,
+\label{eqn:diffusion_1}
+\end{align}
+%
+and therefore, integrating with respect to time gives
+%
+\begin{equation}
+\left<x^2\right> = 2D \left( t - \int_0^t R \phi(R,\tau) d \tau \right).
+\label{eqn:diffusion_msd1d}
+\end{equation}
+%
+Over short timescales, $\phi(R,t) \approx 0$, since the probability of a reaching the boundary over a short period of time is small due to the initial condition. Therefore, over a short timescale, whilst
+%
+\begin{equation}
+\sqrt{2Dt} <<R,
+\end{equation}
+%
+the expected MSD for diffusion in one dimension is directly proportional to time,
+%
+\begin{equation}
+\left<x^2\right> \approx 2Dt.
+\label{eqn:diffusion_short1d}
+\end{equation}
+%
+As an a posteriori check, we note that the MSD in \fig{fig:MSD} is indeed linear within phase 1, and
+%
+%An expression for mean-squared displacement over a long timescale can also be derived using \eqn{eqn:diffusion_msd1d}. Over long timescales, we expect the probability density to be uniformly spread across the domain,
+%
+%\begin{equation}
+%\phi(x,t) = \frac{1}{R} .
+%\end{equation}
+%
+%Substituting this into \eqn{eqn:diffusion_msd1d} gives
+%
+%\begin{align}
+%\left<x^2\right> &= 2Dt - \int_0^t \tau d\tau\\
+%&= 2Dt - \left[ \frac{t^2}{2}\right]_0^t, \\
+%&= 2Dt - \frac{t^2}{2},
+%\end{align}
+%
+%and therefore the mean squared displacement is constant over long timescales.
+
+
+ \subsubsection{A discretised diffusion model} \label{1ddiscrete}
 
  The diffusion equation on a bounded domain can be solved using a discretised ODE description \cite{woolley2011stochastic}. The domain can be discretised into $N$ boxes, each of length
- $h\Delta x=R/N$. The probability density in each box $i$ at $x=x_i$ is denoted by $\phi_i$, and evolves over time according to the diffusion process. A diagram of the motion is shown in \fig{fig:diffusion_diagram1d}. A finite difference approximation is used to describe the movement of probability density between boxes. The central difference approximation to the second order derivative at box $i$ is given by
+ $h=R/N$. The probability density in each box $i$ at $x=x_i$ is denoted by $\phi_i$, and evolves over time according to the diffusion process. A diagram of the motion is shown in \fig{fig:diffusion_diagram1d}. A finite difference approximation is used to describe the movement of probability density between boxes. The central difference approximation to the second order derivative at box $i$ is given by
  %
  \begin{equation}
   \at{\DD{\phi}{x}}{x=x_i}= \frac{\phi_{i-1}-2\phi_i+\phi_{i+1}}{h^2}, \label{eqn:diffusion_discrete1di}
  \end{equation}
  %
- where $\phi_{i-1} = \phi_i - h$ and $\phi_{i+1} = \phi_i + h$.
-
+ where $\phi_i=\phi(x_i)$ and $\phi_{i \pm 1}=\phi{x_i \pm h}$.
+%
  \begin{figure} [t]
      \centering
          \includegraphics[width=0.5\textwidth]{1d_diffusion_diag.pdf}
          \caption{A diagram to illustrate the movement of probability density between boxes in the discretised diffusion model. Diffusion between boxes is represented by $d$ and the probability density in each box $i$ is denoted by $\phi_i$.}
      \label{fig:diffusion_diagram1d}
  \end{figure}
+%
 
  The equation for box 1 at $x = 0$ is
  \begin{equation}
@@ -66,19 +130,19 @@ specifies that all bats begin the night at the roost before moving away to begin
          \label{eqn:box_1}
  \end{equation}
 %
- Similarly, from \eqn{eqn:diffusion_discrete1di}, for strip $n$ at $r=R$,
+ Similarly, from \eqn{eqn:diffusion_discrete1di}, for box $n$ at $x=R$,
  %
  \begin{equation}
  \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-2\phi_n +\phi_{n+1}).
  \end{equation}
  %
- Due to the reflective boundary condition between strip $n$ and strip $n+1$, $\phi_{n+1} = \phi_n$, and
+ Due to the reflective boundary condition between box $n$ and box $n+1$, $\phi_{n+1} = \phi_n$, and
  \begin{equation}
  \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-\phi_n).
-         \label{eqn:strip_n1d}
+         \label{eqn:annulus_n1d}
  \end{equation}
 
- Gathering up \eqnto{eqn:diffusion_discrete1di}{eqn:strip_n1d} and substituting $d = \frac{D}{h^2}$, the set of equations describing the full system is
+ Collecting \eqnto{eqn:diffusion_discrete1di}{eqn:annulus_n1d} and substituting $d = D/h^2$, the set of equations describing the full system is
  %
  \begin{equation}
  \frac{d\phi_i}{dt} = \begin{cases}
@@ -104,14 +168,16 @@ specifies that all bats begin the night at the roost before moving away to begin
 
  %
  A diagram illustrating the spread of probability density due to the diffusion process is shown in \fig{fig:diffusion_diagram1d}. This generates a system of $N$ ODEs describing motion over
- the domain at each timestep and which can be solved using a numerical ODE solver. The equations for $i=1$ and $i=N$ correspond to reflective, zero-flux boundary conditions. The discretised model was simulated using DifferentialEquations.jl, a package for solving differential equations in Julia \cite{DifferentialEquations}. The result of a simulation with $N = 100$ boxes in a domain of length $R = 1000$m and diffusion coefficient $D = 100\mathrm{ms^{-2}}$ is shown in \fig{fig:discretised_phi}. The diffusion process spreads the probability density out from the left side of the domain, where $\phi$ is high, and tends to homogenise the probability density across the domain over time. After 5 hours, the probability density $\phi$ is evenly spread throughout the domain and the probability distribution is eventually uniform.
+ the domain at each timestep and which can be solved using a numerical ODE solver. The equations for $i=1$ and $i=N$ correspond to reflective, zero-flux boundary conditions.  The result of a simulation with $N = 100$ boxes in a domain of
+ length $R = 1000$m and diffusion coefficient $D = 100\mathrm{m^2s^{-1}}$ is shown in
+ \fig{fig:discretised_phi}. The diffusion process spreads the probability density out from the left side of the domain, where $\phi$ is high and tends to homogenise the probability density across the domain over time. After 5 hours, the probability density $\phi$ is evenly spread throughout the domain and the probability distribution is eventually uniform.
 
-  \begin{figure} [t]
-      \centering
-          \includegraphics[width=0.8\textwidth]{discretised_phi.png}
-          \caption{The value of $\phi$ for a discretised diffusion simulation with parameters $N = 100$, $R = 2000\mathrm{m}$ and $D = 100\mathrm{ms^{-2}}$ and initial condition given by \eqn{eqn:discrete_diffusion_IC} after $t = $ 1 hour, 2 hours and 5 hours.}
-      \label{fig:discretised_phi}
-  \end{figure}
+ \begin{figure} [t]
+     \centering
+         \includegraphics[width=0.8\textwidth]{discretised_phi.png}
+         \caption{The value of $\phi$ for a 1D discretised diffusion simulation with parameters $N = 100$, $R = 2000\mathrm{m}$ and $D = 100\mathrm{m^2s^{-1}}$ and initial condition given by \eqn{eqn:discrete_diffusion_IC} after $t = $ 1 hour, 2 hours and 5 hours.}
+     \label{fig:discretised_phi}
+ \end{figure}
 
 \subsubsection{Diffusion in two dimensions}
 
@@ -119,7 +185,6 @@ Next we will consider a diffusion model in two dimensions to
 describe dispersal during phase one of movement. The third dimension is not
 included as height is not measured in the radio tracking survey, and it is not
 needed to describe landscape use.
-
 If the roost is at $(x_0,y_0)$ and bats leave the roost at time $t =0$,
 the 2D diffusion equation describes the probability density $\phi(x,y,t)$ of
 finding a bat at position $(x,y)$ at time $t$,
@@ -172,12 +237,12 @@ sides and substituting
 \end{equation} from \eqn{eqn:diffusion_polar2d},
 %
 \begin{align}
-\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\Omega}r^2 \phi(r,t) d\omega ,\\
-                           &= \int_0^{2\pi} \int_0^{R} r^3 \D{\phi}{t} dr d\theta ,\\
-                            &= \int_0^{2\pi} \int_0^{R} r^3 \frac{D}{r} \D{}{r } \left( r \D{ \phi}{ r}\right) dr d\theta , \\
-                            &= \int_0^{2\pi} \left( \left[ D r^2 \left( r \D{ \phi}{ r}\right) \right]_0^{R} - \int_0^{R} 2rD \left(r \frac{\partial \phi}{\partial r} \right) dr \right) d\theta , \\
-                            &= \int_0^{2\pi} \int_0^{R} -2r^2D \D{ \phi}{r}dr d\theta , \\
-                            &= \int_0^{2\pi} \left( \left[-2r^2D \phi \right]_0^{R} + \int_0^{R} 4rD \phi dr \right)d\theta , \\
+\frac{d}{dt} \left<r^2\right> &= \frac{d}{dt}\int_{\Omega}r^2 \phi(r,t) d\omega , \nonumber\\
+                           &= \int_0^{2\pi} \int_0^{R} r^3 \D{\phi}{t} dr d\theta ,\nonumber\\
+                            &= \int_0^{2\pi} \int_0^{R} r^3 \frac{D}{r} \D{}{r } \left( r \D{ \phi}{ r}\right) dr d\theta , \nonumber\\
+                            &= \int_0^{2\pi} \left( \left[ D r^2 \left( r \D{ \phi}{ r}\right) \right]_0^{R} - \int_0^{R} 2rD \left(r \frac{\partial \phi}{\partial r} \right) dr \right) d\theta , \nonumber\\
+                            &= \int_0^{2\pi} \int_0^{R} -2r^2D \D{ \phi}{r}dr d\theta , \nonumber\\
+                            &= \int_0^{2\pi} \left( \left[-2r^2D \phi \right]_0^{R} + \int_0^{R} 4rD \phi dr \right)d\theta , \nonumber\\
                             &= - 4\pi R^2D \phi(R,t) + 4D \int_{\Omega} \phi d\omega ,
 \label{eqn:diffusion_1}
 \end{align}
@@ -194,7 +259,13 @@ Integrating with respect to time gives
 \label{eqn:diffusion_msd}
 \end{equation}
 %
-Over short timescales, $\phi(R,t) \approx 0$, since the probability of a reaching the boundary over a short period of time is small due to the initial condition. Therefore, over a short timescale, the expected MSD for diffusion is directly proportional to time,
+Over short timescales, $\phi(R,t) \approx 0$, since the probability of a reaching the boundary over a short period of time is small due to the initial condition. Therefore, over a short timescale, while
+%
+\begin{equation}
+\sqrt{4Dt} << R,
+\end{equation}
+%
+the expected MSD for diffusion is directly proportional to time,
 %
 \begin{equation}
 \left<r^2\right> \approx 4Dt.
@@ -210,11 +281,13 @@ An expression for mean-squared displacement over a long timescale can also be de
 Substituting this into \eqn{eqn:MSD_expectation} gives
 %
 \begin{align}
-\left<r^2\right> &= \frac{1}{\phi R^2}\int_{0}^{2\pi} \int_{0}^{R} r^2 dr d\theta \\
+\left<r^2\right> &= \frac{1}{\phi R^2}\int_{0}^{2\pi} \int_{0}^{R} r^2 dr d\theta \nonumber \\
 &= \frac{1}{2} R^2,
 \end{align}
 %
 and therefore the mean squared displacement is constant over long timescales.
+
+%NOTE Add a nice plot of MSD in diffusion here
 
 \subsection{A discretised ODE solution to the two dimensional diffusion model}
 
@@ -242,7 +315,7 @@ The central difference approximation to \eqn{eqn:diffusion_polar2d} is then
  \label{eqn:diffusion_polar_cd}
 \end{equation}
 %
-The distance $r_i$ at strip $i$ is given by
+The distance $r_i$ at annulus $i$ is given by
 \begin{equation}
 r_i = i h ,
 \end{equation}
@@ -261,32 +334,32 @@ Changing notation for the discretised version gives
         \label{eqn:discrete_diffusion_i}
 \end{equation}
 %
-The equation for strip 1 at $r=0$ is
+The equation for annulus 1 at $r=0$ is
 %
 \begin{equation}
 \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{0}-2\phi_1 +\phi_{2}) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}).
 \end{equation}
 %
-However, due to the reflective boundary condition in \eqn{eqn:BC}, any bats in a trajectory that would pass through the boundary are reflected back in the direction of the roost. Bats that would pass from strip 1 to an imaginary strip 0 are instead reflected back, and therefore the value of $\phi$ in the imaginary strip 0 is the same as in strip 1, and $\phi_0$ = $\phi_1$.
+However, due to the reflective boundary condition in \eqn{eqn:BC}, any bats in a trajectory that would pass through the boundary are reflected back in the direction of the roost. Bats that would pass from annulus 1 to an imaginary annulus 0 are instead reflected back, and therefore the value of $\phi$ in the imaginary annulus 0 is the same as in annulus 1, and $\phi_0$ = $\phi_1$.
 %
 \begin{equation}
 \frac{d\phi_1}{dt} = \frac{D}{h^2}(\phi_{2}- \phi_1) + \frac{D}{2h^2} (\phi_{2}-\phi_{1}) .
-        \label{eqn:strip_1}
+        \label{eqn:annulus_1}
 \end{equation}
 
-Similarly, from \eqn{eqn:diffusion_discrete1}, for strip $n$ at $r=R$,
+Similarly, from \eqn{eqn:diffusion_discrete1di}, for annulus $n$ at $r=R$,
 %
 \begin{equation}
 \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-2\phi_n +\phi_{n+1}) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n}) .
 \end{equation}
 %
-Due to the reflective boundary condition between strip $n$ and strip $n+1$, $\phi_{n+1} = \phi_n$, and
+Due to the reflective boundary condition between annulus $n$ and annulus $n+1$, $\phi_{n+1} = \phi_n$, and
 \begin{equation}
 \frac{d\phi_n}{dt} = \frac{D}{h^2}(\phi_{n-1}-\phi_n) + \frac{D}{2h^2} (\phi_{n+1}-\phi_{n-1}) .
-        \label{eqn:strip_n}
+        \label{eqn:annulus_n}
 \end{equation}
 
-Gathering up \eqnto{eqn:discrete_diffusion_i}{eqn:strip_n}, the set of equations describing the full system is
+Gathering up \eqnto{eqn:discrete_diffusion_i}{eqn:annulus_n}, the set of equations describing the full system is
 %
   \begin{equation}
   \frac{d\phi_i}{dt} = \begin{cases}
@@ -296,22 +369,36 @@ Gathering up \eqnto{eqn:discrete_diffusion_i}{eqn:strip_n}, the set of equations
   		\end{cases}
           \label{eqn:discrete_diffusion2d}
   \end{equation}
+ %
+ The initial condition corresponding to \eqn{eqn:IC1d} means that probability density is concentrated in the first annulus,
+%
+\begin{equation}
+\phi_i(0) = \begin{cases}
+       \frac{1}{2\pi h}, & \text{for } i = 1, \\
+       0, & \text{for } 2 \leq i \leq N. \\
+       \end{cases}
+        \label{eqn:discrete_diffusion_IC}
+\end{equation}
+%
 
- A 2D discretised diffusion simulation with $N=1000$ particles and diffusion coefficient $D=65$ms\textsuperscript{-2} was run using DifferentialEquations.jl \cite{DifferentialEquations} to validate the model. The mean squared displacement is shown in \fig{fig:2d_diffusion}. The mean squared displacement for the discretised simulation is initially linear and equal to $4Dt$ before the curve flattens and tends towards a constant value. This is consistent with the mean squared displacement expected for a bounded diffusion model, calculated in \ref{msd2d}.
 
-\begin{figure}
-\centering
-    \includegraphics[width=0.8\textwidth]{figs/2d_diffusion.png}
-    \caption{The mean squared displacement for a discretised diffusion simulation with $N=1000$ particles in a bounded 2D domain for $D=65$ms\textsuperscript{-2} compared to the analytical result of $4Dt$ from \sect{msd2d}.}
-\label{fig:2d_diffusion}
-\end{figure}
+%\begin{figure}
+%\centering%
+%    \includegraphics[width=0.8\textwidth]{figs/2d_diffusion.png}
+%    \caption{The mean squared displacement for a discretised diffusion simulation with $N=1000$ particles in a bounded 2D domain for $D=65$ms\textsuperscript{-2} compared to the analytical result of $4Dt$ from \sect{msd2d}.}
+%\label{fig:2d_diffusion}
+%\end{figure}
 %
 \subsection{Comparison of one and two dimensional diffusion models}
 %
+Diffusion simulations in 1D and 2D were simulated, each with $N=1000$ particles and diffusion coefficient $D=100$m\textsuperscript{2}s\textsuperscript{-1}, using \texttt{DifferentialEquations.jl} \cite{DifferentialEquations} to validate the model. The mean squared displacement for each is shown in \fig{fig:1d2d_diffusion}. The mean squared displacements for both dicretised simulations are initially linear and consistent with the analytical results calculated in \sect{msd1d} and \sect{msd2d}. The curve then flattens and tends towards a constant value.
+%
+
+%NOTE Redo this fig with asymptotes, zoomed in to see each bit better and change $D$ to 100. Also change colours?
 \begin{figure}
 \centering
-    \includegraphics[width=0.8\textwidth]{figs/2d_diffusion.png}
-    \caption{The mean squared displacement for a discretised diffusion simulation with $N=1000$ particles in a bounded 2D domain for $D=65$ms\textsuperscript{-2} compared to the analytical result of $4Dt$ from \sect{msd2d}.}
+    \includegraphics[width=0.8\textwidth]{figs/1d2d_diffusion.png}
+    \caption{A comparison of the mean squared displacement for discretised diffusion simulations in bounded one and two dimensional domains, both with $N=1000$ particles and $D=100$ms\textsuperscript{-2}, compared to the analytical results from \sect{msd1d} and \sect{msd2d}.}
 \label{fig:1d2d_diffusion}
 \end{figure}
 %

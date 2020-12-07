@@ -1,5 +1,5 @@
 
-\documentclass[a4paper, 11pt, twoside, onecolumn, openany, extrafontsizes]{memoir}
+\documentclass[a4paper, 11pt, oneside, onecolumn, openany, extrafontsizes]{memoir}
 
 \usepackage{siunitx}
 \usepackage[useregional]{datetime2}
@@ -62,6 +62,11 @@
 %%% SECTIONAL DIVISIONS
 %%%------------------------------------------------------------------------------
 
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{*5}{*0}
+ \titlespacing{\subsection}{0pt}{*5}{*0}
+\titlespacing{\subsubsection}{0pt}{*5}{*0}
+
 \maxsecnumdepth{subsubsection} % Subsections (and higher) are numbered
 \setsecnumdepth{subsubsection}
 
@@ -90,7 +95,6 @@
 %%%------------------------------------------------------------------------------
 
 \makepagestyle{standard} % Make standard pagestyle
-
 \makeatletter                 % Define standard pagestyle
 \makeevenfoot{standard}{}{}{} %
 \makeoddfoot{standard}{}{}{}  %
@@ -198,13 +202,10 @@
 \title{Deterministic models of bat movement during foraging}
 
 \begin{document}
-
 	\pagenumbering{gobble}
 	\include{tex/titlepage}
-
 	\tableofcontents*
 	\pagestyle{standard}
-
 	\mainmatter
 %\maketitle
 
@@ -212,40 +213,29 @@
 %\cite{Barlow2015}
 
 
-%\include{tex/intro}
-
-\chapter{Deterministic models for bat movement}
-\include{tex/radiotrack}
-\include{tex/methodsphase1}
-\include{tex/methodsphase2}
-%\include{tex/diffusionconvection_box}
-%\include{tex/shrink}
-\include{tex/discussion}
-
-\chapter{Stochastic models for bat movement}
-
-Finite number of bats in a roost, stochastic model better to describe noise
-
-	\section{A stochastic diffusion model}
-
-	\section{Leapfrog model: return to roost}
-
-\chapter{Methods for locating bat roosts}
-
-\include{roostfind}
-
-	\section{Current methods}
-		\subsection{Radio tracking?}
-		\subsection{Geographic profiling?}
-	\section{Bayesian inference?}
-%	\include{roostfinding}
-
-\chapter{Landscape}
-
-	\section{Circuitscape}
+\include{tex/intro}
+%\include{tex/deterministic}
+		\include{tex/radiotrack}
+		\include{tex/methodsphase1}
+		\include{tex/methodsphase2}
+		\include{tex/discussion}
+%\include{tex/stochastic}
 
 
-\chapter{Discussion}
+%\include{roostfind}
+
+%	\section{Current methods}
+%	\subsection{Radio tracking?}%
+%		\subsection{Geographic profiling?}
+%	\section{Bayesian inference?}
+%\include{roostfinding}
+
+%\chapter{Landscape}
+
+%	\section{Circuitscape}
+
+
+%\chapter{Discussion}
 
 
 

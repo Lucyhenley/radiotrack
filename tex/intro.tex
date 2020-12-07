@@ -1,15 +1,16 @@
 \chapter{Introduction} \label{chap:intro}
 
   Bats play an important role in the UK ecosystem, as they help control insect
-  populations \cite{Kunz2011} and act as ecological indicators \cite{Jones2009}.
-  However, they are susceptible to human impacts due to their sensitivity to
+  populations \cite{Kunz2011} and act as ecological indicators of biodiversity and pollution \cite{Jones2009}.  However, they are susceptible to human impacts due to their sensitivity to
   light, noise and temperature. Additionally, habitat fragmentation due to roads
   and building work can reduce foraging opportunities and lead to a significant
   risk of population decline \cite{rossiter2000genetic}.
  As a result, bat habitats are protected by law in
 Europe under the EUROBATS agreement \cite{Eurobats}. Therefore, identifying
 roosts and important foraging areas is an important step in ensuring that
-habitats remain protected. One measure often used to identify key patches of
+habitats remain protected.
+
+One measure often used to identify key patches of
 habitat is the Core Sustenance Zone, the area surrounding a roost within which
 habitat quality has a significant influence on the resilience of the colony
 using the roost \cite{CSZ}. Bats are expected to remain within this area for
@@ -21,14 +22,22 @@ landscape features, such as hedgerows and waterways for movement whilst foraging
    by using radio transmitters to
  locate bats during foraging
    \cite{Bontadina2002,
-Encarnacao2005}.
+Encarnacao2005}. A guide to radio tracking techniques can be found in Ecological and Behavioral Methods for the Study of Bats (Chapter 7) \cite{kunz1988ecological}.
   In order to
  track bats, they must first be caught using a
 humane method such as a harp trap.
- Once a bat is caught, a radio
-   transmitter
-is attached to its back and it is
- released to forage. The
+ Once a bat is caught, a small radio
+   transmitter is attached to its back, often using surgical glue, and it is
+%
+\begin{figure} [t!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{bat_with_transmitter.png}
+        \caption{An Indiana bat with radio transmitter glued to its back, reproduced from \cite{divolldataset}.
+        }
+    \label{fig:bat_tracker}
+\end{figure}
+%
+ released to forage. The transmitter must be less than 5\% of the bat's weight in order to avoid disrupting flight patterns \cite{brigham1988load}. An image of a typical transmitter attached to a bat is shown in \fig{fig:bat_tracker}. The
   signal from a
 transmitter is then picked up by field
  workers using scanning radio-receivers, and the position of the bat is
@@ -36,7 +45,7 @@ transmitter is then picked up by field
  throughout the night, taking regular recordings of location until the signal is
  lost, or the bat returns to
 the roost. Due to the nature of the tracking,
- locations are not recorded at regular intervals, and instead when the signal is
+ locations are not recorded at regular intervals, rather only when the signal is
  found. Although useful, radio
 tracking surveys are highly labour intensive as
  they require first locating a
@@ -52,28 +61,24 @@ and hedgerows. Additionally,
  limited battery life and are
 often detached and lost before the end of the
  survey, meaning that surveys can
-be cut short.
+be cut short. As a result, it can be useful to derive mathematical models to describe movement and improve understanding of behaviour.
 
-\section{Mathematical models for animal movement}
 
-  Mathematical models are an
- invaluable tool in understanding
+Mathematical models are an
+invaluable tool in understanding
 ecological
-  mechanisms as they help us to
- understand the ecological mechanisms
+mechanisms as they help us to
+understand the ecological mechanisms
 that lead to certain patterns in behaviour
- \cite{Ovaskainen2016}. There are
+\cite{Ovaskainen2016}. There are
 many possible formalisms, such as stochastic,
- deterministic, spatial, or
+deterministic, spatial, or
 discrete depending on the population and behaviour
- \cite{Murray2011}.
+\cite{Murray2011}.
 
-  will be to derive deterministic
- partial differential equation
-(PDE) models to compare with data to describe
-  bat movement during foraging. Various PDE models will be considered here. Diffusion models in both one and two dimensions are discussed to describe the dispersal of bats away from the roosts. Two models are used to describe movement for the remainder of the night whilst bats are foraging, a convection-diffusion model and a model describing diffusion on a shrinking domain. Convection-diffusion models are widely used in ecology to model population migration, however we will show here that a convection-diffusion model is not consistent with radio tracking data. Instead, a shrinking domain diffusion model provides a better description of bat movement whilst foraging.
+Here, we will combine statistical methods and deterministic modelling to characterise bat motion. We will use time-location data from radio tracking studies that track bat motion from when they first leave their roost at sunset to when they return in the morning. By extracting the mean squared displacement from the data we see two distinct movement phases, an initial linear dispersal followed by a gradual return to the roost. We will develop deterministic models to describe motion for each movement phase. Diffusion models in both one and two dimensions are discussed to describe the dispersal of bats away from the roosts. Two models are used to describe movement for the remainder of the night whilst bats are foraging, a convection-diffusion model and a model describing diffusion on a shrinking domain. Convection-diffusion models are widely used in ecology to model population migration, however we will show here that a convection-diffusion model is not consistent with radio tracking data. Instead, a shrinking domain diffusion model provides a better description of bat movement whilst foraging.
 
- \section{Bayesian Statistics}
+ \section{Bayesian statistics}
  Bayesian
 statistics is a statistical
 paradigm for updating knowledge about a
@@ -97,8 +102,7 @@ p(\bm{Y} \mid \theta) p(\theta)
  where
 $p(\theta \mid \bm{Y})$ is the posterior probability distribution, formally
 describing the probability that the parameter value is $\theta$ given
-observations $\bm{Y}$. The likelihood is given by $p(\bm{Y} \mid \theta)$ and
-is the probability of observing $\bm{Y}$ if the parameter value is $\theta$.
+observations $\bm{Y}$. The likelihood function describes the probability of observing $\bm{Y}$ if the parameter value is $\theta$ and is given by $p(\bm{Y} \mid \theta)$.
 The
  prior distribution is $p(\theta)$, describing the initial knowledge of
 possible
@@ -109,7 +113,7 @@ possible
  Approximate Bayesian Compuation (ABC) is an approach to Bayesian
 inference using
  simulation and random sampling \cite{Beaumont2002,
-Sisson2010} and is widely used for problems where the analytical form of the likelihood function is intractable.
+Sisson2010} and is widely used for problems where the analytical form of the likelihood function is intractable \cite{myung2003tutorial}.
  ABC replaces the calculation
  of the likelihood function
 $p(\bm{Y}
@@ -117,7 +121,7 @@ $p(\bm{Y}
 value
 $\theta'$ to produce an artificial dataset
  $\bm{X}$. Then, some
-distance metric
+distance metric,
 $\rho (\bm{X}, \bm{Y}) $, usually defined
  as a distance
 between summary
@@ -127,7 +131,7 @@ simulated data $\bm{X}$
 to observations $\bm{Y}$. If $\rho (\bm{X},
  \bm{Y}) $
 is smaller than some
-threshold value $\epsilon$, the simulated data is
+threshold value, $\epsilon$, the simulated data is
  close
 enough to observations
 that the candidate parameter $\theta'$ has some
@@ -141,23 +145,19 @@ model is correct, the simulated posterior
 distribution produced approximates
 the
  true posterior $ p(\theta \mid
-\bm{Y})$.
+\bm{Y})$ \cite{Sisson2010}.
 
- First, the threshold parameter
-$\epsilon$ and sample size $n$
-are fixed and the
- prior distribution for
-parameters $\theta$ is
-set, $p(\theta)$. The pseudocode is as
-follows:
+A pseudocode for the ABC method is as
+follows. First, the threshold parameter $\epsilon$ and sample size $n$ are fixed and the
+ prior distribution for parameters $\theta$ is set, $p(\theta)$.
  %
  \begin{algorithmic}
 \While {$i < n$}
      \State Sample $\theta'$ from $p(\theta)$
-     \State Simulate $\bm{X}$ from $theta'$
+     \State Simulate $\bm{X}$ from $\theta '$
      \State $\rho \gets \mid \bm{X} - \bm{Y} \mid$
 \If {$\rho < \epsilon$}
-  \State $\theta_i \gets \theta'$
+  \State $\theta_i \gets \theta '$
   \State $i \gets i + 1$
 \EndIf
 \EndWhile
@@ -166,5 +166,7 @@ follows:
 The parameters $\theta_i$ are an approximate sample from the posterior distribution $p(\theta \mid \bm{Y})$, and the posterior mean $\mathbb{E}(\theta \mid \bm{Y})$ can be estimated using
 
 \begin{equation}
-\frac{1}{n} \sum_i \theta_i .
+\mathbb{E}(\theta \mid \bm{Y}) = \frac{1}{n} \sum_i \theta_i .
 \end{equation}
+
+ABC will be used here to fit parameters to the data extracted from radio tracking data. The mean squared displacement will be used as observations $Y$, and parameters describing the rate of spread and shrinking speed in the shrinking domain diffusion model will be used as parameters $\theta$. 
