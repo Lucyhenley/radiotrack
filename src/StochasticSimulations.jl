@@ -41,5 +41,18 @@ function square_distance(xy)
     return (MSD=mean(SD,dims=1),std_error = SEM)
 end
 
+function max_distance(xy)
+    """
+    Calculates and returnsthe maximum distance from 0 for trajectory xy.
+    """
+    D = sqrt.(xy.x.^2 .+ xy.y.^2);
+    SEM = Array{Float64}(undef,size(D)[2])
+    for i = 1:size(D)[2]
+        SEM[i] = sem(D[:,i])
+    end
+    return (MD = maximum(D,dims=1),std_error = SEM)
+end
+
+
 
 end

@@ -1411,6 +1411,12 @@ path = "C:\\Users\\lucy_\\.julia\\dev\\NumericallyIntegrateArrays"
 uuid = "030973e2-ac42-11e9-1c78-e905c061731d"
 version = "0.1.0"
 
+[[ODEInterface]]
+deps = ["Dates", "Libdl", "LinearAlgebra", "Markdown", "Unicode"]
+git-tree-sha1 = "0864f7b240c88bc433bc32dbfe0b69e954418891"
+uuid = "54ca160b-1b9f-5127-a996-1867f4bc2a2c"
+version = "0.4.8"
+
 [[ORCA]]
 deps = ["PlotlyBase"]
 git-tree-sha1 = "21116b7c215347f1759ebb013f89bce3cafb6b4f"

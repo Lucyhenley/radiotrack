@@ -33,12 +33,12 @@ locations recorded varies each night because the signal was lost during the nigh
 \begin{figure} [h]
     \centering
         \includegraphics[width=0.6\textwidth]{time_interval.png}
-        \caption{A histogram of the time intervals between consecutive recordings. Outliers with time intervals over the 75th percentile at 5000 seconds have been removed, and the median value is 600 seconds.}
+        \caption{A histogram of the time intervals between consecutive recordings. Outliers with time intervals over the 75th percentile at 5000 seconds have been removed, and the distribution peaks between 100 and 200 seconds.}
     \label{fig:time_interval}
 \end{figure}
 
 A histogram of time intervals between consecutive recordings is shown in \fig{fig:time_interval}. From this, it is clear that the data is recorded at irregular time intervals. In order to produce regularly spaced recordings, locations were linearly
-interpolated between recordings at intervals of $\Delta t = 600$ seconds, the median time interval shown in the data.
+interpolated between recordings at intervals of $\Delta t = 200$ seconds, as the distribution peaks between 100 and 200 seconds.
 The mean-squared distance (MSD) from the roost was calculated from the
 interpolated positions using
 %

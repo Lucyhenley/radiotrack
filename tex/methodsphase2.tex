@@ -42,8 +42,8 @@ The convection-diffusion model will be solved using a discretised ODE model, as 
 \begin{equation}
 \frac{d\phi_i}{dt} = \begin{cases}
 		d(\phi_{i+1} - \phi_i) + \frac{d}{2} (\phi_{i+1}-\phi_i) - c \phi_{i+1}, & \text{for } i = 1, \\
-		d(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{d}{2i} (\phi_{i+1}-\phi_{i-1}) - c(\phi_{i+1}-\phi_{i}), & \text{for } 2 \leq i \leq N-1, \\
-		d(\phi_{i-1}-\phi_i)  - \frac{d}{2i} (\phi_{i}-\phi_{i-1}) - c\phi_{i}, & \text{for } i = N.
+		d(\phi_{i-1}-2\phi_i +\phi_{i+1}) + \frac{d}{2i} (\phi_{i+1}-\phi_{i-1}) - \frac{c}{i}(\phi_{i+1}-\phi_{i}), & \text{for } 2 \leq i \leq N-1, \\
+		d(\phi_{i-1}-\phi_i)  + \frac{d}{2i} (\phi_{i}-\phi_{i-1}) - \frac{c}{i}\phi_{i}, & \text{for } i = N.
 		\end{cases}
         \label{eqn:discrete_convection}
 \end{equation}
@@ -53,25 +53,31 @@ The discretised diffusion coefficient is $d = D/h^2$ as before and $c=\chi/h$ is
 The model was simulated using \texttt{DifferentialEquations.jl} \cite{DifferentialEquations}, using a time dependent convection coefficient as in \eqn{eqn:time_dependentchi} with $T = 4000$ seconds. The
 simulation was run with a domain of length $R = 2000$m, split into $N = 100$
 annuli. The diffusion coefficient was $D = 65\mathrm{m^2s^{-1}}$, and the convection coefficient
-was $\chi =  - 0.15\mathrm{ms^{-1}}$. The results
-of this simulation are shown in \fig{fig:convection_diffusion}. The convection process pushes $\phi$ uniformly in the direction of the drift, towards the left side of the domain, whereas the diffusion tends to spread $\phi$ across the domain. The boundary acts as a barrier stopping $\phi$ from moving any further and $\phi$ collects at the boundary. The movement towards the edge slows as $t$ increases because it is unable to move any further, and eventually the system reaches a steady state when diffusion and convection are balanced.
+was $\chi =  - 15\mathrm{ms^{-1}}$. The results
+of this simulation are shown in \fig{fig:convection2d}. The probability density $\phi$ is shown in \fig{fig:convection2dphi}. The convection process pushes $\phi$ uniformly in the direction of the drift, towards the left side of the domain, whereas the diffusion tends to spread $\phi$ across the domain. The boundary acts as a barrier stopping $\phi$ from moving any further and $\phi$ collects at the boundary. The movement towards the edge slows as $t$ increases because it is unable to move any further, and eventually the system reaches a steady state when diffusion and convection are balanced.
 
-The MSD for the same convection-diffusion simulation is shown in \fig{fig:convection_diffusion_MSD}. The convection-diffusion simulation shows the initial rapid dispersal expected from the diffusion model, however the shape of the curve for phase 2 is clearly inconsistent with the radio tracking data. The convection-diffusion simulation yields a convex curve, and the decrease in MSD slows with time as bats return to the roost and stop contributing to the movement. The MSD never reaches 0 because the diffusion term acts to spread bats out whilst the convection term is pushing them back towards the roost, and these eventually balance, without the colony returning to the roost. In order to produce a concave curve consistent with the radio tracking data, the model cannot push all bats towards the roost at the same rate, and instead should push the bats furthest from the roost first.
+The MSD for the same convection-diffusion simulation is shown in \fig{fig:convection2dmsd}. The convection-diffusion simulation shows the initial rapid dispersal expected from the diffusion model, however the shape of the curve for phase 2 is clearly inconsistent with the radio tracking data. The convection-diffusion simulation yields a convex curve, and the decrease in MSD slows with time as bats return to the roost and stop contributing to the movement. The MSD never reaches 0 because the diffusion term acts to spread bats out whilst the convection term is pushing them back towards the roost, and these eventually balance, without the colony returning to the roost. In order to produce a concave curve consistent with the radio tracking data, the model cannot push all bats towards the roost at the same rate, and instead the bats furthest from the roost should start to return first.
 
-  \begin{figure} [t]
-      \centering
-          \includegraphics[width=0.7\textwidth]{convection_diffusion_phi.png}
-          \caption{The probability density $\phi$ for a convection diffusion simulation after $t = 0.2$, 2 and 8 hours. The parameters for this simulation are $R = 2000$m, $N = 100$,
-          $D = 100\mathrm{m^2s^{-1}}$, and $\chi_0 = - 0.15\mathrm{ms^{-1}}$ and $T = 4000$ seconds.}
-      \label{fig:convection_diffusion}
-  \end{figure}
-    \begin{figure} [t]
-        \centering
-            \includegraphics[width=0.7\textwidth]{convection_diffusion_msd.png}
-            \caption{The MSD for a convection diffusion simulation. The parameters for this simulation are $R = 2000$m, $N = 100$,
-            $D = 100\mathrm{m^2s^{-1}}$, and $\chi_0 = - 0.15\mathrm{ms^{-1}}$ and $T = 4000$ seconds.}
-        \label{fig:convection_diffusion_MSD}
-    \end{figure}
+
+         \begin{figure}
+              \centering
+              \begin{subfigure}[b]{0.48\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{convection_diffusion_phi2dchi_15.png}
+                  \caption{The probability density $\phi$ after $t = 1$, 1.5, 2 and 5 hours.}
+                  \label{fig:convection2dphi}
+              \end{subfigure}
+              \hfill
+              \begin{subfigure}[b]{0.48\textwidth}
+                  \centering
+                  \includegraphics[width=\textwidth]{convection_diffusion_MSD2dchi_15.png}
+                  \caption{The mean squared displacement for $0 \leq t \leq 8$ hours. }
+                  \label{fig:convection2dmsd}
+              \end{subfigure}
+              \caption{The results of a convection-diffusion simulation with parameters are $R = 2000$m, $N = 100$,
+              $D = 100\mathrm{m^2s^{-1}}$, and $\chi_0 = - 15\mathrm{ms^{-1}}$ and $T = 4000$ seconds.}
+              \label{fig:convection2d}
+              \end{figure}
 
 \subsubsection{Diffusion on a shrinking domain} \label{shrink}
 %NOTE Leapfrogging?
@@ -81,15 +87,14 @@ The MSD for the same convection-diffusion simulation is shown in \fig{fig:convec
 \bm{a}(\bm{X},t) = \frac{d\bm{X}}{dt}.
 \end{equation}
 %
-%NOTE give this a caption and ref it in text
 \begin{figure} [h]
     \centering
         \includegraphics[width=0.5\textwidth]{shrink_diagram.pdf}
-        \caption{}
+        \caption{A diagram showing the mapping of the stationary to the shrinking domain frame of reference. }
     \label{fig:shrink_diagram}
 \end{figure}
 %
-Moving from the stationary to the shrinking domain frame of reference requires a Lagrangian description of the domain which maps each point in the domain from the stationary frame to the shrinking frame. If $\bm{X} = (r(t=0),\theta(t=0))$ is the initial location of an element $w(t)$ and $\bm{x} = (r(t),\theta(t))$ is the location of the element at time $t$ then the mapping is defined by the function $\Gamma(\bm{X},t) $ as $\bm{x}(t) =\Gamma(\bm{X},t) $. For a growth rate $l(t)$, the mapping function is
+Moving from the stationary to the shrinking domain frame of reference requires a Lagrangian description of the domain which maps each point in the domain from the stationary frame to the shrinking frame. If $\bm{X} = (r(t=0),\theta(t=0))$ is the initial location of an element $w(t)$ and $\bm{x} = (r(t),\theta(t))$ is the location of the element at time $t$ then the mapping is defined by the function $\Gamma(\bm{X},t) $ as $\bm{x}(t) =\Gamma(\bm{X},t) $. A diagram showing the mapping is displayed in \fig{fig:shrink_diagram}. For a growth rate $l(t)$, the mapping function is
 %
 \begin{equation}
 \Gamma(X,t) = Xl(t).
@@ -128,6 +133,13 @@ The scaled diffusion equation in the stationary frame of reference is then given
 \D{\phi}{t} = \frac{D}{Xl(t)^2}\D{}{X}\left(X \D{\phi}{X} \right) + X \frac{\dot{l(t)}}{l(t)}\D{\phi}{X}.
 \end{equation}
 %
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.5\textwidth]{apical.pdf}
+        \caption{A diagram showing a domain shrinking apically, such that shrinking is restricted to the edge of the domain.}
+    \label{fig:apical_diagram}
+\end{figure}
+%
 We will consider a domain shrinking apically, in which shrinking is restricted to a region of width $\delta$ at the tip of domain. The shrinking rate $\rho$ is zero everywhere except at the edge of the domain,
 %
 \begin{equation}
@@ -135,10 +147,11 @@ We will consider a domain shrinking apically, in which shrinking is restricted t
 		0, & 0 \leq r \leq R(t) - \delta, \\
 		S_{tip}(t), & R(t) - \delta \leq r \leq R(t), \\
 		\end{cases}
+        \label{eqn:s_tip}
 \end{equation}
 %
-where $S_{tip}(t)$ is the shrinking rate in the element at the edge of the boundary. Therefore, the size of the domain $R(t)$ is given by $R(t) = 1 + \delta \int_0^t S_{tip}(t')dt'$. Considering the shrinking region to be much smaller than the domain size, the system can be reduced to an Eulerian moving boundary problem.
-Assuming that the growth rate $l$ is small, the equation reduces to the diffusion equation
+where $S_{tip}(t)$ is the shrinking rate in the element at the edge of the boundary. A diagram illustrating \eqn{eqn:s_tip} is shown in \fig{fig:apical_diagram}. Therefore, the size of the domain $R(t)$ is given by $R(t) = 1 + \delta \int_0^t S_{tip}(t')dt'$. Considering the shrinking region to be much smaller than the domain size, the system can be reduced to an Eulerian moving boundary problem.
+Assuming also that the growth rate $l$ is small, the equation reduces to the diffusion equation
 %
 \begin{equation}
 \D{\phi}{t} = \frac{D}{Xl(t)^2}\D{}{X}\left(X \D{\phi}{X} \right).
@@ -158,7 +171,7 @@ Thus, we expect the probability distribution to remain
  \begin{align}
  \left<r^2\right> 	&= \int_{\Omega}r^2 \phi(r,t) d\Omega , \nonumber\\
                  	&= \int_0^{2\pi}\int_0^{R(t)} \frac{r^3}{\pi R(t)^2} dr d\theta, \nonumber \\
- \left<r^2\right>	&= \frac{R(t)^2}{2} .
+	                &= \frac{R(t)^2}{2} .
  \label{eqn:shrink_domain}
  \end{align}
  %
@@ -171,7 +184,7 @@ Thus, we expect the probability distribution to remain
 %
 \subsubsection{A discretised diffusion simulation on a shrinking domain}
 %NOTE timescale?
-The diffusion process on a shrinking domain can be simulated using the diffusion model described in \sect{phase1}. The simulation consists of two stages at each timestep, illustrated in \fig{fig:shrinking_diagram}. First, the diffusion process moves probability density between annuli. Then, the size of the domain is reduced by adding the concentration in annulus $N$ to annulus $N-1$ and removing annulus $N$.
+The diffusion process on a shrinking domain can be simulated using the diffusion model described in \sect{phase1}. The simulation consists of two separate stages at each timestep, illustrated in \fig{fig:shrinking_diagram}. First, the diffusion process moves probability density between annuli. Then, the size of the domain is reduced by adding the concentration in annulus $N$ to annulus $N-1$ and removing annulus $N$.
 
 Since the MSD for this phase is a negative parabola, the shrinking rate is chosen to give
 %
@@ -183,7 +196,7 @@ Since the MSD for this phase is a negative parabola, the shrinking rate is chose
 From \eqn{eqn:shrink_domain}, a time dependent domain size $R(t)$ of
 %
 \begin{equation}
-R(t) = \sqrt{R_0^2 - \alpha t^2}
+R(t) = \sqrt{2(R_0^2 - \alpha t^2)}
 \label{eqn:Rt}
 \end{equation}
 %
@@ -193,11 +206,11 @@ gives an expected MSD of
  \end{equation}
 
 The result of a simulation of diffusion on a domain shrinking with rate $R(t)$ given by \eqn{eqn:Rt} is shown in \fig{fig:shrink_phi}. The probability density spreads across the domain due to the diffusion process, however the shrinking causes the probability density to increase at the right edge of the domain. In this case, the rate of diffusion is slower than the rate at which the domain shrinks, and therefore the probability density does not spread evenly across the domain.
-%
+%NOTE Add another plot to show both extremes: slow shrink rate, high diffusion. high shrink rate, slow diffusion.
     \begin{figure} [h]
         \centering
-            \includegraphics[width=0.8\textwidth]{shrink.png}
+            \includegraphics[width=0.8\textwidth]{shrinkphi.png}
             \caption{The probability density $\phi$ for diffusion simulation on a shrinking domain at $t = 1$, 4 and 6 hours. The initial condition is a delta function at $r = 0$ and the
-             parameters for this simulation are $N = 100$, $D = 65\mathrm{m^2s^{-1}}$, $R_0 = 1800$m, $t_s = 1000$ seconds and $\alpha  = 3.24 \mathrm{m^2s^{-2}}$.}
+             parameters for this simulation are $N = 100$, $D = 100\mathrm{m^2s^{-1}}$, $R_0 = 1800$m, $t_s = 1000$ seconds and $\alpha  = 3.24 \mathrm{m^2s^{-2}}$.}
         \label{fig:shrink_phi}
     \end{figure}

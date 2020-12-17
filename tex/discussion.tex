@@ -1,9 +1,13 @@
 
 \section{Comparison of convection-diffusion and shrinking domain models}
 
-In order to compare the two models, simulations were run for each. For the convection-diffusion model, the diffusion process is first simulated for for $T = 4000$ seconds, then the convection-diffusion process is simulated until the end of the night. The parameters for this simulation are $R = 2000$m, $N = 100$,
-$D = 65\mathrm{ms^{-2}}$, and $\chi =  - 0.15\mathrm{ms^{-1}}$. For the shrinking domain model, the parameters used were $N = 100$, $D = 65\mathrm{m^2s^{-1}}$, $R_0 = 1800m$, $t_s = 1000$ seconds and $\alpha  = 3.24 \mathrm{m^2s^{-2}}$. The mean-squared distance was calculated numerically, using a trapezium rule
-approximation to the expectation value in \eqn{eqn:MSD_expectation}, and the results are shown in \fig{fig:c-d_shrink}. The result for the convection-diffusion model shows an initial linear dispersal, due to diffusion, followed by a sharp decrease as the convection process begins. The decrease slows and the curve flattens over time as probability density gathers at the boundary. The mean squared difference never reaches zero because diffusion continues to spread probability density across the domain and diffusion and convection are balanced. The shape of the curve is clearly inconsistent with the negative parabola from the radio tracking data in \fig{fig:MSD}, and convection-diffusion does not provide a good model for the radio tracking data. The shrinking domain model gives a very different result, an initial straight line dispersal which then begins to level off and decrease slowly, a similar shape to the radio tracking data. The steps in the curve are caused by the shrinking step of the simulation, as this causes an abrupt change in the probability distribution.
+In order to compare the shrinking domain and convection-diffusion models, simulations were run for each model. For the convection-diffusion model, the diffusion process is first simulated for $T = 4000$ seconds, then the convection-diffusion process is simulated until the end of the night. The parameters for this simulation are $R = 2000$m, $N = 100$,
+$D = 65\mathrm{m^2s^{-1}}$, and $\chi =  - 0.15\mathrm{ms^{-1}}$. For the shrinking domain model, the parameters used were $N = 100$, $D = 65\mathrm{m^2s^{-1}}$, $R_0 = 1800\mathrm{m}$, $t_s = 1000$ seconds and $\alpha  = 3.24 \mathrm{m^2s^{-2}}$. The mean-squared distance was calculated numerically, using a trapezium rule
+approximation for the expectation value in \eqn{eqn:MSD_expectation}, and the results are shown in \fig{fig:c-d_shrink}.
+
+%NOTE Add diagrams to show the convection bit
+The result for the convection-diffusion model shows an initial linear dispersal, due to diffusion, followed by a sharp decrease as the convection process begins. The decrease slows and the curve flattens over time as probability density gathers at the boundary. The mean squared displacement never reaches zero because diffusion continues to spread probability density across the domain and diffusion and convection are balanced. The shape of the curve is clearly inconsistent with the convex shape that arises from the radio tracking data in \fig{fig:MSD}, and convection-diffusion does not provide a good model for the radio tracking data. The shrinking domain model gives a very different result, an initial straight line dispersal which then begins to level off and decrease slowly, a similar shape to the radio tracking data.
+%The steps in the curve are caused by the shrinking step of the simulation, as this causes an abrupt change in the probability distribution.
 
 \begin{figure} [h]
     \centering
@@ -16,8 +20,8 @@ approximation to the expectation value in \eqn{eqn:MSD_expectation}, and the res
 \section{Model validation using radio tracking data}
 
 The diffusion on a shrinking domain model was fit to the radio tracking data. The diffusion coefficient for the initial, linear dispersal was calculated using
-LsqFit.jl, a package for least squares fitting in Julia \cite{LsqFit}. A
-straight line was fit to the initial linear segment, for time $0 \leq t < 3000$, and the gradient was used
+\texttt{LsqFit.jl}, a package for least squares fitting in Julia \cite{LsqFit}. A
+straight line was fit to the initial linear segment, for time $0 \leq t < 3000$ seconds, and the gradient was used
 along with \eqn{eqn:diffusion_msd} to determine the diffusion coefficient as $D
 = 63.4 m^2s^{-1}$. For the return phase, the shrinking rate was chosen to give a negative parabola for the MSD, as in \eqn{eqn:Rt}. The parameters to fit are $\alpha$, the rate at which the domain shrinks,
 $t_s$, the time at which the domain begins to shrink and $R_0$, the initial size
@@ -39,9 +43,9 @@ r^2 = 1 - \frac{\sum_i(y_i - x_i)^2 }{\sum_i (y_i - \overline{y})^2},
 %
 where $y_i$ corresponds to each value in $\bm{Y}$ and $x_i$ corresponds to each value in $\bm{X}$.
 
-As there is initially no information about parameters $\theta$, the prior distribution for each parameter is assumed to be uniform over plausible values, for $t_s$, $p(t_s) = \unif(0,5000)$ seconds and for the shrinking rate $R_0$, $p(R_0) = \unif(1500\mathrm{m},2500\mathrm{m})$. The posterior distribution $ p(\theta \mid \bm{Y})$ will be a distribution describing the probability of each set of possible parameters $\theta$, and is given by the mean value for each parameter $\overline{\bm{\theta}}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
+As there is initially no information about parameters $\theta$, the prior distribution for each parameter is assumed to be uniform over plausible values. For $t_s$, $p(t_s) \sim \unif(0,5000)$ seconds, and for the shrinking rate $R_0$, $p(R_0) \sim \unif(1500\mathrm{m},2500\mathrm{m})$. The posterior distribution $ p(\theta \mid \bm{Y})$ will be a distribution describing the probability of each set of possible parameters $\theta$, and is given by the mean value for each parameter $\overline{\bm{\theta}}$, where $\bm{\theta_i}$ is the $i$-th accepted sample.
 
-The ABC algorithm was run for a sample size of $n = 10000$, and $\epsilon$ was chosen such that the best 1\% of parameter values were added to the posterior. The prior and posterior distributions are shown in \fig{fig:posterior}. The estimate for each parameter is calculated by taking the mean of the posterior, $t_s = 901$ seconds and $R_0 = 1756$m.
+The ABC algorithm was run for a sample size of $n = 10^4$, and $\epsilon$ was chosen such that the best 1\% of parameter values were added to the posterior. The prior and posterior distributions are shown in \fig{fig:posterior}. The posterior distribution shows a very narrow distribution in $R_0$, suggesting that the MSD is very sensitive to domain radius. The estimate for each parameter is calculated by taking the mean of the posterior, $t_s = 901$ seconds and $R_0 = 1756$m.
 
 \begin{figure} [h]
     \centering
@@ -50,7 +54,7 @@ The ABC algorithm was run for a sample size of $n = 10000$, and $\epsilon$ was c
     \label{fig:posterior}
 \end{figure}
 
- The MSD for the simulation run using estimates of the true parameters is shown in \fig{fig:fit}. The curve shows a good fit with the radio tracking data, within the standard error for the majority of the night. The coefficient of determination calculated was $r^2 = 0.929$, suggesting that the model provides a good fit.
+ The MSD simulation using fitted estimates of the true parameters is shown in \fig{fig:fit}. The curve shows a good fit with the radio tracking data, within the standard error for the majority of the night. The coefficient of determination calculated was $r^2 = 0.929$, suggesting that the model provides a good fit. Additionally, the distance from the roost for all recordings from the radio tracking data was calculated, and 93\% of recordings were within $R_0 = 1756$m, suggesting that this is a good estimate for maximum foraging radius for the majority of bats in this study.
 
 \begin{figure} [h]
     \centering
@@ -62,6 +66,9 @@ The ABC algorithm was run for a sample size of $n = 10000$, and $\epsilon$ was c
 \section{Discussion}
 
  The movement of bats within a domain with a shrinking boundary corresponds to those furthest from the roost always moving towards the roost, whilst those closer to the roost move diffusively. The probability distributions for this simulation in \fig{fig:shrink_phi} show a clustering of probability density against the moving boundary, suggesting that bats behaving in this way would gather togther. This behaviour could be explained by a desire for bats to move towards the locations of other foraging bats. In fact, a common foraging strategy amongst some bat species is to eavesdrop on the hunting calls of other bats to easily and quickly locate hunting grounds \cite{roelekelandscape, egert2018resource}. This strategy is most common in landscapes dominated by cropland, where prey is difficult to find for a single bat due to patchy and ephemeral or unpredictable insect distribution and is uncommon in woodland where insect distribution is more reliable. Eavesdropping allows bats to locate areas with insects by following bats that have already found these hunting grounds. A satellite image of the area covered by bats in the survey is displayed in \fig{fig:satellite}, showing that the area is primarily farmland, with very little woodland, and thus it is likely that bats foraging in this landscape may employ this eavesdropping technique.
+
+
+ %NOTE Alternative hypothesis: don't want to be furthest out once eaten
 
 \begin{figure} [h]
     \centering
