@@ -56,28 +56,50 @@ annuli. The diffusion coefficient was $D = 65\mathrm{m^2s^{-1}}$, and the convec
 was $\chi =  - 15\mathrm{ms^{-1}}$. The results
 of this simulation are shown in \fig{fig:convection2d}. The probability density $\phi$ is shown in \fig{fig:convection2dphi}. The convection process pushes $\phi$ uniformly in the direction of the drift, towards the left side of the domain, whereas the diffusion tends to spread $\phi$ across the domain. The boundary acts as a barrier stopping $\phi$ from moving any further and $\phi$ collects at the boundary. The movement towards the edge slows as $t$ increases because it is unable to move any further, and eventually the system reaches a steady state when diffusion and convection are balanced.
 
-The MSD for the same convection-diffusion simulation is shown in \fig{fig:convection2dmsd}. The convection-diffusion simulation shows the initial rapid dispersal expected from the diffusion model, however the shape of the curve for phase 2 is clearly inconsistent with the radio tracking data. The convection-diffusion simulation yields a convex curve, and the decrease in MSD slows with time as bats return to the roost and stop contributing to the movement. The MSD never reaches 0 because the diffusion term acts to spread bats out whilst the convection term is pushing them back towards the roost, and these eventually balance, without the colony returning to the roost. In order to produce a concave curve consistent with the radio tracking data, the model cannot push all bats towards the roost at the same rate, and instead the bats furthest from the roost should start to return first.
+The MSD for the same convection-diffusion simulation is shown in \fig{fig:convection2dmsd}. The convection-diffusion simulation shows the initial rapid dispersal expected from the diffusion model, however the shape of the curve for phase 2 is clearly inconsistent with the radio tracking data. The convection-diffusion simulation yields a convex curve, and the decrease in MSD slows with time as bats return to the roost and stop contributing to the movement. The MSD never reaches 0 because the diffusion term acts to spread bats out whilst the convection term is pushing them back towards the roost, and these eventually balance, without the colony returning to the roost.
 
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{convection_diffusion_phi2dchi_15.png}
+         \caption{The probability density $\phi$ after $t = 1$, 1.5, 2 and 5 hours.}
+         \label{fig:convection2dphi}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.48\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{convection_diffusion_MSD2dchi_15.png}
+         \caption{The mean squared displacement for $0 \leq t \leq 8$ hours. }
+         \label{fig:convection2dmsd}
+     \end{subfigure}
+     \caption{The results of a convection-diffusion simulation with parameters are $R = 2000$m, $N = 100$,
+     $D = 100\mathrm{m^2s^{-1}}$, $\chi_0 = - 15\mathrm{ms^{-1}}$ and $T = 4000$ seconds.}
+     \label{fig:convection2d}
+     \end{figure}
 
-         \begin{figure}
-              \centering
-              \begin{subfigure}[b]{0.48\textwidth}
-                  \centering
-                  \includegraphics[width=\textwidth]{convection_diffusion_phi2dchi_15.png}
-                  \caption{The probability density $\phi$ after $t = 1$, 1.5, 2 and 5 hours.}
-                  \label{fig:convection2dphi}
-              \end{subfigure}
-              \hfill
-              \begin{subfigure}[b]{0.48\textwidth}
-                  \centering
-                  \includegraphics[width=\textwidth]{convection_diffusion_MSD2dchi_15.png}
-                  \caption{The mean squared displacement for $0 \leq t \leq 8$ hours. }
-                  \label{fig:convection2dmsd}
-              \end{subfigure}
-              \caption{The results of a convection-diffusion simulation with parameters are $R = 2000$m, $N = 100$,
-              $D = 100\mathrm{m^2s^{-1}}$, and $\chi_0 = - 15\mathrm{ms^{-1}}$ and $T = 4000$ seconds.}
-              \label{fig:convection2d}
-              \end{figure}
+We have also tested a convection-diffusion model in which the convection coefficient is spatially dependent as well as time dependent such that bats drift back to the roost at a rate dependent on their distance from the roost,
+%
+\begin{equation}
+\chi (r,t) =  \begin{cases}
+    0, & \text{for } t < T, \\
+    r^{\beta}\chi_0, & \text{for } t \leq T,
+  \end{cases}
+  \label{eqn:r_dependentchi}
+\end{equation}
+%
+where $\beta$ is a constant. The results of simulations with $ -2 \leq \beta \leq 2$ are shown in \fig{fig:rdependentphi}. The plots show that for each value of the exponent $\beta$, the curves are convex rather than concave and diffusion eventually balances convection and bats stop moving once they reach the roost.
+%
+\begin{figure} [h]
+    \centering
+        \includegraphics[width=0.7\textwidth]{rdependentphi.png}
+        \caption{The mean squared displacement for spatially dependent convection-diffusion models with convection coefficient $\chi$ of the form given in \eqn{eqn:r_dependentchi}. The simulation parameters are $R = 2000$m, $N = 100$,
+        $D = 100\mathrm{m^2s^{-1}}$ and $T = 4000$ seconds.}
+    \label{fig:rdependentphi}
+\end{figure}
+%
+
+ In order to produce a concave curve consistent with the radio tracking data, the model cannot push all bats towards the roost at the same time, as those closest to the roost will always reach the roost first and stop moving. Next we will consider a model that solves this problem by selecting only the bats furthest from the roost to drift back towards the roost
 
 \subsubsection{Diffusion on a shrinking domain} \label{shrink}
 %NOTE Leapfrogging?

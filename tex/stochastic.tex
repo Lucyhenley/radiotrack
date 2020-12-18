@@ -1,9 +1,8 @@
-
-\chapter{Stochastic models for bat movement}
-
 %So far, only deterministic partial differential equation models have been considered. These models provide a good description of average behaviour with a population large enough to treat as a continuum. However, bat colonies tend to contain a finite number of individuals. Greater Horseshoe bat colonies typically have 50 - 200 individuals, although some colonies can number up to 600 \cite{greenaway1990field}. As a result, it is important to consider stochastic effects in order to provide a realistic model for bat movement. Here we will consider a stochastic description of the diffusion model describing dispersal from the roost in two dimensions, and a model for the return to roost.
 
-	\section{A stochastic diffusion model}
+First we will derive a stochastic model describing bat movement and use it to inform a deterministic model.
+
+	\subsubsection{A stochastic diffusion model}
 
 	For simplicity, we will first derive a stochastic diffusion model in one
 	dimension, before extending to two dimensions.
@@ -98,6 +97,8 @@ dy_i &= \lambda_i,
 %
 where $\{\rho_i\}$ and $\{\lambda_i\}$ are both sets of random numbers chosen from the normal distribution with zero mean and standard deviation $\sqrt{2D\tau}$, such that $\rho_i \sim \mathcal{N}(0,2D\tau)$ and $\lambda_i \sim \mathcal{N}(0,2D\tau)$.
 
+
+%NOTE Probably add a plot of convection diffusion model to compare deterministic/stochastic models
 \section{A stochastic model for phase 2, return to the roost}
 New model to fix the problems with convection model.
 
